@@ -1,5 +1,5 @@
 // Import vue component
-import component from './ElDataTable.vue';
+import component from './el-data-table.vue';
 
 // install function executed by Vue.use()
 export function install(Vue) {
