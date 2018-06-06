@@ -1,0 +1,53 @@
+{
+  "name": "el-data-table",
+  "version": "0.1.1",
+  "description": "",
+  "main": "dist/el-data-table.umd.js",
+  "module": "dist/el-data-table.esm.js",
+  "unpkg": "dist/el-data-table.min.js",
+  "browser": {
+    "./sfc": "src/el-data-table.vue"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/el-data-table.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/el-data-table.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/el-data-table.min.js",
+    "precommit": "pretty-quick --staged",
+    "prepublish": "npm run build"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "el-form-renderer": "^1.0.2",
+    "element-ui": "^2.2.0",
+    "lodash.get": "^4.4.2",
+    "vue": "^2.5.16"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.16",
+    "babel-jest": "^23.0.1",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^23.1.0",
+    "minimist": "^1.2.0",
+    "prettier": "1.12.1",
+    "pretty-quick": "^1.4.1",
+    "rollup": "^0.57.1",
+    "rollup-plugin-buble": "^0.19.2",
+    "rollup-plugin-uglify-es": "0.0.1",
+    "rollup-plugin-vue": "^3.0.0",
+    "vue": "^2.5.16",
+    "vue-jest": "^2.6.0",
+    "vue-template-compiler": "^2.5.16"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "transform": {
+      "^.+\\.js$": "./node_modules/babel-jest",
+      "^.+\\.vue$": "./node_modules/vue-jest"
+    }
+  }
+}
