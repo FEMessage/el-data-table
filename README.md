@@ -6,6 +6,14 @@
 
 本组件依赖`element-ui`以及开源组件`el-form-renderer`
 
+## 安装
+
+推荐使用[yarn](https://yarnpkg.com/en/docs/install#mac-stable)安装
+
+```sh
+yarn add el-data-table
+```
+
 ## 使用
 
 ### 全局注册
