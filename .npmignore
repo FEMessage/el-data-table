@@ -1,0 +1,10 @@
+.idea
+.babelrc
+.editorconfig
+.gitignore
+*.html
+config
+logs
+npm-debug.log
+test
+build
