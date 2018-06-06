@@ -1,6 +1,6 @@
 {
   "name": "el-data-table",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "dist/el-data-table.umd.js",
   "module": "dist/el-data-table.esm.js",
