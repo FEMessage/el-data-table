@@ -149,16 +149,6 @@
 
 <script>
 import _get from 'lodash.get'
-import {
-  Table,
-  TableColumn,
-  Pagination,
-  Form,
-  FormItem,
-  Button,
-  Dialog
-} from 'element-ui'
-import ElFormRenderer from 'el-form-renderer'
 import axios from 'axios'
 
 // TODO
@@ -191,16 +181,6 @@ const dialogForm = 'dialogForm'
 // 相关事件 selection-change, update (数据更新后触发), reset (重置按钮后触发)
 export default {
   name: 'el-data-table',
-  components: {
-    [Table.name]: Table,
-    [TableColumn.name]: TableColumn,
-    [Pagination.name]: Pagination,
-    [Button.name]: Button,
-    [Dialog.name]: Dialog,
-    [Form.name]: Form,
-    [FormItem.name]: FormItem,
-    ElFormRenderer
-  },
   props: {
     url: {
       type: String,

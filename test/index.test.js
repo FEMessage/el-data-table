@@ -1,11 +1,30 @@
 import {shallowMount} from '@vue/test-utils'
 import ElDataTable from '../src'
 
-// 注册loading指令
 import Vue from 'vue'
-import {Loading} from 'element-ui'
 
+// 全局注册组件及loading指令
+import ElFormRenderer from 'el-form-renderer'
+import {
+    Button,
+    Dialog,
+    Form,
+    FormItem,
+    Loading,
+    Pagination,
+    Table,
+    TableColumn
+} from 'element-ui'
+
+Vue.component('el-form-renderer', ElFormRenderer)
+Vue.use(Button)
+Vue.use(Dialog)
+Vue.use(Form)
+Vue.use(FormItem)
 Vue.use(Loading.directive)
+Vue.use(Pagination)
+Vue.use(Table)
+Vue.use(TableColumn)
 
 describe('ElDataTable', () => {
   it('mounted 发送请求, 返回数据非空', async done => {
