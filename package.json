@@ -16,6 +16,8 @@
     "./sfc": "src/el-data-table.vue"
   },
   "scripts": {
+    "styleguide": "vue-styleguidist server",
+    "doc": "vue-styleguidist build",
     "test": "jest",
     "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
     "build:umd":
@@ -38,6 +40,7 @@
     "@vue/test-utils": "^1.0.0-beta.16",
     "babel-jest": "^23.0.1",
     "babel-preset-env": "^1.7.0",
+    "css-loader": "^0.28.7",
     "husky": "^0.14.3",
     "jest": "^23.1.0",
     "minimist": "^1.2.0",
@@ -47,9 +50,15 @@
     "rollup-plugin-buble": "^0.19.2",
     "rollup-plugin-uglify-es": "0.0.1",
     "rollup-plugin-vue": "^3.0.0",
+    "style-loader": "^0.19.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
     "vue": "^2.5.16",
     "vue-jest": "^2.6.0",
-    "vue-template-compiler": "^2.5.16"
+    "vue-loader": "^13.5.0",
+    "vue-styleguidist": "1.7.7",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^3.10.0"
   },
   "engines": {
     "node": ">= 4.0.0",
