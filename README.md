@@ -27,14 +27,14 @@ import Vue from 'vue'
 import ElDataTable from 'el-data-table'
 import ElFormRenderer from 'el-form-renderer'
 import {
-    Button,
-    Dialog,
-    Form,
-    FormItem,
-    Loading,
-    Pagination,
-    Table,
-    TableColumn
+  Button,
+  Dialog,
+  Form,
+  FormItem,
+  Loading,
+  Pagination,
+  Table,
+  TableColumn
 } from 'element-ui'
 
 Vue.use(ElDataTable)
@@ -57,4 +57,6 @@ Vue.component('el-form-renderer', ElFormRenderer)
 </template>
 ```
 
+## doc
 
+[api doc](https://femessage.github.io/el-data-table/)
