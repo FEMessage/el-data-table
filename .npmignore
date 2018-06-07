@@ -2,9 +2,13 @@
 .babelrc
 .editorconfig
 .gitignore
+.prettierignore
+.prettierrc
 *.html
 config
 logs
 npm-debug.log
 test
 build
+docs
+styleguide.config.js
