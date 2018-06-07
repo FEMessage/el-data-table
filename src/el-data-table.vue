@@ -800,37 +800,39 @@ export default {
 }
 </script>
 <style lang="stylus">
-    color-blue = #2196F3;
-    space-width = 18px;
+.el-data-table {
+  color-blue = #2196F3;
+  space-width = 18px;
 
-    .ms-tree-space {
-        position: relative;
-        top: 1px;
-        display: inline-block;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 1;
-        width: space-width;
-        height: 14px;
+  .ms-tree-space {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    width: space-width;
+    height: 14px;
 
     &::before {
-         content: '';
-     }
+      content: '';
+    }
+  }
+
+  .tree-ctrl {
+    position: relative;
+    cursor: pointer;
+    color: color-blue;
+  }
+
+  @keyframes treeTableShow {
+    from {
+      opacity: 0;
     }
 
-    .tree-ctrl {
-        position: relative;
-        cursor: pointer;
-        color: color-blue;
+    to {
+      opacity: 1;
     }
-
-    @keyframes treeTableShow {
-        from {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-    }
+  }
+}
 </style>
