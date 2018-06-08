@@ -1,29 +1,35 @@
 # el-data-table
 
-使用`axios`自动发送请求，支持树形结构，支持分页，支持自定义查询, 让 RESTFul 风格的 CRUD 更简单 👏
+使用`axios`自动发送请求，支持树形结构，支持分页，支持自定义查询, 自定义操作列, 让 RESTFul 风格的 CRUD 更简单 👏
 
-## 前提
+auto requesting by `axios`, supports pagination, tree data structure, custom search, custom operation column, makes rest api easily 👏
 
-本组件依赖`element-ui`以及开源组件`el-form-renderer`
+## pre install
 
-## 安装
+this component depends on[element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/leezng/el-form-renderer)
 
-推荐使用[yarn](https://yarnpkg.com/en/docs/install#mac-stable)安装
+## install
+
+encourage using [yarn](https://yarnpkg.com/en/docs/install#mac-stable) to install
 
 ```sh
 yarn add el-data-table
 ```
 
-## 使用
+## usage
 
-### 全局注册
+### global register component
 
-为减小打包体积, 组件内并不注册外部依赖, 因此鼓励在项目内使用全局注册组件的方式
+this is for minification reason: in this way building your app,
+
+webpack or other bundler just bundle the dependencies into one vendor for all pages which using this component,
+
+instead of one vendor for one page
 
 ```js
 import Vue from 'vue'
 
-// 全局注册组件及loading指令
+// register component and loading directive
 import ElDataTable from 'el-data-table'
 import ElFormRenderer from 'el-form-renderer'
 import {
@@ -61,6 +67,35 @@ Vue.component('el-form-renderer', ElFormRenderer)
 
 ### basic
 
+suppose the api response looks like this:
+
+```json
+{
+  "code": 0,
+  "msg": "ok",
+  "payload": {
+    "content": [], // the data to render
+    "totalElements": 2 // total count
+  }
+}
+```
+
+we get setting
+
+```template
+<el-data-table
+  dataPath="payload.content"
+  totalPath="payload.totalElement"
+>
+</el-data-table>
+```
+
+that's the default setting, you can get your custom setting according to your api
+
+now I'll show you more code example, here we go🚴
+
+### url and columns
+
 ```vue
 <!-- template -->
 <el-data-table
@@ -89,14 +124,56 @@ export default {
 }
 ```
 
-> 后面的示例将省略 template 及 script 的部分内容
+> examples below will omit template and some repeated content in script
 
-### new/edit dialog form
+### new/edit form
 
 ```js
 form: [
   {
-    rules: [{message: '请输入email', required: true, trigger: 'blur'}],
+    $type: 'select',
+    $id: 'backendFramework',
+    label: '后端框架',
+    rules: [{required: true, message: '请选择后端框架', trigger: 'blur'}],
+    $options: backendFrameworks.map(f => ({label: f, value: f})),
+    $el: {
+      placeholder: '请选择'
+    }
+  },
+  {
+    $type: 'input',
+    $id: 'name',
+    label: '元数据名称',
+    rules: [
+      {
+        required: true,
+        message: '请输入元数据名称',
+        trigger: 'blur',
+        transform: v => v && v.trim()
+      }
+    ],
+    $el: {placeholder: '请输入'}
+  }
+]
+```
+
+### search
+
+```js
+searchForm: [
+  {
+    $el: {placeholder: '请输入'},
+    label: '用户名',
+    $id: 'username',
+    $type: 'input'
+  },
+  {
+    $el: {placeholder: '请输入'},
+    label: '全名',
+    $id: 'fullname',
+    $type: 'input'
+  },
+  {
     $el: {placeholder: '请输入'},
     label: 'email',
     $id: 'email',
@@ -105,31 +182,55 @@ form: [
 ]
 ```
 
-### search
+### header buttons on the top of the table
+
+> attention: click function called `atClick`
 
 ```js
-      searchForm: [
-        {
-          $el: {placeholder: '请输入'},
-          label: '用户名',
-          $id: 'username',
-          $type: 'input'
-        },
-        {
-          $el: {placeholder: '请输入'},
-          label: '全名',
-          $id: 'fullname',
-          $type: 'input'
-        },
-        {
-          $el: {placeholder: '请输入'},
-          label: 'email',
-          $id: 'email',
-          $type: 'input'
-        }
-      ],
+headerButtons: [
+  {
+    text: '批量导出',
+    disabled: selected => selected.length == 0,
+    atClick: selected => {
+      let ids = selected.map(s => s.id)
+      console.log(ids)
+    }
+  }
+]
 ```
 
-## doc
+### extra buttons in operation column
+
+> attention: click function called `atClick`
+
+```js
+extraButtons: [
+  {
+    type: 'primary',
+    text: '跳转',
+    atClick: row =>
+      this.$router.push({path: '/module-detail', query: {id: row.id}})
+  }
+]
+```
+
+### extraParams on new/edit
+
+```js
+extraParams: {
+  version: 0,
+  isTree: false
+}
+```
+
+### customQuery on search
+
+```js
+customQuery: {
+  type: this.$route.query.type
+}
+```
+
+## api doc
 
 [full documentation](https://femessage.github.io/el-data-table/)
