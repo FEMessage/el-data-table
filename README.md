@@ -51,12 +51,85 @@ Vue.component('el-form-renderer', ElFormRenderer)
 
 ### template
 
-```html
+```vue
 <template>
   <el-data-table></el-data-table>
 </template>
 ```
 
+## example
+
+### basic
+
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+>
+</el-data-table>
+```
+
+```js
+// script
+export default {
+  data() {
+    return {
+      url: '/api/v1/users',
+      columns: [
+        {prop: 'id', label: '主键'},
+        {prop: 'username', label: '用户名'},
+        {prop: 'fullname', label: '全名'},
+        {prop: 'email', label: 'email'},
+        {prop: 'department.id', label: 'department.id'},
+        {prop: 'department.name', label: 'department.name'}
+      ]
+    }
+  }
+}
+```
+
+> 后面的示例将省略 template 及 script 的部分内容
+
+### new/edit dialog form
+
+```js
+form: [
+  {
+    rules: [{message: '请输入email', required: true, trigger: 'blur'}],
+    $el: {placeholder: '请输入'},
+    label: 'email',
+    $id: 'email',
+    $type: 'input'
+  }
+]
+```
+
+### search
+
+```js
+      searchForm: [
+        {
+          $el: {placeholder: '请输入'},
+          label: '用户名',
+          $id: 'username',
+          $type: 'input'
+        },
+        {
+          $el: {placeholder: '请输入'},
+          label: '全名',
+          $id: 'fullname',
+          $type: 'input'
+        },
+        {
+          $el: {placeholder: '请输入'},
+          label: 'email',
+          $id: 'email',
+          $type: 'input'
+        }
+      ],
+```
+
 ## doc
 
-[api doc](https://femessage.github.io/el-data-table/)
+[full documentation](https://femessage.github.io/el-data-table/)
