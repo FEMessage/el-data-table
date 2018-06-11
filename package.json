@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/FEMessage/el-data-table.git"
   },
-  "keywords": ["vue", "element-ui", "table", "data-table"],
+  "keywords": ["vue", "element-ui", "table", "data-table", "element table"],
   "main": "dist/el-data-table.umd.js",
   "module": "dist/el-data-table.esm.js",
   "unpkg": "dist/el-data-table.min.js",
