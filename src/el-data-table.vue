@@ -132,7 +132,7 @@
             :page-size="size"
             :total="total"
             style="text-align: right; padding: 10px 0"
-            layout="total, sizes, prev, pager, next, jumper"
+            :layout="layout"
         >
         </el-pagination>
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
@@ -318,6 +318,13 @@ export default {
     hasPagination: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 自定义分页功能模块
+     */
+    layout: {
+      type: String,
+      default: 'total, sizes, prev, pager, next, jumper'
     },
     /**
      * 不分页时的size的大小
