@@ -19,7 +19,8 @@
     "styleguide": "vue-styleguidist server",
     "doc": "vue-styleguidist build",
     "test": "jest",
-    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
+    "build":
+      "npm run build:unpkg & npm run build:es & npm run build:umd & npm run doc",
     "build:umd":
       "rollup --config build/rollup.config.js --format umd --file dist/el-data-table.umd.js",
     "build:es":
