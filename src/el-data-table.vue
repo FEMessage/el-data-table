@@ -129,7 +129,7 @@
             @current-change="handleCurrentChange"
             :current-page="page"
             :page-sizes="paginationSizes"
-            :page-size="paginationSize"
+            :page-size="size"
             :total="total"
             style="text-align: right; padding: 10px 0"
             :layout="paginationLayout"
@@ -321,7 +321,7 @@ export default {
     },
     /**
      * 分页组件的子组件布局，子组件名用逗号分隔，对应element-ui pagination的layout属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination 
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
      */
     paginationLayout: {
       type: String,
@@ -329,7 +329,7 @@ export default {
     },
     /**
      * 分页组件的每页显示个数选择器的选项设置，对应element-ui pagination的page-sizes属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination 
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
      */
     paginationSizes: {
       type: Array,
@@ -337,9 +337,9 @@ export default {
     },
     /**
      * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination 
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
      */
-    page-size: {
+    paginationSize: {
       type: Number,
       default: 10
     },
@@ -473,7 +473,7 @@ export default {
       data: [],
       query: {},
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
-      size: 10,
+      size: paginationSize || paginationSizes[0],
       page: this.firstPage,
       total: 0,
       loading: false,
