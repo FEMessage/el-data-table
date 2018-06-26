@@ -473,7 +473,7 @@ export default {
       data: [],
       query: {},
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
-      size: paginationSize || paginationSizes[0],
+      size: this.paginationSize || this.paginationSizes[0],
       page: this.firstPage,
       total: 0,
       loading: false,
