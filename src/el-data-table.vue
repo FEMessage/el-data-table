@@ -128,11 +128,11 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="page"
-            :page-sizes="[10, 20, 30, 40, 50]"
+            :page-sizes="paginationSizes"
             :page-size="size"
             :total="total"
             style="text-align: right; padding: 10px 0"
-            layout="total, sizes, prev, pager, next, jumper"
+            :layout="paginationLayout"
         >
         </el-pagination>
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
@@ -320,6 +320,30 @@ export default {
       default: true
     },
     /**
+     * 分页组件的子组件布局，子组件名用逗号分隔，对应element-ui pagination的layout属性
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     */
+    paginationLayout: {
+      type: String,
+      default: 'total, sizes, prev, pager, next, jumper'
+    },
+    /**
+     * 分页组件的每页显示个数选择器的选项设置，对应element-ui pagination的page-sizes属性
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     */
+    paginationSizes: {
+      type: Array,
+      default: [10, 20, 30, 40, 50]
+    },
+    /**
+     * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     */
+    paginationSize: {
+      type: Number,
+      default: 10
+    },
+    /**
      * 不分页时的size的大小
      */
     noPaginationSize: {
@@ -449,7 +473,7 @@ export default {
       data: [],
       query: {},
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
-      size: 10,
+      size: this.paginationSize || this.paginationSizes[0],
       page: this.firstPage,
       total: 0,
       loading: false,
