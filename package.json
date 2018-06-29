@@ -1,6 +1,6 @@
 {
   "name": "el-data-table",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "base on element-ui, makes crud easily",
   "author": "https://github.com/FEMessage",
   "license": "MIT",
@@ -19,7 +19,8 @@
     "styleguide": "vue-styleguidist server",
     "doc": "vue-styleguidist build",
     "test": "jest",
-    "build": "npm run build:unpkg & npm run build:es & npm run build:umd",
+    "build":
+      "npm run build:unpkg & npm run build:es & npm run build:umd & npm run doc",
     "build:umd":
       "rollup --config build/rollup.config.js --format umd --file dist/el-data-table.umd.js",
     "build:es":
@@ -28,7 +29,7 @@
       "rollup --config build/rollup.config.js --format iife --file dist/el-data-table.min.js",
     "precommit": "pretty-quick --staged",
     "prepublishOnly": "npm run build",
-    "postpublish": "git commit -a --amend"
+    "postpublish": "git add docs & git commit -a --amend"
   },
   "dependencies": {
     "axios": "^0.18.0",
