@@ -100,7 +100,7 @@
 
             <!--默认操作列-->
             <el-table-column label="操作" v-if="hasOperation"
-                             v-bind="operationColumn"
+                             v-bind="operationAttrs"
             >
                 <template slot-scope="scope">
                     <el-button v-if="isTree && hasNew" type="primary" size="small"
