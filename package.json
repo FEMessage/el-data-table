@@ -1,6 +1,6 @@
 {
   "name": "el-data-table",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "base on element-ui, makes crud easily",
   "author": "https://github.com/FEMessage",
   "license": "MIT",
@@ -29,7 +29,7 @@
       "rollup --config build/rollup.config.js --format iife --file dist/el-data-table.min.js",
     "precommit": "pretty-quick --staged",
     "prepublishOnly": "npm run build",
-    "postpublish": "git add docs & git commit -a --amend"
+    "postpublish": "git add docs && git commit -a --amend"
   },
   "dependencies": {
     "axios": "^0.18.0",

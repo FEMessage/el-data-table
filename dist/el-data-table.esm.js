@@ -182,7 +182,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
      */
     paginationSizes: {
       type: Array,
-      default: [10, 20, 30, 40, 50]
+      default: function () { return [10, 20, 30, 40, 50]; }
     },
     /**
      * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
