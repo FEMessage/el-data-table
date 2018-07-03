@@ -664,6 +664,7 @@ export default {
       })
     },
     cancel() {
+      this.$emit('onDialogClose')
       this.dialogVisible = false
     },
     confirm() {
