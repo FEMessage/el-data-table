@@ -508,6 +508,12 @@ export default {
     },
     dialogVisible: function(val, old) {
       if (!val) {
+      /**
+       * 关闭弹窗触发事件
+       * @event onDialogClose
+       */
+        this.$emit('onDialogClose')
+        
         this.isNew = false
         this.isEdit = false
         this.isView = false
@@ -664,7 +670,6 @@ export default {
       })
     },
     cancel() {
-      this.$emit('onDialogClose')
       this.dialogVisible = false
     },
     confirm() {
