@@ -63,6 +63,10 @@ Vue.component('el-form-renderer', ElFormRenderer)
 </template>
 ```
 
+## documentation
+
+[api doc](https://femessage.github.io/el-data-table/)
+
 ## example
 
 ### basic
@@ -230,7 +234,3 @@ customQuery: {
   type: this.$route.query.type
 }
 ```
-
-## api doc
-
-[full documentation](https://femessage.github.io/el-data-table/)
