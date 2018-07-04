@@ -1,5 +1,4 @@
 import _get from 'lodash.get';
-import axios from 'axios';
 
 (function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=".el-data-table .ms-tree-space { position: relative; top: 1px; display: inline-block; font-style: normal; font-weight: 400; line-height: 1; width: 18px; height: 14px; } .el-data-table .ms-tree-space::before { content: ''; } .el-data-table .tree-ctrl { position: relative; cursor: pointer; color: #2196f3; } @-moz-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @-webkit-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @-o-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } "; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
 
@@ -142,18 +141,6 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       default: function default$5() {
         return true
       }
-    },
-    /**
-     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用
-     */
-    onNew: {
-      type: Function
-    },
-    /**
-     * 点击修改按钮时的方法, 当默认新增方法不满足需求时使用
-     */
-    onEdit: {
-      type: Function
     },
     /**
      * 点击删除按钮时的方法, 当默认新增方法不满足需求时使用
@@ -359,6 +346,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       var this$1 = this;
 
       if (!val) {
+      
         this.isNew = false;
         this.isEdit = false;
         this.isView = false;
@@ -407,7 +395,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       // 请求开始
       this.loading = true;
 
-      axios
+      this.$axios
         .get(url)
         .then(function (resp) {
           var res = resp.data;
@@ -486,9 +474,11 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     onDefaultNew: function onDefaultNew(row) {
       if ( row === void 0 ) row = {};
 
-      if (this.onNew) {
-        return this.onNew(row)
-      }
+     /**
+       * 点击新增 触发new事件 
+       * @event new
+       */
+      this.$emit('new', row);
 
       this.row = row;
       this.isNew = true;
@@ -500,9 +490,12 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     onDefaultEdit: function onDefaultEdit(row) {
       var this$1 = this;
 
-      if (this.onEdit) {
-        return this.onEdit(row)
-      }
+    
+      /**
+       * 点击修改 触发edit事件 
+       * @event edit
+       */
+      this.$emit('edit', row);
 
       this.row = row;
       this.isEdit = true;
@@ -558,7 +551,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
         this$1.confirmLoading = true;
 
-        axios[method](url, data)
+        this$1.$axios[method](url, data)
           .then(function (resp) {
             this$1.getList();
             this$1.showMessage(true);
@@ -583,7 +576,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
             // 单个删除
             if (!this$1.hasSelect) {
-              axios
+              this$1.$axios
                 .delete(this$1.url + '/' + row.id || row._id)
                 .then(function (resp) {
                   instance.confirmButtonLoading = false;
@@ -596,7 +589,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
                 });
             } else {
               // 多选模式
-              axios
+              this$1.$axios
                 .delete(
                   this$1.url +
                     '/' +

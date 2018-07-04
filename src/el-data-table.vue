@@ -152,7 +152,6 @@
 
 <script>
 import _get from 'lodash.get'
-import axios from 'axios'
 
 // 默认返回的数据格式如下
 // 可根据实际情况传入 data/total 两个字段的路径
@@ -496,7 +495,6 @@ export default {
     },
     dialogVisible: function(val, old) {
       if (!val) {
-      
         this.isNew = false
         this.isEdit = false
         this.isView = false
@@ -543,7 +541,7 @@ export default {
       // 请求开始
       this.loading = true
 
-      axios
+      this.$axios
         .get(url)
         .then(resp => {
           let res = resp.data
@@ -620,8 +618,8 @@ export default {
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
-     /**
-       * 点击新增 触发new事件 
+      /**
+       * 点击新增 触发new事件
        * @event new
        */
       this.$emit('new', row)
@@ -634,9 +632,8 @@ export default {
       this.dialogVisible = true
     },
     onDefaultEdit(row) {
-    
       /**
-       * 点击修改 触发edit事件 
+       * 点击修改 触发edit事件
        * @event edit
        */
       this.$emit('edit', row)
@@ -693,7 +690,7 @@ export default {
 
         this.confirmLoading = true
 
-        axios[method](url, data)
+        this.$axios[method](url, data)
           .then(resp => {
             this.getList()
             this.showMessage(true)
@@ -716,7 +713,7 @@ export default {
 
             // 单个删除
             if (!this.hasSelect) {
-              axios
+              this.$axios
                 .delete(this.url + '/' + row.id || row._id)
                 .then(resp => {
                   instance.confirmButtonLoading = false
@@ -729,7 +726,7 @@ export default {
                 })
             } else {
               // 多选模式
-              axios
+              this.$axios
                 .delete(
                   this.url +
                     '/' +

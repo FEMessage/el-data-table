@@ -16,6 +16,10 @@ encourage using [yarn](https://yarnpkg.com/en/docs/install#mac-stable) to instal
 yarn add el-data-table
 ```
 
+## documentation
+
+[full api doc](https://femessage.github.io/el-data-table/)
+
 ## usage
 
 ### global register component
@@ -53,6 +57,11 @@ Vue.use(Pagination)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.component('el-form-renderer', ElFormRenderer)
+
+// inject Vue.prototype
+// if the table component cannot access `this.$axios`, it cannot send request
+import axios from 'axios'
+Vue.prototype.$axios = axios
 ```
 
 ### template
@@ -62,10 +71,6 @@ Vue.component('el-form-renderer', ElFormRenderer)
   <el-data-table></el-data-table>
 </template>
 ```
-
-## documentation
-
-[api doc](https://femessage.github.io/el-data-table/)
 
 ## example
 
