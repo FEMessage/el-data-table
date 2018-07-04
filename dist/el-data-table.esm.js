@@ -144,18 +144,6 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       }
     },
     /**
-     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用
-     */
-    onNew: {
-      type: Function
-    },
-    /**
-     * 点击修改按钮时的方法, 当默认新增方法不满足需求时使用
-     */
-    onEdit: {
-      type: Function
-    },
-    /**
      * 点击删除按钮时的方法, 当默认新增方法不满足需求时使用
      */
     onDelete: {
@@ -359,6 +347,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       var this$1 = this;
 
       if (!val) {
+      
         this.isNew = false;
         this.isEdit = false;
         this.isView = false;
@@ -486,9 +475,11 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     onDefaultNew: function onDefaultNew(row) {
       if ( row === void 0 ) row = {};
 
-      if (this.onNew) {
-        return this.onNew(row)
-      }
+     /**
+       * 点击新增 触发new事件 
+       * @event new
+       */
+      this.$emit('new', row);
 
       this.row = row;
       this.isNew = true;
@@ -500,9 +491,12 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     onDefaultEdit: function onDefaultEdit(row) {
       var this$1 = this;
 
-      if (this.onEdit) {
-        return this.onEdit(row)
-      }
+    
+      /**
+       * 点击修改 触发edit事件 
+       * @event edit
+       */
+      this.$emit('edit', row);
 
       this.row = row;
       this.isEdit = true;
