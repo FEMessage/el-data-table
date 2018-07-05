@@ -5,8 +5,8 @@
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
-                <el-button type="primary" @click="onSearch">查询</el-button>
-                <el-button @click="onResetSearch">重置</el-button>
+                <el-button type="primary" @click="onSearch" size="small">查询</el-button>
+                <el-button @click="onResetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
 
