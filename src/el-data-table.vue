@@ -29,7 +29,7 @@
 
         <el-table
             ref="table"
-            v-bind="table"
+            v-bind="tableAttrs"
             :data="data"
             :row-style="showRow"
             v-loading="loading"
