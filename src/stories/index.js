@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 import {storiesOf} from '@storybook/vue'
 import ElDataTable from '../el-data-table.vue'
-import {withNotes} from '@storybook/addon-notes'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../../mock'
 import CustomDataTableDemo from './custom-data-table-demo.vue'
@@ -120,7 +119,9 @@ function searchTable() {
         url: '/api/v1/trees',
         dataPath: 'data',
         formAttrs,
-        searchForm: form,
+        searchForm: form.map(form => {
+          return Object.assign({}, form, {rules: []})
+        }),
         form,
         columns: [
           {prop: 'id', label: '主键'},
@@ -143,7 +144,7 @@ function searchTable() {
       </el-data-table>`
   }
 }
-function customTable() {
+function customTableForm() {
   return {
     components: {CustomDataTableDemo},
     data: function() {
@@ -155,9 +156,53 @@ function customTable() {
     template: `<custom-data-table-demo v-bind="$data"></custom-data-table-demo>`
   }
 }
+function customTableButton() {
+  return {
+    components: {ElDataTable},
+    data: function() {
+      return {
+        url: '/api/v1/users',
+        dataPath: 'data',
+        formAttrs,
+        form,
+        headerButtons: [
+          {
+            text: '批量导出',
+            disabled: selected => selected.length == 0,
+            atClick: selected => {
+              let ids = selected.map(s => s.id)
+              this.$alert(ids)
+            }
+          }
+        ],
+        extraButtons: [
+          {
+            type: 'primary',
+            text: '跳转',
+            atClick: selected => {
+              this.$alert(`hello ${selected.name}`)
+            }
+          }
+        ],
+        columns: [
+          {type: 'selection', width: '55'},
+          {prop: 'id', label: '主键'},
+          {prop: 'name', label: '用户名'},
+          {prop: 'sex', label: '性别'},
+          {prop: 'address', label: '地址'},
+          {prop: 'birthday', label: '生日'},
+          {prop: 'email', label: '邮箱'}
+        ]
+      }
+    },
+    template: `<el-data-table v-bind="$data">
+    </el-data-table>`
+  }
+}
 
 storiesOf('ElDataTable', module)
   .add('通用表格', commonTable)
   .add('查询表格', searchTable)
   .add('树形表格', treeTable)
-  .add('自定义表单', customTable)
+  .add('自定义表单', customTableForm)
+  .add('自定义操作按钮', customTableButton)
