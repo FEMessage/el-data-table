@@ -19,6 +19,7 @@ yarn add el-data-table
 ## documentation
 
 [full api doc](https://femessage.github.io/el-data-table/)
+[storybook demo]](https://femessage.github.io/el-data-table/storybook/)
 
 ## usage
 

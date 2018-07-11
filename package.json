@@ -20,6 +20,7 @@
     "doc": "vue-styleguidist build",
     "test": "jest",
     "storybook": "start-storybook -p 9001 -c .storybook",
+    "storybook:build": "build-storybook -c .storybook -o docs/storybook",
     "build":
       "npm run build:unpkg & npm run build:es & npm run build:umd & npm run doc",
     "build:umd":
