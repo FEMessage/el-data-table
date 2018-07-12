@@ -25,24 +25,19 @@
 </template>
 <script>
 import ElDataTable from '../el-data-table.vue'
+import config from './config'
 
 export default {
   components: {ElDataTable},
-  props: ['form', 'formAttrs'],
   data: function() {
     return {
-      url: '/api/v1/users',
+      url: config.url,
       dataPath: 'data',
       imageUrl: '',
       extraParams: {logoUrl: ''},
-      columns: [
-        {prop: 'id', label: '主键'},
-        {prop: 'name', label: '用户名'},
-        {prop: 'sex', label: '性别'},
-        {prop: 'address', label: '地址'},
-        {prop: 'birthday', label: '生日'},
-        {prop: 'email', label: '邮箱'}
-      ]
+      form: config.form,
+      formAttrs: config.formAttrs,
+      columns: config.columns.concat({prop: 'logoUrl', label: '头像'})
     }
   },
   computed: {
