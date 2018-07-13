@@ -239,3 +239,19 @@ customQuery: {
   type: this.$route.query.type
 }
 ```
+
+### tree structure
+
+> attention: treeChildKey, treeParentKey, treeParentValue has their own default value.   you can ignore them if your tree config is same to default config.
+
+```vue
+<template>
+  <el-data-table
+    isTree
+    treeChildKey="children" // default value
+    treeParentKey="parentId" // default value
+    treeParentValue="id" // default value
+  >
+  </el-data-table>
+</template>
+```
