@@ -5,8 +5,8 @@
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
-                <el-button type="primary" @click="onSearch">查询</el-button>
-                <el-button @click="onResetSearch">重置</el-button>
+                <el-button type="primary" @click="onSearch" size="small">查询</el-button>
+                <el-button @click="onResetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
 
@@ -29,7 +29,7 @@
 
         <el-table
             ref="table"
-            v-bind="table"
+            v-bind="tableAttrs"
             :data="data"
             :row-style="showRow"
             v-loading="loading"
@@ -152,7 +152,6 @@
 
 <script>
 import _get from 'lodash.get'
-import axios from 'axios'
 
 // 默认返回的数据格式如下
 // 可根据实际情况传入 data/total 两个字段的路径
@@ -321,7 +320,7 @@ export default {
      */
     paginationSizes: {
       type: Array,
-      default: [10, 20, 30, 40, 50]
+      default: () => [10, 20, 30, 40, 50]
     },
     /**
      * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
@@ -496,7 +495,6 @@ export default {
     },
     dialogVisible: function(val, old) {
       if (!val) {
-      
         this.isNew = false
         this.isEdit = false
         this.isView = false
@@ -543,7 +541,7 @@ export default {
       // 请求开始
       this.loading = true
 
-      axios
+      this.$axios
         .get(url)
         .then(resp => {
           let res = resp.data
@@ -620,8 +618,8 @@ export default {
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
-     /**
-       * 点击新增 触发new事件 
+      /**
+       * 点击新增 触发new事件
        * @event new
        */
       this.$emit('new', row)
@@ -634,9 +632,8 @@ export default {
       this.dialogVisible = true
     },
     onDefaultEdit(row) {
-    
       /**
-       * 点击修改 触发edit事件 
+       * 点击修改 触发edit事件
        * @event edit
        */
       this.$emit('edit', row)
@@ -693,7 +690,7 @@ export default {
 
         this.confirmLoading = true
 
-        axios[method](url, data)
+        this.$axios[method](url, data)
           .then(resp => {
             this.getList()
             this.showMessage(true)
@@ -716,7 +713,7 @@ export default {
 
             // 单个删除
             if (!this.hasSelect) {
-              axios
+              this.$axios
                 .delete(this.url + '/' + row.id || row._id)
                 .then(resp => {
                   instance.confirmButtonLoading = false
@@ -729,7 +726,7 @@ export default {
                 })
             } else {
               // 多选模式
-              axios
+              this.$axios
                 .delete(
                   this.url +
                     '/' +
