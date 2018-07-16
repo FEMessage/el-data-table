@@ -240,6 +240,44 @@ customQuery: {
 }
 ```
 
+### `onNew`/`onEdit`
+如果默认的新增、编辑弹窗不能满足需求,可以使用`onNew`/`onEdit`方法
+
+点击新增/编辑按钮, 会触发`onNew`/`onEdit`方法
+
+适用场景：想使用el-data-table默认的新编、编辑按钮，但不需要弹窗的情况
+
+例子: 点击新增/编辑按钮，跳转到详情页面
+
+```vue
+<template>
+  <el-data-table
+    onNew="onNew"
+    onEdit="onEdit"
+  >
+  </el-data-table>
+</template>
+<script>
+  export default{
+    data () {
+      return {}
+    },
+    methods:{
+      onNew() {
+        this.$router.push({
+          path: detailPage
+        })
+      },
+      onEdit(row) {
+        this.$router.push({
+          path: detailPage,
+          query: { id: row.id }
+        })
+      }
+    }
+  }
+</script>
+```
 
 ### 监听 `new` /`edit` 事件
 
