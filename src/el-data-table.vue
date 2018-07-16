@@ -294,6 +294,18 @@ export default {
       }
     },
     /**
+     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用
+     */
+    onNew: {
+      type: Function
+    },
+    /**
+     * 点击修改按钮时的方法, 当默认新增方法不满足需求时使用
+     */
+    onEdit: {
+      type: Function
+    },
+    /**
      * 点击删除按钮时的方法, 当默认新增方法不满足需求时使用
      */
     onDelete: {
@@ -618,6 +630,9 @@ export default {
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
+      if (this.onNew) {
+        return this.onNew(row)
+      }
       /**
        * 点击新增 触发new事件
        * @event new
@@ -632,6 +647,9 @@ export default {
       this.dialogVisible = true
     },
     onDefaultEdit(row) {
+      if (this.onEdit) {
+        return this.onEdit(row)
+      }
       /**
        * 点击修改 触发edit事件
        * @event edit
