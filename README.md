@@ -239,3 +239,60 @@ customQuery: {
   type: this.$route.query.type
 }
 ```
+
+
+### 监听 `new` /`edit` 事件
+
+如果想在默认的新增、编辑方法中增加额外的操作。可以监听 `new` 、`edit` 事件
+
+点击新增/修改按钮，会触发`new`/`edit`事件
+
+适用场景:  想利用el-data-table快速渲染弹窗表单的特性，并且复用默认的`new`/`edit`的逻辑，但弹窗含有自定义组件, 无法通过配置进行渲染的情况
+
+例子：在新增和编辑的弹窗中，除了常规的表单元素，还要增加一个上传图片组件，并且发送`POST`/`PUT`请求的body中，带上图片的url
+
+```vue
+<template>
+  <el-data-table
+    :extraParams=extraParams
+    @new="clearExtraParams"
+    @edit="setExtraParams"
+  >
+    <div slot="form" prop="logo">
+      <div class="form-label"> 品牌logo</div>
+      <my-upload-component
+        :onLoadSuccess="onLoadSuccess"
+        :fileUrl="extraParams.logoUrl">
+      </my-upload-component>
+    </div>
+  </el-data-table>
+</template>
+<script>
+  export default{
+    data () {
+      return {
+        extraParams: {
+          logoUrl: ''
+        }
+      }
+    },
+    methods:{
+      onLoadSuccess(url) {
+        this.extraParams.logoUrl = url// 将成功后的url 放进extraParams
+      },
+      clearExtraParams(){
+        this.extraParams.logoUrl = ''  //清空extraParams
+      },
+      setExtraParams(row) {
+        this.extraParams.logoUrl = row.logoUrl //将原有的logoUrl 放入extraParams
+      }
+    }
+  }
+</script>
+```
+
+技巧点：
+
+1. 上传成功后把图片url放在 `extraParams` 上
+2. 点击新增按钮时，清除 `extraParams.logoUrl`
+3. 点击编辑按钮时，设置`extraParams.logoUrl`
