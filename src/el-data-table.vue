@@ -458,6 +458,15 @@ export default {
       type: Object
     },
     /**
+     * 在新增/修改弹窗 点击确认后首先调用的方法
+     */
+    beforeConfirm: {
+      type: Function,
+      default() {
+        return true
+      }
+    },
+    /**
      * 外部的注入额外的查询参数, 键值对形式
      */
     customQuery: {
@@ -676,6 +685,8 @@ export default {
       this.dialogVisible = false
     },
     confirm() {
+      if(!this.beforeConfirm()) return
+
       this.$refs[dialogForm].validate(valid => {
         if (!valid) return false
 
