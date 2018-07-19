@@ -458,7 +458,7 @@ export default {
       type: Object
     },
     /**
-     * 在新增/修改弹窗 点击确认后首先调用的方法
+     * 在新增/修改弹窗 点击确认时调用，返回false则不会继续执行confirm逻辑
      */
     beforeConfirm: {
       type: Function,
