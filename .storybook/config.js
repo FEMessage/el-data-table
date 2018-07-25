@@ -1,8 +1,6 @@
 import {configure, setAddon} from '@storybook/vue'
 
 import Vue from 'vue'
-import Vuex from 'vuex' // Vue plugins
-
 import axios from 'axios'
 
 import ElFormRenderer from 'el-form-renderer'
@@ -35,9 +33,6 @@ Vue.use(Pagination)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.component('el-form-renderer', ElFormRenderer)
-
-// Install Vue plugins.
-Vue.use(Vuex)
 
 Vue.prototype.$axios = axios
 Vue.prototype.$msgbox = MessageBox
