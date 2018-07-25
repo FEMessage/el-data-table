@@ -2,7 +2,7 @@ export default {
   form: [
     {
       $type: 'input',
-      $id: 'name',
+      $id: 'login',
       label: '用户名',
       rules: [
         {

@@ -4,14 +4,14 @@ import Basic from './basic.vue'
 import Search from './search.vue'
 import Tree from './tree.vue'
 import CustomFormDataTable from './custom-form-data-table.vue'
-import CustomButtonDataTable from './custom-button-data-table.vue'
+import CustomButtons from './custom-buttons.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
   .add('基本查询', search)
   .add('树形结构', tree)
   .add('自定义表单', customFormTable)
-  .add('自定义操作按钮', customButtonTable)
+  .add('自定义按钮', customButtons)
 
 function basic() {
   return {
@@ -37,9 +37,9 @@ function customFormTable() {
     template: `<custom-form-data-table/>`
   }
 }
-function customButtonTable() {
+function customButtons() {
   return {
-    components: {CustomButtonDataTable},
-    template: `<custom-button-data-table/>`
+    components: {CustomButtons},
+    template: `<custom-buttons/>`
   }
 }
