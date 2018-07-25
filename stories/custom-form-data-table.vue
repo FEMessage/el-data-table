@@ -24,7 +24,7 @@
       </el-data-table>
 </template>
 <script>
-import ElDataTable from '../el-data-table.vue'
+import ElDataTable from '../src/el-data-table.vue'
 import config from './config'
 
 export default {

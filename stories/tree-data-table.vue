@@ -2,6 +2,7 @@
   <el-data-table
       :url="url"
       :columns="columns"
+      :isTree="isTree"
       :form="form"
       :formAttrs="formAttrs"
       :dataPath="dataPath"
@@ -9,7 +10,7 @@
       </el-data-table>
 </template>
 <script>
-import ElDataTable from '../el-data-table.vue'
+import ElDataTable from '../src/el-data-table.vue'
 import config from './config'
 export default {
   components: {ElDataTable},
@@ -19,7 +20,8 @@ export default {
       dataPath: 'data',
       form: config.form,
       formAttrs: config.formAttrs,
-      columns: config.columns
+      columns: config.columns,
+      isTree: true
     }
   }
 }
