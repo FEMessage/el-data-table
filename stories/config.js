@@ -23,23 +23,6 @@ export default {
       $el: {
         placeholder: '请选择'
       }
-    },
-    {
-      $type: 'input',
-      $id: 'email',
-      label: '邮箱',
-      rules: [
-        {
-          required: true,
-          message: '请输入邮箱',
-          trigger: 'blur',
-          transform: v => v && v.trim()
-        }
-      ],
-      $el: {
-        placeholder: '请输入邮箱',
-        type: 'email'
-      }
     }
   ],
   formAttrs: {labelWidth: '80px'},
