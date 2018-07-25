@@ -2,14 +2,14 @@ import {storiesOf} from '@storybook/vue'
 import 'element-ui/lib/theme-chalk/index.css'
 import Basic from './basic.vue'
 import Search from './search.vue'
-import TreeDataTable from './tree-data-table.vue'
+import Tree from './tree.vue'
 import CustomFormDataTable from './custom-form-data-table.vue'
 import CustomButtonDataTable from './custom-button-data-table.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
   .add('基本查询', search)
-  .add('树形表格', treeTable)
+  .add('树形结构', tree)
   .add('自定义表单', customFormTable)
   .add('自定义操作按钮', customButtonTable)
 
@@ -19,10 +19,10 @@ function basic() {
     template: `<basic/>`
   }
 }
-function treeTable() {
+function tree() {
   return {
-    components: {TreeDataTable},
-    template: `<tree-data-table/>`
+    components: {Tree},
+    template: `<tree/>`
   }
 }
 function search() {

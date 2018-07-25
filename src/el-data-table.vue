@@ -565,7 +565,7 @@ export default {
 
           // 不分页
           if (!this.hasPagination) {
-            data = _get(res, this.dataPath || noPaginationDataPath) || []
+            data = _get(res, dataPath) || _get(res, noPaginationDataPath) || []
           } else {
             data = _get(res, this.dataPath) || []
             this.total = _get(res, this.totalPath)
