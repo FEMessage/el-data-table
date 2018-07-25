@@ -1,10 +1,10 @@
 import {storiesOf} from '@storybook/vue'
 import 'element-ui/lib/theme-chalk/index.css'
-import CustomFormDataTable from './custom-form-data-table.vue'
-import CustomButtonDataTable from './custom-button-data-table.vue'
 import CommonDataTable from './common-data-table.vue'
 import SearchDataTable from './search-data-table.vue'
 import TreeDataTable from './tree-data-table.vue'
+import CustomFormDataTable from './custom-form-data-table.vue'
+import CustomButtonDataTable from './custom-button-data-table.vue'
 
 storiesOf('ElDataTable', module)
   .add('通用表格', commonTable)
