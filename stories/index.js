@@ -3,14 +3,14 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Basic from './basic.vue'
 import Search from './search.vue'
 import Tree from './tree.vue'
-import CustomFormDataTable from './custom-form-data-table.vue'
+import CustomRender from './custom-render.vue'
 import CustomButtons from './custom-buttons.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
   .add('基本查询', search)
   .add('树形结构', tree)
-  .add('自定义表单', customFormTable)
+  .add('自定义渲染', customRender)
   .add('自定义按钮', customButtons)
 
 function basic() {
@@ -31,10 +31,10 @@ function search() {
     template: `<search></search>`
   }
 }
-function customFormTable() {
+function customRender() {
   return {
-    components: {CustomFormDataTable},
-    template: `<custom-form-data-table/>`
+    components: {CustomRender},
+    template: `<custom-render/>`
   }
 }
 function customButtons() {
