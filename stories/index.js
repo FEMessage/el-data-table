@@ -10,8 +10,8 @@ storiesOf('ElDataTable', module)
   .add('通用表格', commonTable)
   .add('查询表格', searchTable)
   .add('树形表格', treeTable)
-  .add('自定义表单', customTableForm)
-  .add('自定义操作按钮', customTableButton)
+  .add('自定义表单', customFormTable)
+  .add('自定义操作按钮', customButtonTable)
 
 function commonTable() {
   return {
@@ -31,13 +31,13 @@ function searchTable() {
     template: `<search-data-table></search-data-table>`
   }
 }
-function customTableForm() {
+function customFormTable() {
   return {
     components: {CustomFormDataTable},
     template: `<custom-form-data-table/>`
   }
 }
-function customTableButton() {
+function customButtonTable() {
   return {
     components: {CustomButtonDataTable},
     template: `<custom-button-data-table/>`
