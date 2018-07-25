@@ -13,7 +13,6 @@ import {
   FormItem,
   Input,
   Select,
-  Upload,
   Option,
   Loading,
   Pagination,
@@ -29,7 +28,6 @@ Vue.use(Dialog)
 Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
-Vue.use(Upload)
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Loading.directive)

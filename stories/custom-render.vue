@@ -25,6 +25,7 @@
       </el-data-table>
 </template>
 <script>
+import ElUpload from 'element-ui/lib/upload'
 import ElDataTable from '../src/el-data-table.vue'
 import config from './config'
 
@@ -41,7 +42,7 @@ const checkName = (rule, value, callback) => {
 }
 
 export default {
-  components: {ElDataTable},
+  components: {ElDataTable, ElUpload},
   data: function() {
     return {
       url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
