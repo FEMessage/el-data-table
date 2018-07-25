@@ -43,13 +43,13 @@ export default {
     }
   ],
   formAttrs: {labelWidth: '80px'},
-  url: 'http://yapi.demo.qunar.com/mock/13587/api/v1/users',
+  url: 'https://api.github.com/search/users?q=FEMessage',
+  dataPath: 'items',
+  totalPath: 'total_count',
   columns: [
-    {prop: 'id', label: '主键'},
-    {prop: 'name', label: '用户名'},
-    {prop: 'sex', label: '性别'},
-    {prop: 'address', label: '地址'},
-    {prop: 'birthday', label: '生日'},
-    {prop: 'email', label: '邮箱'}
+    {prop: 'id', label: 'id'},
+    {prop: 'login', label: '名称'},
+    {prop: 'type', label: '账户类型'},
+    {prop: 'html_url', label: '主页地址'}
   ]
 }

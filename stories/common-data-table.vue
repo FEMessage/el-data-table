@@ -1,26 +1,18 @@
 <template>
   <el-data-table
-      :url="url"
-      :columns="columns"
-      :form="form"
-      :formAttrs="formAttrs"
-      :dataPath="dataPath"
-      >
-      </el-data-table>
+    v-bind="$data"
+  >
+  </el-data-table>
 </template>
 <script>
+// 显示基本crud
+// post/delete/put 接口会报错, 因为调用的是github的api
 import ElDataTable from '../src/el-data-table.vue'
 import config from './config'
 export default {
   components: {ElDataTable},
   data: function() {
-    return {
-      url: config.url,
-      dataPath: 'data',
-      form: config.form,
-      formAttrs: config.formAttrs,
-      columns: config.columns
-    }
+    return config
   }
 }
 </script>
