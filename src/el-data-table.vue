@@ -188,7 +188,7 @@ export default {
     },
     /**
      * 主键，默认值 id，
-     * 新增/修改时会用到,请求会根据定义的属性值获取主键,即row[this.id]
+     * 修改/删除时会用到,请求会根据定义的属性值获取主键,即row[this.id]
      */
     id: {
       type: String,
@@ -766,9 +766,7 @@ export default {
               // 多选模式
               this.$axios
                 .delete(
-                  this.url +
-                    '/' +
-                    this.selected.map(v => v[this.id]).toString()
+                  this.url + '/' + this.selected.map(v => v[this.id]).toString()
                 )
                 .then(resp => {
                   instance.confirmButtonLoading = false

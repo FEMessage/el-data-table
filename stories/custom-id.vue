@@ -5,17 +5,17 @@
   </el-data-table>
 </template>
 <script>
-// 自定义主键
-// post/delete/put ,对应接口不存在
+// put/delete, 对应接口不存在, 但没关系, 主要是看请求参数
 import ElDataTable from '../src/el-data-table.vue'
 import config from './config'
 export default {
-  name:'custom-id',
+  name: 'custom-id',
   components: {ElDataTable},
   data: function() {
     return {
       url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
-      id:'code',
+      // 主键设置为status
+      id: 'status',
       columns: [
         {prop: 'code', label: '品牌编号'},
         {prop: 'name', label: '品牌名称'},
@@ -51,7 +51,8 @@ export default {
           $type: 'input'
         }
       ],
-      formAttrs: config.formAttrs
+      formAttrs: config.formAttrs,
+      hasNew: false
     }
   }
 }
