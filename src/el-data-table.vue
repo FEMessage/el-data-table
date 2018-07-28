@@ -172,6 +172,7 @@ const noPaginationDataPath = 'payload'
 const treeChildKey = 'children'
 const treeParentKey = 'parentId'
 const treeParentValue = 'id'
+const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
 
@@ -184,6 +185,14 @@ export default {
     url: {
       type: String,
       default: ''
+    },
+    /**
+     * 主键，默认值 id，
+     * 新增/修改时会用到,请求会根据定义的属性值获取主键,即row[this.id]
+     */
+    id: {
+      type: String,
+      default: defaultId
     },
     /**
      * 分页请求的第一页的值(有的接口0是第一页)
@@ -707,7 +716,7 @@ export default {
 
         if (this.isEdit) {
           method = 'put'
-          url += `/${this.row.id || this.row._id}`
+          url += `/${this.row[this.id]}`
         }
 
         if (this.isTree) {
@@ -743,7 +752,7 @@ export default {
             // 单个删除
             if (!this.hasSelect) {
               this.$axios
-                .delete(this.url + '/' + row.id || row._id)
+                .delete(this.url + '/' + row[this.id])
                 .then(resp => {
                   instance.confirmButtonLoading = false
                   done()
@@ -759,7 +768,7 @@ export default {
                 .delete(
                   this.url +
                     '/' +
-                    this.selected.map(v => v._id || v.id).toString()
+                    this.selected.map(v => v[this.id]).toString()
                 )
                 .then(resp => {
                   instance.confirmButtonLoading = false
