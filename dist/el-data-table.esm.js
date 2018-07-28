@@ -21,6 +21,7 @@ var noPaginationDataPath = 'payload';
 var treeChildKey = 'children';
 var treeParentKey = 'parentId';
 var treeParentValue = 'id';
+var defaultId = 'id';
 
 var dialogForm = 'dialogForm';
 
@@ -33,6 +34,14 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     url: {
       type: String,
       default: ''
+    },
+    /**
+     * 主键，默认值 id，
+     * 修改/删除时会用到,请求会根据定义的属性值获取主键,即row[this.id]
+     */
+    id: {
+      type: String,
+      default: defaultId
     },
     /**
      * 分页请求的第一页的值(有的接口0是第一页)
@@ -439,6 +448,11 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
           this$1.$emit('update', data, res);
         })
         .catch(function (err) {
+          /**
+           * 请求数据失败，返回err对象
+           * @event error
+           */
+          this$1.$emit('error', err);
           this$1.loading = false;
         });
     },
@@ -561,7 +575,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
         if (this$1.isEdit) {
           method = 'put';
-          url += "/" + (this$1.row.id || this$1.row._id);
+          url += "/" + (this$1.row[this$1.id]);
         }
 
         if (this$1.isTree) {
@@ -599,7 +613,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
             // 单个删除
             if (!this$1.hasSelect) {
               this$1.$axios
-                .delete(this$1.url + '/' + row.id || row._id)
+                .delete(this$1.url + '/' + row[this$1.id])
                 .then(function (resp) {
                   instance.confirmButtonLoading = false;
                   done();
@@ -613,9 +627,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
               // 多选模式
               this$1.$axios
                 .delete(
-                  this$1.url +
-                    '/' +
-                    this$1.selected.map(function (v) { return v._id || v.id; }).toString()
+                  this$1.url + '/' + this$1.selected.map(function (v) { return v[this$1.id]; }).toString()
                 )
                 .then(function (resp) {
                   instance.confirmButtonLoading = false;
