@@ -154,7 +154,6 @@
 import _get from 'lodash.get'
 
 // 默认返回的数据格式如下
-// 可根据实际情况传入 data/total 两个字段的路径
 //          {
 //            "code":0,
 //            "msg":"ok",
@@ -163,6 +162,7 @@ import _get from 'lodash.get'
 //              "totalElements":2, // 总数
 //            }
 //          }
+// 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
 // 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
 
 const dataPath = 'payload.content'
@@ -175,9 +175,6 @@ const treeParentValue = 'id'
 
 const dialogForm = 'dialogForm'
 
-/**
- *
- */
 export default {
   name: 'ElDataTable',
   props: {
@@ -429,8 +426,6 @@ export default {
       type: String,
       default: '查看'
     },
-    //
-    //
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
      * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
@@ -570,7 +565,7 @@ export default {
 
           // 不分页
           if (!this.hasPagination) {
-            data = _get(res, this.dataPath || noPaginationDataPath) || []
+            data = _get(res, dataPath) || _get(res, noPaginationDataPath) || []
           } else {
             data = _get(res, this.dataPath) || []
             this.total = _get(res, this.totalPath)
@@ -685,7 +680,7 @@ export default {
       this.dialogVisible = false
     },
     confirm() {
-      if(!this.beforeConfirm()) return
+      if (!this.beforeConfirm()) return
 
       this.$refs[dialogForm].validate(valid => {
         if (!valid) return false

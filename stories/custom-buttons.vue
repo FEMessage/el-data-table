@@ -2,7 +2,7 @@
   <el-data-table v-bind="$data"></el-data-table>
 </template>
 <script>
-import ElDataTable from '../el-data-table.vue'
+import ElDataTable from '../src/el-data-table.vue'
 import config from './config'
 
 export default {
@@ -10,7 +10,8 @@ export default {
   data: function() {
     return {
       url: config.url,
-      dataPath: 'data',
+      dataPath: config.dataPath,
+      totalPath: config.totalPath,
       form: config.form,
       formAttrs: config.formAttrs,
       columns: [
@@ -20,23 +21,26 @@ export default {
       ].concat(config.columns),
       headerButtons: [
         {
-          text: '批量导出',
+          text: '自定义头部按钮',
           disabled: selected => selected.length == 0,
           atClick: selected => {
             let ids = selected.map(s => s.id)
-            this.$alert(ids)
+            alert('selected ids: ' + ids)
           }
         }
       ],
       extraButtons: [
         {
           type: 'primary',
-          text: '跳转',
+          text: '自定义操作按钮',
           atClick: selected => {
-            this.$alert(`hello ${selected.name}`)
+            alert(`hello ${selected.login}`)
           }
         }
-      ]
+      ],
+      hasEdit: false,
+      hasNew: false,
+      hasDelete: false
     }
   }
 }
