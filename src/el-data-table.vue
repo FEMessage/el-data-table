@@ -586,6 +586,11 @@ export default {
           this.$emit('update', data, res)
         })
         .catch(err => {
+          /**
+           * 请求数据失败，返回err对象
+           * @event error
+           */
+          this.$emit('error', err)
           this.loading = false
         })
     },
