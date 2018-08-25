@@ -805,7 +805,7 @@ export default {
 
         if (record[this.treeChildKey] && record[this.treeChildKey].length > 0) {
           const children = this.tree2Array(
-            record.children,
+            record[this.treeChildKey],
             expandAll,
             record,
             _level
@@ -832,7 +832,7 @@ export default {
     // 图标显示
     iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
-      return record.children && record.children.length > 0
+      return record[this.treeChildKey] && record[this.treeChildKey].length > 0
     },
     showMessage(isSuccess = true) {
       if (isSuccess) {
