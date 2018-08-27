@@ -108,6 +108,10 @@
                     <el-button v-for="(btn, i) in extraButtons"
                                v-if="'show' in btn ? btn.show(scope.row) : true"
                                v-bind="btn" @click="btn.atClick(scope.row)" :key="i" size="small">{{btn.text}}</el-button>
+                    <el-button v-if="hasView" type="info" size="small"
+                               @click="onDefaultView(scope.row)">
+                        查看
+                    </el-button>
                     <el-button v-if="hasEdit" size="small"
                                @click="onDefaultEdit(scope.row)">
                         修改
@@ -137,7 +141,7 @@
         </el-pagination>
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
             <!--https://github.com/leezng/el-form-renderer-->
-            <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs">
+            <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
                 <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
                 <slot name="form"></slot>
             </el-form-renderer>
@@ -268,6 +272,13 @@ export default {
       default() {
         return []
       }
+    },
+    /**
+     * 是否有查看按钮
+     */
+    hasView: {
+      type: Boolean,
+      default: true
     },
     /**
      * 是否有新增按钮
@@ -663,6 +674,31 @@ export default {
       this.isView = false
       this.dialogTitle = this.dialogNewTitle
       this.dialogVisible = true
+    },
+    onDefaultView(row) {
+      if (this.onView) {
+        return this.onView(row)
+      }
+      /**
+       * 点击查看 触发view事件
+       * @event view
+       */
+      this.$emit('view', row)
+
+      this.row = row
+      this.isEdit = false
+      this.isNew = false
+      this.isView = true
+      this.dialogTitle = this.dialogViewTitle
+      this.dialogVisible = true
+      // 给表单填充值
+      this.$nextTick(() => {
+        this.form.forEach(entry => {
+          let value = row[entry.$id]
+
+          this.$refs[dialogForm].updateValue({id: entry.$id, value})
+        })
+      })
     },
     onDefaultEdit(row) {
       if (this.onEdit) {
