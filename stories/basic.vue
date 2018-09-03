@@ -1,6 +1,7 @@
 <template>
   <el-data-table
     v-bind="$data"
+		:hasView="true"
   >
   </el-data-table>
 </template>
