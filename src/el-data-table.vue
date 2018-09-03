@@ -105,12 +105,18 @@
                 <template slot-scope="scope">
                     <el-button v-if="isTree && hasNew" type="primary" size="small"
                                @click="onDefaultNew(scope.row)">新增</el-button>
-                    <el-button v-for="(btn, i) in extraButtons"
-                               v-if="'show' in btn ? btn.show(scope.row) : true"
-                               v-bind="btn" @click="btn.atClick(scope.row)" :key="i" size="small">{{btn.text}}</el-button>
                     <el-button v-if="hasEdit" size="small"
                                @click="onDefaultEdit(scope.row)">
                         修改
+                    </el-button>
+                    <el-button v-if="hasView" type="info" size="small"
+                               @click="onDefaultView(scope.row)">
+                        查看
+                    </el-button>
+                    <el-button v-for="(btn, i) in extraButtons"
+                               v-if="'show' in btn ? btn.show(scope.row) : true"
+                               v-bind="btn" @click="btn.atClick(scope.row)" :key="i" size="small">
+                        {{btn.text}}
                     </el-button>
                     <el-button v-if="!hasSelect && hasDelete && canDelete(scope.row)" type="danger" size="small"
                                @click="onDefaultDelete(scope.row)">
@@ -137,7 +143,7 @@
         </el-pagination>
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
             <!--https://github.com/leezng/el-form-renderer-->
-            <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs">
+            <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
                 <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
                 <slot name="form"></slot>
             </el-form-renderer>
@@ -154,7 +160,6 @@
 import _get from 'lodash.get'
 
 // 默认返回的数据格式如下
-// 可根据实际情况传入 data/total 两个字段的路径
 //          {
 //            "code":0,
 //            "msg":"ok",
@@ -163,6 +168,7 @@ import _get from 'lodash.get'
 //              "totalElements":2, // 总数
 //            }
 //          }
+// 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
 // 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
 
 const dataPath = 'payload.content'
@@ -172,12 +178,10 @@ const noPaginationDataPath = 'payload'
 const treeChildKey = 'children'
 const treeParentKey = 'parentId'
 const treeParentValue = 'id'
+const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
 
-/**
- *
- */
 export default {
   name: 'ElDataTable',
   props: {
@@ -187,6 +191,14 @@ export default {
     url: {
       type: String,
       default: ''
+    },
+    /**
+     * 主键，默认值 id，
+     * 修改/删除时会用到,请求会根据定义的属性值获取主键,即row[this.id]
+     */
+    id: {
+      type: String,
+      default: defaultId
     },
     /**
      * 分页请求的第一页的值(有的接口0是第一页)
@@ -276,6 +288,13 @@ export default {
     hasEdit: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 是否有查看按钮
+     */
+    hasView: {
+      type: Boolean,
+      default: false
     },
     /**
      * table头部是否有删除按钮(该按钮要多选时才会出现)
@@ -429,8 +448,6 @@ export default {
       type: String,
       default: '查看'
     },
-    //
-    //
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
      * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
@@ -570,7 +587,7 @@ export default {
 
           // 不分页
           if (!this.hasPagination) {
-            data = _get(res, this.dataPath || noPaginationDataPath) || []
+            data = _get(res, dataPath) || _get(res, noPaginationDataPath) || []
           } else {
             data = _get(res, this.dataPath) || []
             this.total = _get(res, this.totalPath)
@@ -591,6 +608,11 @@ export default {
           this.$emit('update', data, res)
         })
         .catch(err => {
+          /**
+           * 请求数据失败，返回err对象
+           * @event error
+           */
+          this.$emit('error', err)
           this.loading = false
         })
     },
@@ -655,6 +677,31 @@ export default {
       this.dialogTitle = this.dialogNewTitle
       this.dialogVisible = true
     },
+    onDefaultView(row) {
+      if (this.onView) {
+        return this.onView(row)
+      }
+      /**
+       * 点击查看 触发view事件
+       * @event view
+       */
+      this.$emit('view', row)
+
+      this.row = row
+      this.isView = true
+      this.isNew = false
+      this.isEdit = false
+      this.dialogTitle = this.dialogViewTitle
+      this.dialogVisible = true
+      // 给表单填充值
+      this.$nextTick(() => {
+        this.form.forEach(entry => {
+          let value = row[entry.$id]
+
+          this.$refs[dialogForm].updateValue({id: entry.$id, value})
+        })
+      })
+    },
     onDefaultEdit(row) {
       if (this.onEdit) {
         return this.onEdit(row)
@@ -685,7 +732,7 @@ export default {
       this.dialogVisible = false
     },
     confirm() {
-      if(!this.beforeConfirm()) return
+      if (!this.beforeConfirm()) return
 
       this.$refs[dialogForm].validate(valid => {
         if (!valid) return false
@@ -707,7 +754,7 @@ export default {
 
         if (this.isEdit) {
           method = 'put'
-          url += `/${this.row.id || this.row._id}`
+          url += `/${this.row[this.id]}`
         }
 
         if (this.isTree) {
@@ -743,7 +790,7 @@ export default {
             // 单个删除
             if (!this.hasSelect) {
               this.$axios
-                .delete(this.url + '/' + row.id || row._id)
+                .delete(this.url + '/' + row[this.id])
                 .then(resp => {
                   instance.confirmButtonLoading = false
                   done()
@@ -757,9 +804,7 @@ export default {
               // 多选模式
               this.$axios
                 .delete(
-                  this.url +
-                    '/' +
-                    this.selected.map(v => v._id || v.id).toString()
+                  this.url + '/' + this.selected.map(v => v[this.id]).toString()
                 )
                 .then(resp => {
                   instance.confirmButtonLoading = false
@@ -798,7 +843,7 @@ export default {
 
         if (record[this.treeChildKey] && record[this.treeChildKey].length > 0) {
           const children = this.tree2Array(
-            record.children,
+            record[this.treeChildKey],
             expandAll,
             record,
             _level
@@ -825,7 +870,7 @@ export default {
     // 图标显示
     iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
-      return record.children && record.children.length > 0
+      return record[this.treeChildKey] && record[this.treeChildKey].length > 0
     },
     showMessage(isSuccess = true) {
       if (isSuccess) {

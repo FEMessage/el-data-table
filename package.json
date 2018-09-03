@@ -1,6 +1,6 @@
 {
   "name": "el-data-table",
-  "version": "0.4.1",
+  "version": "0.8.0",
   "description": "base on element-ui, makes crud easily",
   "author": "https://github.com/FEMessage",
   "license": "MIT",
@@ -19,8 +19,10 @@
     "styleguide": "vue-styleguidist server",
     "doc": "vue-styleguidist build",
     "test": "jest",
+    "storybook": "start-storybook -p 9001 -c .storybook",
+    "storybook:build": "build-storybook -c .storybook -o docs/storybook",
     "build":
-      "npm run build:unpkg & npm run build:es & npm run build:umd & npm run doc",
+      "npm run build:unpkg & npm run build:es & npm run build:umd & npm run doc & npm run storybook:build",
     "build:umd":
       "rollup --config build/rollup.config.js --format umd --file dist/el-data-table.umd.js",
     "build:es":
@@ -29,7 +31,7 @@
       "rollup --config build/rollup.config.js --format iife --file dist/el-data-table.min.js",
     "precommit": "pretty-quick --staged",
     "prepublishOnly": "npm run build",
-    "postpublish": "git add docs && git commit -a --amend"
+    "postpublish": "git add docs && git add dist && git commit -a --amend"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -39,8 +41,15 @@
     "vue": "^2.5.16"
   },
   "devDependencies": {
+    "@storybook/vue": "^3.4.8",
+    "@storybook/addon-actions": "^3.4.8",
+    "@storybook/addon-info": "^3.4.8",
+    "@storybook/addon-links": "^3.4.8",
+    "@storybook/addon-notes": "^3.4.8",
+    "@storybook/addons": "^3.4.8",
     "@vue/test-utils": "^1.0.0-beta.16",
     "babel-jest": "^23.0.1",
+    "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "css-loader": "^0.28.7",
     "husky": "^0.14.3",

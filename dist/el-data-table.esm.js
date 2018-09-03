@@ -3,7 +3,6 @@ import _get from 'lodash.get';
 (function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=".el-data-table .ms-tree-space { position: relative; top: 1px; display: inline-block; font-style: normal; font-weight: 400; line-height: 1; width: 18px; height: 14px; } .el-data-table .ms-tree-space::before { content: ''; } .el-data-table .tree-ctrl { position: relative; cursor: pointer; color: #2196f3; } @-moz-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @-webkit-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @-o-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } "; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
 
 // 默认返回的数据格式如下
-// 可根据实际情况传入 data/total 两个字段的路径
 //          {
 //            "code":0,
 //            "msg":"ok",
@@ -12,6 +11,7 @@ import _get from 'lodash.get';
 //              "totalElements":2, // 总数
 //            }
 //          }
+// 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
 // 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
 
 var dataPath = 'payload.content';
@@ -21,13 +21,11 @@ var noPaginationDataPath = 'payload';
 var treeChildKey = 'children';
 var treeParentKey = 'parentId';
 var treeParentValue = 'id';
+var defaultId = 'id';
 
 var dialogForm = 'dialogForm';
 
-/**
- *
- */
-var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"el-data-table"},[(_vm.searchForm.length > 0)?_c('el-form-renderer',{ref:"searchForm",attrs:{"inline":"","content":_vm.searchForm}},[_vm._t("search"),_vm._v(" "),_c('el-form-item',[_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":_vm.onSearch}},[_vm._v("查询")]),_vm._v(" "),_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.onResetSearch}},[_vm._v("重置")])],1)],2):_vm._e(),_vm._v(" "),(_vm.hasNew || _vm.hasDelete || _vm.headerButtons.length > 0 )?_c('el-form',[_c('el-form-item',[(_vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":_vm.onDefaultNew}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),_vm._l((_vm.headerButtons),function(btn,i){return ('show' in btn ? btn.show(_vm.selected) : true)?_c('el-button',_vm._b({key:i,attrs:{"disabled":'disabled' in btn ? btn.disabled(_vm.selected) : false,"size":"small"},on:{"click":function($event){btn.atClick(_vm.selected);}}},'el-button',btn,false),[_vm._v(_vm._s(btn.text))]):_vm._e()}),_vm._v(" "),(_vm.hasSelect && _vm.hasDelete)?_c('el-button',{attrs:{"type":"danger","size":"small","disabled":_vm.single ? (!_vm.selected.length || _vm.selected.length > 1) : !_vm.selected.length},on:{"click":function($event){_vm.onDefaultDelete($event);}}},[_vm._v("删除")]):_vm._e()],2)],1):_vm._e(),_vm._v(" "),_c('el-table',_vm._b({directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],ref:"table",attrs:{"data":_vm.data,"row-style":_vm.showRow},on:{"selection-change":_vm.handleSelectionChange}},'el-table',_vm.table,false),[(_vm.isTree)?[(_vm.hasSelect)?[_c('el-table-column',_vm._b({key:"selection-key"},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[1].prop])+" ")]}}])},'el-table-column',_vm.columns[1],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0 && i !== 1; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]:[_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[0].prop])+" ")]}}])},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]]:_vm._l((_vm.columns),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))}),_vm._v(" "),(_vm.hasOperation)?_c('el-table-column',_vm._b({attrs:{"label":"操作"},scopedSlots:_vm._u([{key:"default",fn:function(scope){return [(_vm.isTree && _vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":function($event){_vm.onDefaultNew(scope.row);}}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),_vm._l((_vm.extraButtons),function(btn,i){return ('show' in btn ? btn.show(scope.row) : true)?_c('el-button',_vm._b({key:i,attrs:{"size":"small"},on:{"click":function($event){btn.atClick(scope.row);}}},'el-button',btn,false),[_vm._v(_vm._s(btn.text))]):_vm._e()}),_vm._v(" "),(_vm.hasEdit)?_c('el-button',{attrs:{"size":"small"},on:{"click":function($event){_vm.onDefaultEdit(scope.row);}}},[_vm._v(" 修改 ")]):_vm._e(),_vm._v(" "),(!_vm.hasSelect && _vm.hasDelete && _vm.canDelete(scope.row))?_c('el-button',{attrs:{"type":"danger","size":"small"},on:{"click":function($event){_vm.onDefaultDelete(scope.row);}}},[_vm._v(" 删除 ")]):_vm._e()]}}])},'el-table-column',_vm.operationAttrs,false)):_vm._e(),_vm._v(" "),_vm._t("default")],2),_vm._v(" "),(_vm.hasPagination)?_c('el-pagination',{staticStyle:{"text-align":"right","padding":"10px 0"},attrs:{"current-page":_vm.page,"page-sizes":_vm.paginationSizes,"page-size":_vm.size,"total":_vm.total,"layout":_vm.paginationLayout},on:{"size-change":_vm.handleSizeChange,"current-change":_vm.handleCurrentChange}}):_vm._e(),_vm._v(" "),(_vm.hasDialog)?_c('el-dialog',{attrs:{"title":_vm.dialogTitle,"visible":_vm.dialogVisible},on:{"update:visible":function($event){_vm.dialogVisible=$event;}}},[_c('el-form-renderer',_vm._b({ref:"dialogForm",attrs:{"content":_vm.form}},'el-form-renderer',_vm.formAttrs,false),[_vm._t("form")],2),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isView),expression:"!isView"}],attrs:{"slot":"footer"},slot:"footer"},[_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.cancel}},[_vm._v("取 消")]),_vm._v(" "),_c('el-button',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.confirmLoading),expression:"confirmLoading"}],attrs:{"type":"primary","size":"small"},on:{"click":_vm.confirm}},[_vm._v("确 定")])],1)],1):_vm._e()],1)},staticRenderFns: [],
+var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"el-data-table"},[(_vm.searchForm.length > 0)?_c('el-form-renderer',{ref:"searchForm",attrs:{"inline":"","content":_vm.searchForm}},[_vm._t("search"),_vm._v(" "),_c('el-form-item',[_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":_vm.onSearch}},[_vm._v("查询")]),_vm._v(" "),_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.onResetSearch}},[_vm._v("重置")])],1)],2):_vm._e(),_vm._v(" "),(_vm.hasNew || _vm.hasDelete || _vm.headerButtons.length > 0 )?_c('el-form',[_c('el-form-item',[(_vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":_vm.onDefaultNew}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),_vm._l((_vm.headerButtons),function(btn,i){return ('show' in btn ? btn.show(_vm.selected) : true)?_c('el-button',_vm._b({key:i,attrs:{"disabled":'disabled' in btn ? btn.disabled(_vm.selected) : false,"size":"small"},on:{"click":function($event){btn.atClick(_vm.selected);}}},'el-button',btn,false),[_vm._v(_vm._s(btn.text))]):_vm._e()}),_vm._v(" "),(_vm.hasSelect && _vm.hasDelete)?_c('el-button',{attrs:{"type":"danger","size":"small","disabled":_vm.single ? (!_vm.selected.length || _vm.selected.length > 1) : !_vm.selected.length},on:{"click":function($event){_vm.onDefaultDelete($event);}}},[_vm._v("删除")]):_vm._e()],2)],1):_vm._e(),_vm._v(" "),_c('el-table',_vm._b({directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],ref:"table",attrs:{"data":_vm.data,"row-style":_vm.showRow},on:{"selection-change":_vm.handleSelectionChange}},'el-table',_vm.tableAttrs,false),[(_vm.isTree)?[(_vm.hasSelect)?[_c('el-table-column',_vm._b({key:"selection-key"},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[1].prop])+" ")]}}])},'el-table-column',_vm.columns[1],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0 && i !== 1; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]:[_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[0].prop])+" ")]}}])},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]]:_vm._l((_vm.columns),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))}),_vm._v(" "),(_vm.hasOperation)?_c('el-table-column',_vm._b({attrs:{"label":"操作"},scopedSlots:_vm._u([{key:"default",fn:function(scope){return [(_vm.isTree && _vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":function($event){_vm.onDefaultNew(scope.row);}}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),(_vm.hasEdit)?_c('el-button',{attrs:{"size":"small"},on:{"click":function($event){_vm.onDefaultEdit(scope.row);}}},[_vm._v(" 修改 ")]):_vm._e(),_vm._v(" "),(_vm.hasView)?_c('el-button',{attrs:{"type":"info","size":"small"},on:{"click":function($event){_vm.onDefaultView(scope.row);}}},[_vm._v(" 查看 ")]):_vm._e(),_vm._v(" "),_vm._l((_vm.extraButtons),function(btn,i){return ('show' in btn ? btn.show(scope.row) : true)?_c('el-button',_vm._b({key:i,attrs:{"size":"small"},on:{"click":function($event){btn.atClick(scope.row);}}},'el-button',btn,false),[_vm._v(" "+_vm._s(btn.text)+" ")]):_vm._e()}),_vm._v(" "),(!_vm.hasSelect && _vm.hasDelete && _vm.canDelete(scope.row))?_c('el-button',{attrs:{"type":"danger","size":"small"},on:{"click":function($event){_vm.onDefaultDelete(scope.row);}}},[_vm._v(" 删除 ")]):_vm._e()]}}])},'el-table-column',_vm.operationAttrs,false)):_vm._e(),_vm._v(" "),_vm._t("default")],2),_vm._v(" "),(_vm.hasPagination)?_c('el-pagination',{staticStyle:{"text-align":"right","padding":"10px 0"},attrs:{"current-page":_vm.page,"page-sizes":_vm.paginationSizes,"page-size":_vm.size,"total":_vm.total,"layout":_vm.paginationLayout},on:{"size-change":_vm.handleSizeChange,"current-change":_vm.handleCurrentChange}}):_vm._e(),_vm._v(" "),(_vm.hasDialog)?_c('el-dialog',{attrs:{"title":_vm.dialogTitle,"visible":_vm.dialogVisible},on:{"update:visible":function($event){_vm.dialogVisible=$event;}}},[_c('el-form-renderer',_vm._b({ref:"dialogForm",attrs:{"content":_vm.form,"disabled":_vm.isView}},'el-form-renderer',_vm.formAttrs,false),[_vm._t("form")],2),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isView),expression:"!isView"}],attrs:{"slot":"footer"},slot:"footer"},[_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.cancel}},[_vm._v("取 消")]),_vm._v(" "),_c('el-button',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.confirmLoading),expression:"confirmLoading"}],attrs:{"type":"primary","size":"small"},on:{"click":_vm.confirm}},[_vm._v("确 定")])],1)],1):_vm._e()],1)},staticRenderFns: [],
   name: 'ElDataTable',
   props: {
     /**
@@ -36,6 +34,14 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     url: {
       type: String,
       default: ''
+    },
+    /**
+     * 主键，默认值 id，
+     * 修改/删除时会用到,请求会根据定义的属性值获取主键,即row[this.id]
+     */
+    id: {
+      type: String,
+      default: defaultId
     },
     /**
      * 分页请求的第一页的值(有的接口0是第一页)
@@ -127,6 +133,13 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       default: true
     },
     /**
+     * 是否有查看按钮
+     */
+    hasView: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * table头部是否有删除按钮(该按钮要多选时才会出现)
      */
     hasDelete: {
@@ -141,6 +154,18 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       default: function default$5() {
         return true
       }
+    },
+    /**
+     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用
+     */
+    onNew: {
+      type: Function
+    },
+    /**
+     * 点击修改按钮时的方法, 当默认新增方法不满足需求时使用
+     */
+    onEdit: {
+      type: Function
     },
     /**
      * 点击删除按钮时的方法, 当默认新增方法不满足需求时使用
@@ -266,8 +291,6 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       type: String,
       default: '查看'
     },
-    //
-    //
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
      * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
@@ -295,11 +318,20 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       type: Object
     },
     /**
+     * 在新增/修改弹窗 点击确认时调用，返回false则不会继续执行confirm逻辑
+     */
+    beforeConfirm: {
+      type: Function,
+      default: function default$10() {
+        return true
+      }
+    },
+    /**
      * 外部的注入额外的查询参数, 键值对形式
      */
     customQuery: {
       type: Object,
-      default: function default$10() {
+      default: function default$11() {
         return {}
       }
     }
@@ -402,7 +434,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
           // 不分页
           if (!this$1.hasPagination) {
-            data = _get(res, this$1.dataPath || noPaginationDataPath) || [];
+            data = _get(res, dataPath) || _get(res, noPaginationDataPath) || [];
           } else {
             data = _get(res, this$1.dataPath) || [];
             this$1.total = _get(res, this$1.totalPath);
@@ -423,6 +455,11 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
           this$1.$emit('update', data, res);
         })
         .catch(function (err) {
+          /**
+           * 请求数据失败，返回err对象
+           * @event error
+           */
+          this$1.$emit('error', err);
           this$1.loading = false;
         });
     },
@@ -473,6 +510,9 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     onDefaultNew: function onDefaultNew(row) {
       if ( row === void 0 ) row = {};
 
+      if (this.onNew) {
+        return this.onNew(row)
+      }
       /**
        * 点击新增 触发new事件
        * @event new
@@ -486,9 +526,39 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       this.dialogTitle = this.dialogNewTitle;
       this.dialogVisible = true;
     },
+    onDefaultView: function onDefaultView(row) {
+      var this$1 = this;
+
+      if (this.onView) {
+        return this.onView(row)
+      }
+      /**
+       * 点击查看 触发view事件
+       * @event view
+       */
+      this.$emit('view', row);
+
+      this.row = row;
+      this.isView = true;
+      this.isNew = false;
+      this.isEdit = false;
+      this.dialogTitle = this.dialogViewTitle;
+      this.dialogVisible = true;
+      // 给表单填充值
+      this.$nextTick(function () {
+        this$1.form.forEach(function (entry) {
+          var value = row[entry.$id];
+
+          this$1.$refs[dialogForm].updateValue({id: entry.$id, value: value});
+        });
+      });
+    },
     onDefaultEdit: function onDefaultEdit(row) {
       var this$1 = this;
 
+      if (this.onEdit) {
+        return this.onEdit(row)
+      }
       /**
        * 点击修改 触发edit事件
        * @event edit
@@ -517,6 +587,8 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     confirm: function confirm() {
       var this$1 = this;
 
+      if (!this.beforeConfirm()) { return }
+
       this.$refs[dialogForm].validate(function (valid) {
         if (!valid) { return false }
 
@@ -537,7 +609,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
         if (this$1.isEdit) {
           method = 'put';
-          url += "/" + (this$1.row.id || this$1.row._id);
+          url += "/" + (this$1.row[this$1.id]);
         }
 
         if (this$1.isTree) {
@@ -575,7 +647,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
             // 单个删除
             if (!this$1.hasSelect) {
               this$1.$axios
-                .delete(this$1.url + '/' + row.id || row._id)
+                .delete(this$1.url + '/' + row[this$1.id])
                 .then(function (resp) {
                   instance.confirmButtonLoading = false;
                   done();
@@ -589,9 +661,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
               // 多选模式
               this$1.$axios
                 .delete(
-                  this$1.url +
-                    '/' +
-                    this$1.selected.map(function (v) { return v._id || v.id; }).toString()
+                  this$1.url + '/' + this$1.selected.map(function (v) { return v[this$1.id]; }).toString()
                 )
                 .then(function (resp) {
                   instance.confirmButtonLoading = false;
@@ -634,7 +704,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
         if (record[this$1.treeChildKey] && record[this$1.treeChildKey].length > 0) {
           var children = this$1.tree2Array(
-            record.children,
+            record[this$1.treeChildKey],
             expandAll,
             record,
             _level
@@ -661,7 +731,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     // 图标显示
     iconShow: function iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
-      return record.children && record.children.length > 0
+      return record[this.treeChildKey] && record[this.treeChildKey].length > 0
     },
     showMessage: function showMessage(isSuccess) {
       if ( isSuccess === void 0 ) isSuccess = true;
