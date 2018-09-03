@@ -105,16 +105,18 @@
                 <template slot-scope="scope">
                     <el-button v-if="isTree && hasNew" type="primary" size="small"
                                @click="onDefaultNew(scope.row)">新增</el-button>
-                    <el-button v-for="(btn, i) in extraButtons"
-                               v-if="'show' in btn ? btn.show(scope.row) : true"
-                               v-bind="btn" @click="btn.atClick(scope.row)" :key="i" size="small">{{btn.text}}</el-button>
+                    <el-button v-if="hasEdit" size="small"
+                               @click="onDefaultEdit(scope.row)">
+                        修改
+                    </el-button>
                     <el-button v-if="hasView" type="info" size="small"
                                @click="onDefaultView(scope.row)">
                         查看
                     </el-button>
-                    <el-button v-if="hasEdit" size="small"
-                               @click="onDefaultEdit(scope.row)">
-                        修改
+                    <el-button v-for="(btn, i) in extraButtons"
+                               v-if="'show' in btn ? btn.show(scope.row) : true"
+                               v-bind="btn" @click="btn.atClick(scope.row)" :key="i" size="small">
+                        {{btn.text}}
                     </el-button>
                     <el-button v-if="!hasSelect && hasDelete && canDelete(scope.row)" type="danger" size="small"
                                @click="onDefaultDelete(scope.row)">
@@ -274,13 +276,6 @@ export default {
       }
     },
     /**
-     * 是否有查看按钮
-     */
-    hasView: {
-      type: Boolean,
-      default: true
-    },
-    /**
      * 是否有新增按钮
      */
     hasNew: {
@@ -293,6 +288,13 @@ export default {
     hasEdit: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 是否有查看按钮
+     */
+    hasView: {
+      type: Boolean,
+      default: false
     },
     /**
      * table头部是否有删除按钮(该按钮要多选时才会出现)
@@ -686,9 +688,9 @@ export default {
       this.$emit('view', row)
 
       this.row = row
-      this.isEdit = false
-      this.isNew = false
       this.isView = true
+      this.isNew = false
+      this.isEdit = false
       this.dialogTitle = this.dialogViewTitle
       this.dialogVisible = true
       // 给表单填充值
