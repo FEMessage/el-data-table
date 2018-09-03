@@ -499,7 +499,7 @@ export default {
       query: {},
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
-      page: this.firstPage,
+      page: 1,
       total: 0,
       loading: false,
       selected: [],
@@ -524,11 +524,11 @@ export default {
   },
   watch: {
     query: function(val, old) {
-      this.page = this.firstPage
+      this.page = 1
       this.getList()
     },
     url: function(val, old) {
-      this.page = this.firstPage
+      this.page = 1
       this.getList()
     },
     dialogVisible: function(val, old) {
@@ -555,6 +555,10 @@ export default {
       let url = this.url
       let query = Object.assign({}, this.query, this.customQuery)
       let size = this.hasPagination ? this.size : this.noPaginationSize
+      // 计算firstPage与当前选中页的差距的绝对值
+      // 在发送请求之前 根据page与默认值1的对比 计算出发送请求要传的page
+      let pageOffset = this.firstPage - 1
+      let page = this.page + pageOffset
 
       if (!url) {
         console.warn('DataTable: url 为空, 不发送请求')
@@ -565,7 +569,7 @@ export default {
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
-      url += `page=${this.page}&size=${size}`
+      url += `page=${page}&size=${size}`
 
       // query 有可能值为 0
       let params = Object.keys(query)
