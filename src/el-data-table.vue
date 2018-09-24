@@ -569,11 +569,14 @@ export default {
 
       // query 有可能值为 0
       let params = Object.keys(query)
-        .filter(key => {
-          let k = query[key].trim()
+        .filter(k => {
           return k !== '' && k !== null && k !== undefined
         })
-        .reduce((params, k) => (params += `&${k}=${encodeURI(query[k])}`), '')
+        .reduce(
+          (params, k) =>
+            (params += `&${k}=${encodeURI(query[k].toString().trim())}`),
+          ''
+        )
 
       url += params
 
@@ -644,6 +647,7 @@ export default {
       this.query = Object.assign({}, data, customQuery)
     },
     onResetSearch() {
+      // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
       this.query = {}
 
