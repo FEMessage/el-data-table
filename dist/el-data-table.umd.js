@@ -422,10 +422,11 @@
 
         // query 有可能值为 0
         var params = Object.keys(query)
-          .filter(
-            function (k) { return query[k] !== '' && query[k] !== null && query[k] !== undefined; }
-          )
-          .reduce(function (params, k) { return (params += "&" + k + "=" + (query[k])); }, '');
+          .filter(function (key) {
+            var k = query[key].trim();
+            return k !== '' && k !== null && k !== undefined
+          })
+          .reduce(function (params, k) { return (params += "&" + k + "=" + (encodeURI(query[k]))); }, '');
 
         url += params;
 
