@@ -421,9 +421,10 @@
         url += "page=" + (this.page) + "&size=" + size;
 
         // query 有可能值为 0
+        // TODO Object.values IE11不兼容, 暂时使用Object.keys
         var params = Object.keys(query)
           .filter(function (k) {
-            return k !== '' && k !== null && k !== undefined
+            return query[k] !== '' && query[k] !== null && query[k] !== undefined
           })
           .reduce(
             function (params, k) { return (params += "&" + k + "=" + (encodeURI(query[k].toString().trim()))); },
