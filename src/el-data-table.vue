@@ -568,9 +568,10 @@ export default {
       url += `page=${this.page}&size=${size}`
 
       // query 有可能值为 0
+      // TODO Object.values IE11不兼容, 暂时使用Object.keys
       let params = Object.keys(query)
         .filter(k => {
-          return k !== '' && k !== null && k !== undefined
+          return query[k] !== '' && query[k] !== null && query[k] !== undefined
         })
         .reduce(
           (params, k) =>
