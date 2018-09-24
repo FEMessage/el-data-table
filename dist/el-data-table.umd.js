@@ -422,11 +422,13 @@
 
         // query 有可能值为 0
         var params = Object.keys(query)
-          .filter(function (key) {
-            var k = query[key].trim();
+          .filter(function (k) {
             return k !== '' && k !== null && k !== undefined
           })
-          .reduce(function (params, k) { return (params += "&" + k + "=" + (encodeURI(query[k]))); }, '');
+          .reduce(
+            function (params, k) { return (params += "&" + k + "=" + (encodeURI(query[k].toString().trim()))); },
+            ''
+          );
 
         url += params;
 
@@ -497,6 +499,7 @@
         this.query = Object.assign({}, data, customQuery);
       },
       onResetSearch: function onResetSearch() {
+        // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
         this.$refs.searchForm.resetFields();
         this.query = {};
 
