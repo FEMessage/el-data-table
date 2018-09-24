@@ -573,7 +573,7 @@ export default {
           let k = query[key].trim()
           return k !== '' && k !== null && k !== undefined
         })
-        .reduce((params, k) => (params += `&${k}=${query[k]}`), '')
+        .reduce((params, k) => (params += `&${k}=${encodeURI(query[k])}`), '')
 
       url += params
 
