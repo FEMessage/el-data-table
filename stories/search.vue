@@ -4,15 +4,21 @@
       :hasEdit="false"
       :hasNew="false"
       :hasDelete="false"
+      :customQuery="customQuery"
       >
+        <el-tag slot="search">slot=search</el-tag>
+        <el-rate slot="search" v-model="customQuery.rate" style="display: inline-block"></el-rate>
+
       </el-data-table>
 </template>
 <script>
 import ElDataTable from '../src/el-data-table.vue'
 import config from './config'
+import ElTag from 'element-ui/lib/tag'
+import ElRate from 'element-ui/lib/rate'
 
 export default {
-  components: {ElDataTable},
+  components: {ElDataTable, ElTag, ElRate},
   data: function() {
     let searchForm = [
       {
@@ -27,6 +33,8 @@ export default {
     let cfg = JSON.parse(JSON.stringify(config))
     cfg.searchForm = searchForm
     cfg.url = 'https://api.github.com/search/users'
+
+    cfg.customQuery = {rate: 0}
 
     return cfg
   }

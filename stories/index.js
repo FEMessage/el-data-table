@@ -9,7 +9,7 @@ import CustomId from './custom-id.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
-  .add('基本查询', search)
+  .add('slot=search查询', search)
   .add('树形结构', tree)
   .add('自定义按钮', customButtons)
   .add('自定义主键', customId)
