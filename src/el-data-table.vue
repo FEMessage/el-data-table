@@ -569,9 +569,10 @@ export default {
 
       // query 有可能值为 0
       let params = Object.keys(query)
-        .filter(
-          k => query[k] !== '' && query[k] !== null && query[k] !== undefined
-        )
+        .filter(key => {
+          let k = query[key].trim()
+          return k !== '' && k !== null && k !== undefined
+        })
         .reduce((params, k) => (params += `&${k}=${query[k]}`), '')
 
       url += params
