@@ -575,7 +575,9 @@ export default {
         })
         .reduce(
           (params, k) =>
-            (params += `&${k}=${encodeURI(query[k].toString().trim())}`),
+            (params += `&${k}=${encodeURIComponent(
+              query[k].toString().trim()
+            )}`),
           ''
         )
 
