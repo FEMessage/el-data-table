@@ -421,7 +421,9 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
           return query[k] !== '' && query[k] !== null && query[k] !== undefined
         })
         .reduce(
-          function (params, k) { return (params += "&" + k + "=" + (encodeURI(query[k].toString().trim()))); },
+          function (params, k) { return (params += "&" + k + "=" + (encodeURIComponent(
+              query[k].toString().trim()
+            ))); },
           ''
         );
 
