@@ -520,6 +520,11 @@ export default {
     }
   },
   mounted() {
+    this.$refs.searchForm.$el.setAttribute('action', 'javascript:;')
+    this.$refs.searchForm.$el.addEventListener('submit', e => {
+      this.onSearch()
+    })
+
     this.getList()
   },
   watch: {
