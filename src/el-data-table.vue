@@ -1,7 +1,7 @@
 <template>
     <div class="el-data-table">
         <!--搜索字段-->
-        <el-form-renderer v-if="searchForm.length > 0" inline :content="searchForm" ref="searchForm">
+        <el-form-renderer v-if="searchForm.length > 0 || !!$slots.search" inline :content="searchForm" ref="searchForm">
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
