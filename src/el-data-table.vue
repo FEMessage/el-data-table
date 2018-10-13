@@ -520,10 +520,14 @@ export default {
     }
   },
   mounted() {
-    this.$refs.searchForm.$el.setAttribute('action', 'javascript:;')
-    this.$refs.searchForm.$el.addEventListener('submit', e => {
-      this.onSearch()
-    })
+    let searchForm = this.$refs.searchForm
+
+    if (searchForm) {
+      searchForm.$el.setAttribute('action', 'javascript:;')
+      searchForm.$el.addEventListener('submit', e => {
+        this.onSearch()
+      })
+    }
 
     this.getList()
   },
@@ -650,6 +654,7 @@ export default {
       this.$emit('selection-change', val)
     },
     onSearch() {
+      // TODO 应该都调一个方法, 就叫onSearch
       const data = this.$refs.searchForm.getFormValue()
       const customQuery = this.customQuery
       this.query = Object.assign({}, data, customQuery)
