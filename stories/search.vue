@@ -6,8 +6,10 @@
       :hasDelete="false"
       :customQuery="customQuery"
       >
-        <el-tag slot="search">slot=search</el-tag>
-        <el-rate slot="search" v-model="customQuery.rate" style="display: inline-block"></el-rate>
+        <template slot="search">
+          <el-tag>slot=search</el-tag>
+          <el-rate v-model="customQuery.rate" style="display: inline-block"></el-rate>
+        </template>
 
       </el-data-table>
 </template>

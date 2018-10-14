@@ -5,8 +5,8 @@
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
-                <el-button type="primary" @click="getList" size="small">查询</el-button>
-                <el-button @click="onResetSearch" size="small">重置</el-button>
+                <el-button type="primary" @click="getList(1)" size="small">查询</el-button>
+                <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
 
@@ -524,11 +524,23 @@ export default {
     if (searchForm) {
       searchForm.$el.setAttribute('action', 'javascript:;')
       searchForm.$el.addEventListener('submit', e => {
-        this.getList()
+        this.getList(1)
       })
     }
 
-    this.getList()
+    let query = history.state || {}
+
+    // 恢复查询条件
+    // 对slot=search无效
+    if (searchForm) {
+      Object.keys(query).forEach(k => {
+        searchForm.updateValue({id: k, value: query[k]})
+      })
+    }
+
+    this.$nextTick(() => {
+      this.getList()
+    })
   },
   watch: {
     url: function(val, old) {
@@ -555,9 +567,10 @@ export default {
     }
   },
   methods: {
-    getList() {
+    getList(isSearch) {
       let searchForm = this.$refs.searchForm
       let formQuery = searchForm ? searchForm.getFormValue() : {}
+      // TODO Object.assign IE不支持, 所以后面Object.keys的保守其实是没有必要的。。。
       let query = Object.assign({}, formQuery, this.customQuery)
 
       let url = this.url
@@ -568,13 +581,18 @@ export default {
         return
       }
 
+      // 存储query记录, 便于后面恢复
+      if (isSearch > 0) {
+        history.replaceState(query, 'el-data-table search')
+      }
+
       // 拼接 query
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
       url += `page=${this.page}&size=${size}`
 
-      // query 有可能值为 0
+      // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
       // TODO Object.values IE11不兼容, 暂时使用Object.keys
       let params = Object.keys(query)
         .filter(k => {
@@ -651,10 +669,13 @@ export default {
        */
       this.$emit('selection-change', val)
     },
-    onResetSearch() {
+    resetSearch() {
       // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
       this.page = this.firstPage
+
+      // 重置
+      history.replaceState(null, 'el-data-table search')
 
       this.$nextTick(() => {
         this.getList()
