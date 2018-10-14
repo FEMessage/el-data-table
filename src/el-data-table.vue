@@ -524,7 +524,7 @@ export default {
     if (searchForm) {
       searchForm.$el.setAttribute('action', 'javascript:;')
       searchForm.$el.addEventListener('submit', e => {
-        this.onSearch()
+        this.getList()
       })
     }
 
