@@ -5,7 +5,7 @@
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
-                <el-button type="primary" @click="getList(1)" size="small">查询</el-button>
+                <el-button native-type="submit" type="primary" @click="getList(1)" size="small">查询</el-button>
                 <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
@@ -520,19 +520,14 @@ export default {
   },
   mounted() {
     let searchForm = this.$refs.searchForm
-
-    if (searchForm) {
-      searchForm.$el.setAttribute('action', 'javascript:;')
-      searchForm.$el.addEventListener('submit', e => {
-        this.getList(1)
-      })
-    }
-
     let query = history.state || {}
 
-    // 恢复查询条件
-    // 对slot=search无效
     if (searchForm) {
+      // 阻止表单提交的默认行为, 这在element-ui不会出现, 但在storybook里会出现
+      searchForm.$el.setAttribute('action', 'javascript:;')
+
+      // 恢复查询条件
+      // 对slot=search无效
       Object.keys(query).forEach(k => {
         searchForm.updateValue({id: k, value: query[k]})
       })
