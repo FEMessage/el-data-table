@@ -5,7 +5,7 @@
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
-                <el-button type="primary" @click="onSearch" size="small">查询</el-button>
+                <el-button type="primary" @click="getList" size="small">查询</el-button>
                 <el-button @click="onResetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
@@ -496,7 +496,6 @@ export default {
   data() {
     return {
       data: [],
-      query: {},
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
       page: this.firstPage,
@@ -532,10 +531,6 @@ export default {
     this.getList()
   },
   watch: {
-    query: function(val, old) {
-      this.page = this.firstPage
-      this.getList()
-    },
     url: function(val, old) {
       this.page = this.firstPage
       this.getList()
@@ -562,7 +557,8 @@ export default {
   methods: {
     getList() {
       let url = this.url
-      let query = Object.assign({}, this.query, this.customQuery)
+      let formQuery = this.$refs.searchForm.getFormValue()
+      let query = Object.assign({}, formQuery, this.customQuery)
       let size = this.hasPagination ? this.size : this.noPaginationSize
 
       if (!url) {
@@ -653,16 +649,14 @@ export default {
        */
       this.$emit('selection-change', val)
     },
-    onSearch() {
-      // TODO 应该都调一个方法, 就叫onSearch
-      const data = this.$refs.searchForm.getFormValue()
-      const customQuery = this.customQuery
-      this.query = Object.assign({}, data, customQuery)
-    },
     onResetSearch() {
       // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
-      this.query = {}
+      this.page = this.firstPage
+
+      this.$nextTick(() => {
+        this.getList()
+      })
 
       /**
        * 按下重置按钮后触发,
