@@ -556,9 +556,11 @@ export default {
   },
   methods: {
     getList() {
-      let url = this.url
-      let formQuery = this.$refs.searchForm.getFormValue()
+      let searchForm = this.$refs.searchForm
+      let formQuery = searchForm ? searchForm.getFormValue() : {}
       let query = Object.assign({}, formQuery, this.customQuery)
+
+      let url = this.url
       let size = this.hasPagination ? this.size : this.noPaginationSize
 
       if (!url) {
