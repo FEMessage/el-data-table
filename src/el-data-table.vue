@@ -5,6 +5,7 @@
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
+                <!--https://github.com/ElemeFE/element/pull/5920-->
                 <el-button native-type="submit" type="primary" @click="getList(1)" size="small">查询</el-button>
                 <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
@@ -523,7 +524,8 @@ export default {
     let query = history.state || {}
 
     if (searchForm) {
-      // 阻止表单提交的默认行为, 这在element-ui不会出现, 但在storybook里会出现
+      // 阻止表单提交的默认行为
+      // https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2
       searchForm.$el.setAttribute('action', 'javascript:;')
 
       // 恢复查询条件
