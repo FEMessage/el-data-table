@@ -184,6 +184,14 @@ const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
 
+const semicolon = ';'
+const comma = ','
+const equal = '='
+
+const commaPattern = /,/g
+const equalPattern = /=/g
+
+const queryFlag = 'q='
 const queryPattern = /q=.*;/
 
 export default {
@@ -532,8 +540,9 @@ export default {
 
       // 恢复查询条件
       let matches = location.search.match(queryPattern)
-      let query = (matches && matches[0].substr(2).replace(/,/g, '=')) || ''
-      let params = qs.parse(query, {delimiter: ';'})
+      let query =
+        (matches && matches[0].substr(2).replace(commaPattern, equal)) || ''
+      let params = qs.parse(query, {delimiter: semicolon})
 
       // 对slot=search无效
       Object.keys(params).forEach(k => {
@@ -649,10 +658,12 @@ export default {
       if (isSearch > 0) {
         let newUrl = ''
         let searchQuery =
-          'q=' + params.replace(/&/g, ';').replace(/=/g, ',') + ';'
+          queryFlag +
+          params.replace(/&/g, semicolon).replace(equalPattern, comma) +
+          semicolon
 
         // 非第一次查询
-        if (location.search.indexOf('q=') > -1) {
+        if (location.search.indexOf(queryFlag) > -1) {
           newUrl = location.href.replace(queryPattern, searchQuery)
         } else {
           let search = location.search
