@@ -159,6 +159,7 @@
 
 <script>
 import _get from 'lodash.get'
+import qs from 'qs'
 
 // 默认返回的数据格式如下
 //          {
@@ -182,6 +183,8 @@ const treeParentValue = 'id'
 const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
+
+const queryPattern = /q=.*;/
 
 export default {
   name: 'ElDataTable',
@@ -521,7 +524,6 @@ export default {
   },
   mounted() {
     let searchForm = this.$refs.searchForm
-    let query = history.state || {}
 
     if (searchForm) {
       // 阻止表单提交的默认行为
@@ -529,9 +531,13 @@ export default {
       searchForm.$el.setAttribute('action', 'javascript:;')
 
       // 恢复查询条件
+      let matches = location.search.match(queryPattern)
+      let query = (matches && matches[0].substr(2).replace(/,/g, '=')) || ''
+      let params = qs.parse(query, {delimiter: ';'})
+
       // 对slot=search无效
-      Object.keys(query).forEach(k => {
-        searchForm.updateValue({id: k, value: query[k]})
+      Object.keys(params).forEach(k => {
+        searchForm.updateValue({id: k, value: params[k]})
       })
     }
 
@@ -571,6 +577,7 @@ export default {
       let query = Object.assign({}, formQuery, this.customQuery)
 
       let url = this.url
+      let params = ''
       let size = this.hasPagination ? this.size : this.noPaginationSize
 
       if (!url) {
@@ -578,20 +585,15 @@ export default {
         return
       }
 
-      // 存储query记录, 便于后面恢复
-      if (isSearch > 0) {
-        history.replaceState(query, 'el-data-table search')
-      }
-
-      // 拼接 query
+      // 构造查询url
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
-      url += `page=${this.page}&size=${size}`
+      params += `page=${this.page}&size=${size}`
 
       // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
       // TODO Object.values IE11不兼容, 暂时使用Object.keys
-      let params = Object.keys(query)
+      params += Object.keys(query)
         .filter(k => {
           return query[k] !== '' && query[k] !== null && query[k] !== undefined
         })
@@ -603,13 +605,11 @@ export default {
           ''
         )
 
-      url += params
-
       // 请求开始
       this.loading = true
 
       this.$axios
-        .get(url)
+        .get(url + params)
         .then(resp => {
           let res = resp.data
           let data = []
@@ -644,6 +644,25 @@ export default {
           this.$emit('error', err)
           this.loading = false
         })
+
+      // 存储query记录, 便于后面恢复
+      if (isSearch > 0) {
+        let newUrl = ''
+        let searchQuery =
+          'q=' + params.replace(/&/g, ';').replace(/=/g, ',') + ';'
+
+        // 非第一次查询
+        if (location.search.indexOf('q=') > -1) {
+          newUrl = location.href.replace(queryPattern, searchQuery)
+        } else {
+          let search = location.search
+            ? location.search + `&${searchQuery}`
+            : `?${searchQuery}`
+          newUrl = location.origin + location.pathname + search + location.hash
+        }
+
+        history.pushState(history.state, 'el-data-table search', newUrl)
+      }
     },
     handleSizeChange(val) {
       if (this.size === val) return
@@ -672,7 +691,11 @@ export default {
       this.page = this.firstPage
 
       // 重置
-      history.replaceState(null, 'el-data-table search')
+      history.replaceState(
+        history.state,
+        'el-data-table search',
+        location.href.replace(queryPattern, '')
+      )
 
       this.$nextTick(() => {
         this.getList()
