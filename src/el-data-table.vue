@@ -554,6 +554,13 @@ export default {
       this.getList()
     })
   },
+  destroyed() {
+    history.replaceState(
+      history.state,
+      '',
+      location.href.replace(queryPattern, '')
+    )
+  },
   watch: {
     url: function(val, old) {
       this.page = this.firstPage
@@ -704,7 +711,7 @@ export default {
       // 重置
       history.replaceState(
         history.state,
-        'el-data-table search',
+        '',
         location.href.replace(queryPattern, '')
       )
 
