@@ -1,4 +1,5 @@
 import _get from 'lodash.get';
+import qs from 'qs';
 
 (function(){ if(typeof document !== 'undefined'){ var head=document.head||document.getElementsByTagName('head')[0], style=document.createElement('style'), css=".el-data-table .ms-tree-space { position: relative; top: 1px; display: inline-block; font-style: normal; font-weight: 400; line-height: 1; width: 18px; height: 14px; } .el-data-table .ms-tree-space::before { content: ''; } .el-data-table .tree-ctrl { position: relative; cursor: pointer; color: #2196f3; } @-moz-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @-webkit-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @-o-keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } @keyframes treeTableShow { from { opacity: 0; } to { opacity: 1; } } "; style.type='text/css'; if (style.styleSheet){ style.styleSheet.cssText = css; } else { style.appendChild(document.createTextNode(css)); } head.appendChild(style); } })();
 
@@ -24,6 +25,16 @@ var treeParentValue = 'id';
 var defaultId = 'id';
 
 var dialogForm = 'dialogForm';
+
+var semicolon = ';';
+var comma = ',';
+var equal = '=';
+
+var commaPattern = /,/g;
+var equalPattern = /=/g;
+
+var queryFlag = 'q=';
+var queryPattern = /q=.*;/;
 
 var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"el-data-table"},[(_vm.searchForm.length > 0 || !!_vm.$slots.search)?_c('el-form-renderer',{ref:"searchForm",attrs:{"inline":"","content":_vm.searchForm}},[_vm._t("search"),_vm._v(" "),_c('el-form-item',[_c('el-button',{attrs:{"native-type":"submit","type":"primary","size":"small"},on:{"click":function($event){_vm.getList(1);}}},[_vm._v("查询")]),_vm._v(" "),_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.resetSearch}},[_vm._v("重置")])],1)],2):_vm._e(),_vm._v(" "),(_vm.hasNew || _vm.hasDelete || _vm.headerButtons.length > 0 )?_c('el-form',[_c('el-form-item',[(_vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":_vm.onDefaultNew}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),_vm._l((_vm.headerButtons),function(btn,i){return ('show' in btn ? btn.show(_vm.selected) : true)?_c('el-button',_vm._b({key:i,attrs:{"disabled":'disabled' in btn ? btn.disabled(_vm.selected) : false,"size":"small"},on:{"click":function($event){btn.atClick(_vm.selected);}}},'el-button',btn,false),[_vm._v(_vm._s(btn.text))]):_vm._e()}),_vm._v(" "),(_vm.hasSelect && _vm.hasDelete)?_c('el-button',{attrs:{"type":"danger","size":"small","disabled":_vm.single ? (!_vm.selected.length || _vm.selected.length > 1) : !_vm.selected.length},on:{"click":function($event){_vm.onDefaultDelete($event);}}},[_vm._v("删除")]):_vm._e()],2)],1):_vm._e(),_vm._v(" "),_c('el-table',_vm._b({directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],ref:"table",attrs:{"data":_vm.data,"row-style":_vm.showRow},on:{"selection-change":_vm.handleSelectionChange}},'el-table',_vm.tableAttrs,false),[(_vm.isTree)?[(_vm.hasSelect)?[_c('el-table-column',_vm._b({key:"selection-key"},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[1].prop])+" ")]}}])},'el-table-column',_vm.columns[1],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0 && i !== 1; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]:[_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[0].prop])+" ")]}}])},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]]:_vm._l((_vm.columns),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))}),_vm._v(" "),(_vm.hasOperation)?_c('el-table-column',_vm._b({attrs:{"label":"操作"},scopedSlots:_vm._u([{key:"default",fn:function(scope){return [(_vm.isTree && _vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":function($event){_vm.onDefaultNew(scope.row);}}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),(_vm.hasEdit)?_c('el-button',{attrs:{"size":"small"},on:{"click":function($event){_vm.onDefaultEdit(scope.row);}}},[_vm._v(" 修改 ")]):_vm._e(),_vm._v(" "),(_vm.hasView)?_c('el-button',{attrs:{"type":"info","size":"small"},on:{"click":function($event){_vm.onDefaultView(scope.row);}}},[_vm._v(" 查看 ")]):_vm._e(),_vm._v(" "),_vm._l((_vm.extraButtons),function(btn,i){return ('show' in btn ? btn.show(scope.row) : true)?_c('el-button',_vm._b({key:i,attrs:{"size":"small"},on:{"click":function($event){btn.atClick(scope.row);}}},'el-button',btn,false),[_vm._v(" "+_vm._s(btn.text)+" ")]):_vm._e()}),_vm._v(" "),(!_vm.hasSelect && _vm.hasDelete && _vm.canDelete(scope.row))?_c('el-button',{attrs:{"type":"danger","size":"small"},on:{"click":function($event){_vm.onDefaultDelete(scope.row);}}},[_vm._v(" 删除 ")]):_vm._e()]}}])},'el-table-column',_vm.operationAttrs,false)):_vm._e(),_vm._v(" "),_vm._t("default")],2),_vm._v(" "),(_vm.hasPagination)?_c('el-pagination',{staticStyle:{"text-align":"right","padding":"10px 0"},attrs:{"current-page":_vm.page,"page-sizes":_vm.paginationSizes,"page-size":_vm.size,"total":_vm.total,"layout":_vm.paginationLayout},on:{"size-change":_vm.handleSizeChange,"current-change":_vm.handleCurrentChange}}):_vm._e(),_vm._v(" "),(_vm.hasDialog)?_c('el-dialog',{attrs:{"title":_vm.dialogTitle,"visible":_vm.dialogVisible},on:{"update:visible":function($event){_vm.dialogVisible=$event;}}},[_c('el-form-renderer',_vm._b({ref:"dialogForm",attrs:{"content":_vm.form,"disabled":_vm.isView}},'el-form-renderer',_vm.formAttrs,false),[_vm._t("form")],2),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isView),expression:"!isView"}],attrs:{"slot":"footer"},slot:"footer"},[_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.cancel}},[_vm._v("取 消")]),_vm._v(" "),_c('el-button',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.confirmLoading),expression:"confirmLoading"}],attrs:{"type":"primary","size":"small"},on:{"click":_vm.confirm}},[_vm._v("确 定")])],1)],1):_vm._e()],1)},staticRenderFns: [],
   name: 'ElDataTable',
@@ -365,22 +376,34 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     var this$1 = this;
 
     var searchForm = this.$refs.searchForm;
-    var query = history.state || {};
 
     if (searchForm) {
-      // 阻止表单提交的默认行为, 这在element-ui不会出现, 但在storybook里会出现
+      // 阻止表单提交的默认行为
+      // https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2
       searchForm.$el.setAttribute('action', 'javascript:;');
 
       // 恢复查询条件
+      var matches = location.search.match(queryPattern);
+      var query =
+        (matches && matches[0].substr(2).replace(commaPattern, equal)) || '';
+      var params = qs.parse(query, {delimiter: semicolon});
+
       // 对slot=search无效
-      Object.keys(query).forEach(function (k) {
-        searchForm.updateValue({id: k, value: query[k]});
+      Object.keys(params).forEach(function (k) {
+        searchForm.updateValue({id: k, value: params[k]});
       });
     }
 
     this.$nextTick(function () {
       this$1.getList();
     });
+  },
+  destroyed: function destroyed() {
+    history.replaceState(
+      history.state,
+      '',
+      location.href.replace(queryPattern, '')
+    );
   },
   watch: {
     url: function(val, old) {
@@ -418,6 +441,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       var query = Object.assign({}, formQuery, this.customQuery);
 
       var url = this.url;
+      var params = '';
       var size = this.hasPagination ? this.size : this.noPaginationSize;
 
       if (!url) {
@@ -425,20 +449,15 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
         return
       }
 
-      // 存储query记录, 便于后面恢复
-      if (isSearch > 0) {
-        history.replaceState(query, 'el-data-table search');
-      }
-
-      // 拼接 query
+      // 构造查询url
       if (url.indexOf('?') > -1) { url += '&'; }
       else { url += '?'; }
 
-      url += "page=" + (this.page) + "&size=" + size;
+      params += "page=" + (this.page) + "&size=" + size;
 
       // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
       // TODO Object.values IE11不兼容, 暂时使用Object.keys
-      var params = Object.keys(query)
+      params += Object.keys(query)
         .filter(function (k) {
           return query[k] !== '' && query[k] !== null && query[k] !== undefined
         })
@@ -449,13 +468,11 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
           ''
         );
 
-      url += params;
-
       // 请求开始
       this.loading = true;
 
       this.$axios
-        .get(url)
+        .get(url + params)
         .then(function (resp) {
           var res = resp.data;
           var data = [];
@@ -490,6 +507,27 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
           this$1.$emit('error', err);
           this$1.loading = false;
         });
+
+      // 存储query记录, 便于后面恢复
+      if (isSearch > 0) {
+        var newUrl = '';
+        var searchQuery =
+          queryFlag +
+          params.replace(/&/g, semicolon).replace(equalPattern, comma) +
+          semicolon;
+
+        // 非第一次查询
+        if (location.search.indexOf(queryFlag) > -1) {
+          newUrl = location.href.replace(queryPattern, searchQuery);
+        } else {
+          var search = location.search
+            ? location.search + "&" + searchQuery
+            : ("?" + searchQuery);
+          newUrl = location.origin + location.pathname + search + location.hash;
+        }
+
+        history.pushState(history.state, 'el-data-table search', newUrl);
+      }
     },
     handleSizeChange: function handleSizeChange(val) {
       if (this.size === val) { return }
@@ -520,7 +558,11 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       this.page = this.firstPage;
 
       // 重置
-      history.replaceState(null, 'el-data-table search');
+      history.replaceState(
+        history.state,
+        '',
+        location.href.replace(queryPattern, '')
+      );
 
       this.$nextTick(function () {
         this$1.getList();
