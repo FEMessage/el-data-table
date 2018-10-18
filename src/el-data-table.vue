@@ -1,12 +1,13 @@
 <template>
     <div class="el-data-table">
         <!--搜索字段-->
-        <el-form-renderer v-if="searchForm.length > 0" inline :content="searchForm" ref="searchForm">
+        <el-form-renderer v-if="searchForm.length > 0 || !!$slots.search" inline :content="searchForm" ref="searchForm">
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
-                <el-button type="primary" @click="onSearch" size="small">查询</el-button>
-                <el-button @click="onResetSearch" size="small">重置</el-button>
+                <!--https://github.com/ElemeFE/element/pull/5920-->
+                <el-button native-type="submit" type="primary" @click="getList(1)" size="small">查询</el-button>
+                <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
 
@@ -158,6 +159,7 @@
 
 <script>
 import _get from 'lodash.get'
+import qs from 'qs'
 
 // 默认返回的数据格式如下
 //          {
@@ -181,6 +183,16 @@ const treeParentValue = 'id'
 const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
+
+const semicolon = ';'
+const comma = ','
+const equal = '='
+
+const commaPattern = /,/g
+const equalPattern = /=/g
+
+const queryFlag = 'q='
+const queryPattern = /q=.*;/
 
 export default {
   name: 'ElDataTable',
@@ -496,10 +508,9 @@ export default {
   data() {
     return {
       data: [],
-      query: {},
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
-      page: 1,
+      page: this.firstPage,
       total: 0,
       loading: false,
       selected: [],
@@ -520,15 +531,39 @@ export default {
     }
   },
   mounted() {
-    this.getList()
+    let searchForm = this.$refs.searchForm
+
+    if (searchForm) {
+      // 阻止表单提交的默认行为
+      // https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2
+      searchForm.$el.setAttribute('action', 'javascript:;')
+
+      // 恢复查询条件
+      let matches = location.search.match(queryPattern)
+      let query =
+        (matches && matches[0].substr(2).replace(commaPattern, equal)) || ''
+      let params = qs.parse(query, {delimiter: semicolon})
+
+      // 对slot=search无效
+      Object.keys(params).forEach(k => {
+        searchForm.updateValue({id: k, value: params[k]})
+      })
+    }
+
+    this.$nextTick(() => {
+      this.getList()
+    })
+  },
+  destroyed() {
+    history.replaceState(
+      history.state,
+      '',
+      location.href.replace(queryPattern, '')
+    )
   },
   watch: {
-    query: function(val, old) {
-      this.page = 1
-      this.getList()
-    },
     url: function(val, old) {
-      this.page = 1
+      this.page = this.firstPage
       this.getList()
     },
     dialogVisible: function(val, old) {
@@ -551,40 +586,46 @@ export default {
     }
   },
   methods: {
-    getList() {
+    getList(isSearch) {
+      let searchForm = this.$refs.searchForm
+      let formQuery = searchForm ? searchForm.getFormValue() : {}
+      // TODO Object.assign IE不支持, 所以后面Object.keys的保守其实是没有必要的。。。
+      let query = Object.assign({}, formQuery, this.customQuery)
+
       let url = this.url
-      let query = Object.assign({}, this.query, this.customQuery)
+      let params = ''
       let size = this.hasPagination ? this.size : this.noPaginationSize
-      // 计算firstPage与当前选中页的差距的绝对值
-      // 在发送请求之前 根据page与默认值1的对比 计算出发送请求要传的page
-      let pageOffset = this.firstPage - 1
-      let page = this.page + pageOffset
 
       if (!url) {
         console.warn('DataTable: url 为空, 不发送请求')
         return
       }
 
-      // 拼接 query
+      // 构造查询url
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
-      url += `page=${page}&size=${size}`
+      params += `page=${this.page}&size=${size}`
 
-      // query 有可能值为 0
-      let params = Object.keys(query)
-        .filter(
-          k => query[k] !== '' && query[k] !== null && query[k] !== undefined
+      // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
+      // TODO Object.values IE11不兼容, 暂时使用Object.keys
+      params += Object.keys(query)
+        .filter(k => {
+          return query[k] !== '' && query[k] !== null && query[k] !== undefined
+        })
+        .reduce(
+          (params, k) =>
+            (params += `&${k}=${encodeURIComponent(
+              query[k].toString().trim()
+            )}`),
+          ''
         )
-        .reduce((params, k) => (params += `&${k}=${query[k]}`), '')
-
-      url += params
 
       // 请求开始
       this.loading = true
 
       this.$axios
-        .get(url)
+        .get(url + params)
         .then(resp => {
           let res = resp.data
           let data = []
@@ -619,6 +660,27 @@ export default {
           this.$emit('error', err)
           this.loading = false
         })
+
+      // 存储query记录, 便于后面恢复
+      if (isSearch > 0) {
+        let newUrl = ''
+        let searchQuery =
+          queryFlag +
+          params.replace(/&/g, semicolon).replace(equalPattern, comma) +
+          semicolon
+
+        // 非第一次查询
+        if (location.search.indexOf(queryFlag) > -1) {
+          newUrl = location.href.replace(queryPattern, searchQuery)
+        } else {
+          let search = location.search
+            ? location.search + `&${searchQuery}`
+            : `?${searchQuery}`
+          newUrl = location.origin + location.pathname + search + location.hash
+        }
+
+        history.pushState(history.state, 'el-data-table search', newUrl)
+      }
     },
     handleSizeChange(val) {
       if (this.size === val) return
@@ -641,14 +703,21 @@ export default {
        */
       this.$emit('selection-change', val)
     },
-    onSearch() {
-      const data = this.$refs.searchForm.getFormValue()
-      const customQuery = this.customQuery
-      this.query = Object.assign({}, data, customQuery)
-    },
-    onResetSearch() {
+    resetSearch() {
+      // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
-      this.query = {}
+      this.page = this.firstPage
+
+      // 重置
+      history.replaceState(
+        history.state,
+        '',
+        location.href.replace(queryPattern, '')
+      )
+
+      this.$nextTick(() => {
+        this.getList()
+      })
 
       /**
        * 按下重置按钮后触发,
