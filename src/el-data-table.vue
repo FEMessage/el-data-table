@@ -709,6 +709,7 @@ export default {
     handleSizeChange(val) {
       if (this.size === val) return
 
+      this.page = this.firstPage
       this.size = val
       this.getList(true)
     },
