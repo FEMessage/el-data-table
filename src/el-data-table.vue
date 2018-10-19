@@ -184,7 +184,7 @@ const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
 
-const semicolon = ';'
+const paramSeparator = '_'
 const comma = ','
 const equal = '='
 
@@ -192,7 +192,7 @@ const commaPattern = /,/g
 const equalPattern = /=/g
 
 const queryFlag = 'q='
-const queryPattern = /q=.*;/
+const queryPattern = new RegExp('q=.*' + paramSeparator)
 
 export default {
   name: 'ElDataTable',
@@ -252,6 +252,13 @@ export default {
       default() {
         return []
       }
+    },
+    /**
+     * 路由模式, hash | history, 决定了查询参数存放的形式
+     */
+    mode: {
+      type: String,
+      default: 'hash'
     },
     /**
      * 单选, 适用场景: 不可以批量删除
@@ -539,10 +546,10 @@ export default {
       searchForm.$el.setAttribute('action', 'javascript:;')
 
       // 恢复查询条件
-      let matches = location.search.match(queryPattern)
+      let matches = location.href.match(queryPattern)
       let query =
         (matches && matches[0].substr(2).replace(commaPattern, equal)) || ''
-      let params = qs.parse(query, {delimiter: semicolon})
+      let params = qs.parse(query, {delimiter: paramSeparator})
 
       // 对slot=search无效
       Object.keys(params).forEach(k => {
@@ -666,17 +673,31 @@ export default {
         let newUrl = ''
         let searchQuery =
           queryFlag +
-          params.replace(/&/g, semicolon).replace(equalPattern, comma) +
-          semicolon
+          params.replace(/&/g, paramSeparator).replace(equalPattern, comma) +
+          paramSeparator
 
         // 非第一次查询
-        if (location.search.indexOf(queryFlag) > -1) {
+        if (location.href.indexOf(queryFlag) > -1) {
           newUrl = location.href.replace(queryPattern, searchQuery)
+        } else if (this.mode == 'hash') {
+          let search =
+            location.hash.indexOf('?') > -1
+              ? `&${searchQuery}`
+              : `?${searchQuery}`
+          newUrl =
+            location.origin +
+            location.pathname +
+            location.search +
+            location.hash +
+            search
         } else {
-          let search = location.search
-            ? location.search + `&${searchQuery}`
-            : `?${searchQuery}`
-          newUrl = location.origin + location.pathname + search + location.hash
+          let search = location.search ? `&${searchQuery}` : `?${searchQuery}`
+          newUrl =
+            location.origin +
+            location.pathname +
+            location.search +
+            search +
+            location.hash
         }
 
         history.pushState(history.state, 'el-data-table search', newUrl)
