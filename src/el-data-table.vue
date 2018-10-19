@@ -6,7 +6,7 @@
             <slot name="search"></slot>
             <el-form-item>
                 <!--https://github.com/ElemeFE/element/pull/5920-->
-                <el-button native-type="submit" type="primary" @click="getList(1)" size="small">查询</el-button>
+                <el-button native-type="submit" type="primary" @click="page = firstPage; getList(1)" size="small">查询</el-button>
                 <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
