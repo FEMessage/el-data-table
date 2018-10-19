@@ -548,16 +548,21 @@ export default {
 
       // 恢复查询条件
       let matches = location.href.match(queryPattern)
-      let query =
-        (matches &&
-          matches[0].substr(2).replace(valueSeparatorPattern, equal)) ||
-        ''
-      let params = qs.parse(query, {delimiter: paramSeparator})
 
-      // 对slot=search无效
-      Object.keys(params).forEach(k => {
-        searchForm.updateValue({id: k, value: params[k]})
-      })
+      if (matches) {
+        let query = matches[0].substr(2).replace(valueSeparatorPattern, equal)
+        let params = qs.parse(query, {delimiter: paramSeparator})
+
+        // page size 特殊处理
+        this.page = params.page * 1
+        this.size = params.size * 1
+
+        // 对slot=search无效
+        Object.keys(params).forEach(k => {
+          if (k == 'page' || k == 'size') return
+          searchForm.updateValue({id: k, value: params[k]})
+        })
+      }
     }
 
     this.$nextTick(() => {
@@ -589,7 +594,7 @@ export default {
     }
   },
   methods: {
-    getList(isSearch) {
+    getList(shouldStoreQuery) {
       let searchForm = this.$refs.searchForm
       let formQuery = searchForm ? searchForm.getFormValue() : {}
       // TODO Object.assign IE不支持, 所以后面Object.keys的保守其实是没有必要的。。。
@@ -665,7 +670,7 @@ export default {
         })
 
       // 存储query记录, 便于后面恢复
-      if (isSearch > 0) {
+      if (shouldStoreQuery > 0) {
         let newUrl = ''
         let searchQuery =
           queryFlag +
@@ -705,13 +710,13 @@ export default {
       if (this.size === val) return
 
       this.size = val
-      this.getList()
+      this.getList(true)
     },
     handleCurrentChange(val) {
       if (this.page === val) return
 
       this.page = val
-      this.getList()
+      this.getList(true)
     },
     handleSelectionChange(val) {
       this.selected = val
