@@ -564,13 +564,6 @@ export default {
       this.getList()
     })
   },
-  destroyed() {
-    history.replaceState(
-      history.state,
-      '',
-      location.href.replace(queryPattern, '')
-    )
-  },
   watch: {
     url: function(val, old) {
       this.page = this.firstPage
