@@ -184,12 +184,13 @@ const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
 
-const paramSeparator = '_'
-const comma = ','
 const equal = '='
-
-const commaPattern = /,/g
 const equalPattern = /=/g
+
+const valueSeparator = '_'
+const paramSeparator = ','
+
+const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
 
 const queryFlag = 'q='
 const queryPattern = new RegExp('q=.*' + paramSeparator)
@@ -548,7 +549,9 @@ export default {
       // 恢复查询条件
       let matches = location.href.match(queryPattern)
       let query =
-        (matches && matches[0].substr(2).replace(commaPattern, equal)) || ''
+        (matches &&
+          matches[0].substr(2).replace(valueSeparatorPattern, equal)) ||
+        ''
       let params = qs.parse(query, {delimiter: paramSeparator})
 
       // 对slot=search无效
@@ -673,7 +676,9 @@ export default {
         let newUrl = ''
         let searchQuery =
           queryFlag +
-          params.replace(/&/g, paramSeparator).replace(equalPattern, comma) +
+          params
+            .replace(/&/g, paramSeparator)
+            .replace(equalPattern, valueSeparator) +
           paramSeparator
 
         // 非第一次查询
