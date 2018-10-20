@@ -336,3 +336,13 @@ export default {
 1.  上传成功后把图片 url 放在 `extraParams` 上
 2.  点击新增按钮时，清除 `extraParams.logoUrl`
 3.  点击编辑按钮时，设置`extraParams.logoUrl`
+
+## refer
+
+* [el-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
+* [html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
+* [What_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
+* [History_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+* [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
+* [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+* [从 vue-router 看前端路由的两种实现](https://zhuanlan.zhihu.com/p/27588422)
