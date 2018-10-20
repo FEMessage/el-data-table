@@ -255,7 +255,7 @@ export default {
       }
     },
     /**
-     * 路由模式, hash | history, 决定了查询参数存放的形式
+     * 路由模式, hash | history || '', 决定了查询参数存放的形式, 设置为空则不存储查询参数
      */
     mode: {
       type: String,
@@ -670,7 +670,7 @@ export default {
         })
 
       // 存储query记录, 便于后面恢复
-      if (shouldStoreQuery > 0) {
+      if (this.mode && shouldStoreQuery > 0) {
         let newUrl = ''
         let searchQuery =
           queryFlag +
