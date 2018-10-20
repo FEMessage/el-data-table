@@ -257,7 +257,7 @@ export default {
     /**
      * 路由模式, hash | history || '', 决定了查询参数存放的形式, 设置为空则不存储查询参数
      */
-    mode: {
+    routerMode: {
       type: String,
       default: 'hash'
     },
@@ -670,7 +670,7 @@ export default {
         })
 
       // 存储query记录, 便于后面恢复
-      if (this.mode && shouldStoreQuery > 0) {
+      if (this.routerMode && shouldStoreQuery > 0) {
         let newUrl = ''
         let searchQuery =
           queryFlag +
@@ -682,7 +682,7 @@ export default {
         // 非第一次查询
         if (location.href.indexOf(queryFlag) > -1) {
           newUrl = location.href.replace(queryPattern, searchQuery)
-        } else if (this.mode == 'hash') {
+        } else if (this.routerMode == 'hash') {
           let search =
             location.hash.indexOf('?') > -1
               ? `&${searchQuery}`
