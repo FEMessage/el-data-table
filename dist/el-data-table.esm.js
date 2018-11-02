@@ -29,7 +29,7 @@ var dialogForm = 'dialogForm';
 var equal = '=';
 var equalPattern = /=/g;
 
-var valueSeparator = '_';
+var valueSeparator = '~';
 var paramSeparator = ',';
 
 var valueSeparatorPattern = new RegExp(valueSeparator, 'g');
