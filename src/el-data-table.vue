@@ -187,7 +187,7 @@ const dialogForm = 'dialogForm'
 const equal = '='
 const equalPattern = /=/g
 
-const valueSeparator = '_'
+const valueSeparator = '~'
 const paramSeparator = ','
 
 const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
