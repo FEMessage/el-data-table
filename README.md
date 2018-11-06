@@ -81,7 +81,7 @@ Vue.prototype.$axios = axios
 
 suppose the api response looks like this:
 
-```json
+```js
 {
   "code": 0,
   "msg": "ok",
@@ -94,7 +94,7 @@ suppose the api response looks like this:
 
 we get setting
 
-```template
+```vue
 <el-data-table
   dataPath="payload.content"
   totalPath="payload.totalElement"
@@ -122,32 +122,53 @@ now I'll show you more code example, here we go🚴
 export default {
   data() {
     return {
-      url: '/api/v1/users',
+      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
+      // full attributes of columns see: http://element.eleme.io/#/zh-CN/component/table#table-column-attributes
       columns: [
-        {prop: 'id', label: '主键'},
-        {prop: 'username', label: '用户名'},
-        {prop: 'fullname', label: '全名'},
-        {prop: 'email', label: 'email'},
-        {prop: 'department.id', label: 'department.id'},
-        {prop: 'department.name', label: 'department.name'}
+        {prop: 'code', label: '品牌编号'},
+        {prop: 'name', label: '品牌名称'},
+        {prop: 'alias', label: '品牌别名'},
+        {
+          prop: 'logoUrl',
+          label: '品牌Logo',
+          width: '150px'
+        },
+        {
+          prop: 'status',
+          label: '状态',
+          formatter: row => (row.status === 'normal' ? '启用' : '禁用')
+        }
       ]
     }
   }
 }
 ```
 
-> examples below will omit template and some repeated content in script
+![url and columns](assets/image-20181106222453747.png)
 
 ### new/edit form
 
+this will show new or edit form, when you click new or edit button
+
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+  :form="form"
+>
+</el-data-table>
+```
+
 ```js
+// script
 form: [
   {
     $type: 'select',
     $id: 'backendFramework',
     label: '后端框架',
     rules: [{required: true, message: '请选择后端框架', trigger: 'blur'}],
-    $options: backendFrameworks.map(f => ({label: f, value: f})),
+    $options: ['DUBBO', 'HSF'].map(f => ({label: f, value: f})),
     $el: {
       placeholder: '请选择'
     }
@@ -155,11 +176,11 @@ form: [
   {
     $type: 'input',
     $id: 'name',
-    label: '元数据名称',
+    label: '名称',
     rules: [
       {
         required: true,
-        message: '请输入元数据名称',
+        message: '请输入名称',
         trigger: 'blur',
         transform: v => v && v.trim()
       }
@@ -169,9 +190,23 @@ form: [
 ]
 ```
 
-### search
+![new/edit form](assets/image-20181106224258372.png)
+
+### searchForm
+
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+  :form="form"
+  :searchForm="searchForm"
+>
+</el-data-table>
+```
 
 ```js
+// script
 searchForm: [
   {
     $el: {placeholder: '请输入'},
@@ -194,37 +229,105 @@ searchForm: [
 ]
 ```
 
-### header buttons on the top of the table
+![searchForm](assets/image-20181106224933515.png)
+
+### selection
+
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+>
+</el-data-table>
+```
+
+```js
+// script
+columns: [
+  // type: 'selection' will show checkbox
+  // see http://element.eleme.io/#/zh-CN/component/table#table-column-attributes
+  {type: 'selection', selectable: (row, index) => index > 0},
+  {prop: 'code', label: '品牌编号'},
+  {prop: 'name', label: '品牌名称'},
+  {prop: 'alias', label: '品牌别名'},
+  {
+    prop: 'logoUrl',
+    label: '品牌Logo',
+    width: '150px'
+  },
+  {
+    prop: 'status',
+    label: '状态',
+    formatter: row => (row.status === 'normal' ? '启用' : '禁用')
+  }
+]
+```
+
+![selection](assets/image-20181106225421654.png)
+
+### headerButtons
+
+buttons on the top of the table
 
 > attention: click function called `atClick`
 
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+  :headerButtons="headerButtons"
+>
+</el-data-table>
+```
+
 ```js
+// script
+// more attribute see: https://femessage.github.io/el-data-table/
 headerButtons: [
   {
     text: '批量导出',
     disabled: selected => selected.length == 0,
     atClick: selected => {
       let ids = selected.map(s => s.id)
-      console.log(ids)
+      alert(ids)
     }
   }
 ]
 ```
 
-### extra buttons in operation column
+![headerButtons](assets/image-20181106230058138.png)
+
+### extraButtons
+
+extra buttons in operation column
 
 > attention: click function called `atClick`
 
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+  :extraButtons="extraButtons"
+>
+</el-data-table>
+```
+
 ```js
+// script
+// more attribute see: https://femessage.github.io/el-data-table/
 extraButtons: [
   {
     type: 'primary',
     text: '跳转',
-    atClick: row =>
-      this.$router.push({path: '/module-detail', query: {id: row.id}})
+    atClick: row => alert('跳转' + row.code)
   }
 ]
 ```
+
+![image-20181106231010055](assets/image-20181106231010055.png)
 
 ### extraParams on new/edit
 
