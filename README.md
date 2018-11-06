@@ -45,7 +45,8 @@ import {
   Loading,
   Pagination,
   Table,
-  TableColumn
+  TableColumn,
+  MessageBox
 } from 'element-ui'
 
 Vue.use(ElDataTable)
@@ -59,7 +60,8 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.component('el-form-renderer', ElFormRenderer)
 
-// inject Vue.prototype
+// to show confirm before delete
+Vue.prototype.$confirm = MessageBox.confirm
 // if the table component cannot access `this.$axios`, it cannot send request
 import axios from 'axios'
 Vue.prototype.$axios = axios
