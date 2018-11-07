@@ -26,17 +26,18 @@ var defaultId = 'id';
 
 var dialogForm = 'dialogForm';
 
-var semicolon = ';';
-var comma = ',';
 var equal = '=';
-
-var commaPattern = /,/g;
 var equalPattern = /=/g;
 
-var queryFlag = 'q=';
-var queryPattern = /q=.*;/;
+var valueSeparator = '~';
+var paramSeparator = ',';
 
-var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"el-data-table"},[(_vm.searchForm.length > 0 || !!_vm.$slots.search)?_c('el-form-renderer',{ref:"searchForm",attrs:{"inline":"","content":_vm.searchForm}},[_vm._t("search"),_vm._v(" "),_c('el-form-item',[_c('el-button',{attrs:{"native-type":"submit","type":"primary","size":"small"},on:{"click":function($event){_vm.getList(1);}}},[_vm._v("查询")]),_vm._v(" "),_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.resetSearch}},[_vm._v("重置")])],1)],2):_vm._e(),_vm._v(" "),(_vm.hasNew || _vm.hasDelete || _vm.headerButtons.length > 0 )?_c('el-form',[_c('el-form-item',[(_vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":_vm.onDefaultNew}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),_vm._l((_vm.headerButtons),function(btn,i){return ('show' in btn ? btn.show(_vm.selected) : true)?_c('el-button',_vm._b({key:i,attrs:{"disabled":'disabled' in btn ? btn.disabled(_vm.selected) : false,"size":"small"},on:{"click":function($event){btn.atClick(_vm.selected);}}},'el-button',btn,false),[_vm._v(_vm._s(btn.text))]):_vm._e()}),_vm._v(" "),(_vm.hasSelect && _vm.hasDelete)?_c('el-button',{attrs:{"type":"danger","size":"small","disabled":_vm.single ? (!_vm.selected.length || _vm.selected.length > 1) : !_vm.selected.length},on:{"click":function($event){_vm.onDefaultDelete($event);}}},[_vm._v("删除")]):_vm._e()],2)],1):_vm._e(),_vm._v(" "),_c('el-table',_vm._b({directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],ref:"table",attrs:{"data":_vm.data,"row-style":_vm.showRow},on:{"selection-change":_vm.handleSelectionChange}},'el-table',_vm.tableAttrs,false),[(_vm.isTree)?[(_vm.hasSelect)?[_c('el-table-column',_vm._b({key:"selection-key"},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[1].prop])+" ")]}}])},'el-table-column',_vm.columns[1],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0 && i !== 1; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]:[_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[0].prop])+" ")]}}])},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]]:_vm._l((_vm.columns),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))}),_vm._v(" "),(_vm.hasOperation)?_c('el-table-column',_vm._b({attrs:{"label":"操作"},scopedSlots:_vm._u([{key:"default",fn:function(scope){return [(_vm.isTree && _vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":function($event){_vm.onDefaultNew(scope.row);}}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),(_vm.hasEdit)?_c('el-button',{attrs:{"size":"small"},on:{"click":function($event){_vm.onDefaultEdit(scope.row);}}},[_vm._v(" 修改 ")]):_vm._e(),_vm._v(" "),(_vm.hasView)?_c('el-button',{attrs:{"type":"info","size":"small"},on:{"click":function($event){_vm.onDefaultView(scope.row);}}},[_vm._v(" 查看 ")]):_vm._e(),_vm._v(" "),_vm._l((_vm.extraButtons),function(btn,i){return ('show' in btn ? btn.show(scope.row) : true)?_c('el-button',_vm._b({key:i,attrs:{"size":"small"},on:{"click":function($event){btn.atClick(scope.row);}}},'el-button',btn,false),[_vm._v(" "+_vm._s(btn.text)+" ")]):_vm._e()}),_vm._v(" "),(!_vm.hasSelect && _vm.hasDelete && _vm.canDelete(scope.row))?_c('el-button',{attrs:{"type":"danger","size":"small"},on:{"click":function($event){_vm.onDefaultDelete(scope.row);}}},[_vm._v(" 删除 ")]):_vm._e()]}}])},'el-table-column',_vm.operationAttrs,false)):_vm._e(),_vm._v(" "),_vm._t("default")],2),_vm._v(" "),(_vm.hasPagination)?_c('el-pagination',{staticStyle:{"text-align":"right","padding":"10px 0"},attrs:{"current-page":_vm.page,"page-sizes":_vm.paginationSizes,"page-size":_vm.size,"total":_vm.total,"layout":_vm.paginationLayout},on:{"size-change":_vm.handleSizeChange,"current-change":_vm.handleCurrentChange}}):_vm._e(),_vm._v(" "),(_vm.hasDialog)?_c('el-dialog',{attrs:{"title":_vm.dialogTitle,"visible":_vm.dialogVisible},on:{"update:visible":function($event){_vm.dialogVisible=$event;}}},[_c('el-form-renderer',_vm._b({ref:"dialogForm",attrs:{"content":_vm.form,"disabled":_vm.isView}},'el-form-renderer',_vm.formAttrs,false),[_vm._t("form")],2),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isView),expression:"!isView"}],attrs:{"slot":"footer"},slot:"footer"},[_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.cancel}},[_vm._v("取 消")]),_vm._v(" "),_c('el-button',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.confirmLoading),expression:"confirmLoading"}],attrs:{"type":"primary","size":"small"},on:{"click":_vm.confirm}},[_vm._v("确 定")])],1)],1):_vm._e()],1)},staticRenderFns: [],
+var valueSeparatorPattern = new RegExp(valueSeparator, 'g');
+
+var queryFlag = 'q=';
+var queryPattern = new RegExp('q=.*' + paramSeparator);
+
+var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"el-data-table"},[(_vm.searchForm.length > 0 || !!_vm.$slots.search)?_c('el-form-renderer',{ref:"searchForm",attrs:{"inline":"","content":_vm.searchForm}},[_vm._t("search"),_vm._v(" "),_c('el-form-item',[_c('el-button',{attrs:{"native-type":"submit","type":"primary","size":"small"},on:{"click":function($event){_vm.page = _vm.firstPage; _vm.getList(1);}}},[_vm._v("查询")]),_vm._v(" "),_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.resetSearch}},[_vm._v("重置")])],1)],2):_vm._e(),_vm._v(" "),(_vm.hasNew || _vm.hasDelete || _vm.headerButtons.length > 0 )?_c('el-form',[_c('el-form-item',[(_vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":_vm.onDefaultNew}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),_vm._l((_vm.headerButtons),function(btn,i){return ('show' in btn ? btn.show(_vm.selected) : true)?_c('el-button',_vm._b({key:i,attrs:{"disabled":'disabled' in btn ? btn.disabled(_vm.selected) : false,"size":"small"},on:{"click":function($event){btn.atClick(_vm.selected);}}},'el-button',btn,false),[_vm._v(_vm._s(btn.text))]):_vm._e()}),_vm._v(" "),(_vm.hasSelect && _vm.hasDelete)?_c('el-button',{attrs:{"type":"danger","size":"small","disabled":_vm.single ? (!_vm.selected.length || _vm.selected.length > 1) : !_vm.selected.length},on:{"click":function($event){_vm.onDefaultDelete($event);}}},[_vm._v("删除")]):_vm._e()],2)],1):_vm._e(),_vm._v(" "),_c('el-table',_vm._b({directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],ref:"table",attrs:{"data":_vm.data,"row-style":_vm.showRow},on:{"selection-change":_vm.handleSelectionChange}},'el-table',_vm.tableAttrs,false),[(_vm.isTree)?[(_vm.hasSelect)?[_c('el-table-column',_vm._b({key:"selection-key"},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[1].prop])+" ")]}}])},'el-table-column',_vm.columns[1],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0 && i !== 1; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]:[_c('el-table-column',_vm._b({key:"tree-ctrl",scopedSlots:_vm._u([{key:"default",fn:function(scope){return [_vm._l((scope.row._level),function(space){return (_vm.isTree)?_c('span',{key:space,staticClass:"ms-tree-space"}):_vm._e()}),_vm._v(" "),(_vm.isTree && _vm.iconShow(scope.$index, scope.row))?_c('span',{staticClass:"tree-ctrl",on:{"click":function($event){_vm.toggleExpanded(scope.$index);}}},[(!scope.row._expanded)?_c('i',{staticClass:"el-icon-plus"}):_c('i',{staticClass:"el-icon-minus"})]):_vm._e(),_vm._v(" "+_vm._s(scope.row[_vm.columns[0].prop])+" ")]}}])},'el-table-column',_vm.columns[0],false)),_vm._v(" "),_vm._l((_vm.columns.filter(function (c, i) { return i !== 0; })),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))})]]:_vm._l((_vm.columns),function(col){return _c('el-table-column',_vm._b({key:col.prop},'el-table-column',col,false))}),_vm._v(" "),(_vm.hasOperation)?_c('el-table-column',_vm._b({attrs:{"label":"操作"},scopedSlots:_vm._u([{key:"default",fn:function(scope){return [(_vm.isTree && _vm.hasNew)?_c('el-button',{attrs:{"type":"primary","size":"small"},on:{"click":function($event){_vm.onDefaultNew(scope.row);}}},[_vm._v("新增")]):_vm._e(),_vm._v(" "),(_vm.hasEdit)?_c('el-button',{attrs:{"size":"small"},on:{"click":function($event){_vm.onDefaultEdit(scope.row);}}},[_vm._v(" 修改 ")]):_vm._e(),_vm._v(" "),(_vm.hasView)?_c('el-button',{attrs:{"type":"info","size":"small"},on:{"click":function($event){_vm.onDefaultView(scope.row);}}},[_vm._v(" 查看 ")]):_vm._e(),_vm._v(" "),_vm._l((_vm.extraButtons),function(btn,i){return ('show' in btn ? btn.show(scope.row) : true)?_c('el-button',_vm._b({key:i,attrs:{"size":"small"},on:{"click":function($event){btn.atClick(scope.row);}}},'el-button',btn,false),[_vm._v(" "+_vm._s(btn.text)+" ")]):_vm._e()}),_vm._v(" "),(!_vm.hasSelect && _vm.hasDelete && _vm.canDelete(scope.row))?_c('el-button',{attrs:{"type":"danger","size":"small"},on:{"click":function($event){_vm.onDefaultDelete(scope.row);}}},[_vm._v(" 删除 ")]):_vm._e()]}}])},'el-table-column',_vm.operationAttrs,false)):_vm._e(),_vm._v(" "),_vm._t("default")],2),_vm._v(" "),(_vm.hasPagination)?_c('el-pagination',{staticStyle:{"text-align":"right","padding":"10px 0"},attrs:{"current-page":_vm.page,"page-sizes":_vm.paginationSizes,"page-size":_vm.size,"total":_vm.total,"layout":_vm.paginationLayout},on:{"size-change":_vm.handleSizeChange,"current-change":_vm.handleCurrentChange}}):_vm._e(),_vm._v(" "),(_vm.hasDialog)?_c('el-dialog',{attrs:{"title":_vm.dialogTitle,"visible":_vm.dialogVisible},on:{"update:visible":function($event){_vm.dialogVisible=$event;}}},[_c('el-form-renderer',_vm._b({ref:"dialogForm",attrs:{"content":_vm.form,"disabled":_vm.isView}},'el-form-renderer',_vm.formAttrs,false),[_vm._t("form")],2),_vm._v(" "),_c('div',{directives:[{name:"show",rawName:"v-show",value:(!_vm.isView),expression:"!isView"}],attrs:{"slot":"footer"},slot:"footer"},[_c('el-button',{attrs:{"size":"small"},on:{"click":_vm.cancel}},[_vm._v("取 消")]),_vm._v(" "),_c('el-button',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.confirmLoading),expression:"confirmLoading"}],attrs:{"type":"primary","size":"small"},on:{"click":_vm.confirm}},[_vm._v("确 定")])],1)],1):_vm._e()],1)},staticRenderFns: [],
   name: 'ElDataTable',
   props: {
     /**
@@ -94,6 +95,13 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       default: function default$2() {
         return []
       }
+    },
+    /**
+     * 路由模式, hash | history || '', 决定了查询参数存放的形式, 设置为空则不存储查询参数
+     */
+    routerMode: {
+      type: String,
+      default: 'hash'
     },
     /**
      * 单选, 适用场景: 不可以批量删除
@@ -383,27 +391,27 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       searchForm.$el.setAttribute('action', 'javascript:;');
 
       // 恢复查询条件
-      var matches = location.search.match(queryPattern);
-      var query =
-        (matches && matches[0].substr(2).replace(commaPattern, equal)) || '';
-      var params = qs.parse(query, {delimiter: semicolon});
+      var matches = location.href.match(queryPattern);
 
-      // 对slot=search无效
-      Object.keys(params).forEach(function (k) {
-        searchForm.updateValue({id: k, value: params[k]});
-      });
+      if (matches) {
+        var query = matches[0].substr(2).replace(valueSeparatorPattern, equal);
+        var params = qs.parse(query, {delimiter: paramSeparator});
+
+        // page size 特殊处理
+        this.page = params.page * 1;
+        this.size = params.size * 1;
+
+        // 对slot=search无效
+        Object.keys(params).forEach(function (k) {
+          if (k == 'page' || k == 'size') { return }
+          searchForm.updateValue({id: k, value: params[k]});
+        });
+      }
     }
 
     this.$nextTick(function () {
       this$1.getList();
     });
-  },
-  destroyed: function destroyed() {
-    history.replaceState(
-      history.state,
-      '',
-      location.href.replace(queryPattern, '')
-    );
   },
   watch: {
     url: function(val, old) {
@@ -432,7 +440,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     }
   },
   methods: {
-    getList: function getList(isSearch) {
+    getList: function getList(shouldStoreQuery) {
       var this$1 = this;
 
       var searchForm = this.$refs.searchForm;
@@ -509,21 +517,37 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
         });
 
       // 存储query记录, 便于后面恢复
-      if (isSearch > 0) {
+      if (this.routerMode && shouldStoreQuery > 0) {
         var newUrl = '';
         var searchQuery =
           queryFlag +
-          params.replace(/&/g, semicolon).replace(equalPattern, comma) +
-          semicolon;
+          params
+            .replace(/&/g, paramSeparator)
+            .replace(equalPattern, valueSeparator) +
+          paramSeparator;
 
         // 非第一次查询
-        if (location.search.indexOf(queryFlag) > -1) {
+        if (location.href.indexOf(queryFlag) > -1) {
           newUrl = location.href.replace(queryPattern, searchQuery);
+        } else if (this.routerMode == 'hash') {
+          var search =
+            location.hash.indexOf('?') > -1
+              ? ("&" + searchQuery)
+              : ("?" + searchQuery);
+          newUrl =
+            location.origin +
+            location.pathname +
+            location.search +
+            location.hash +
+            search;
         } else {
-          var search = location.search
-            ? location.search + "&" + searchQuery
-            : ("?" + searchQuery);
-          newUrl = location.origin + location.pathname + search + location.hash;
+          var search$1 = location.search ? ("&" + searchQuery) : ("?" + searchQuery);
+          newUrl =
+            location.origin +
+            location.pathname +
+            location.search +
+            search$1 +
+            location.hash;
         }
 
         history.pushState(history.state, 'el-data-table search', newUrl);
@@ -532,14 +556,15 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     handleSizeChange: function handleSizeChange(val) {
       if (this.size === val) { return }
 
+      this.page = this.firstPage;
       this.size = val;
-      this.getList();
+      this.getList(true);
     },
     handleCurrentChange: function handleCurrentChange(val) {
       if (this.page === val) { return }
 
       this.page = val;
-      this.getList();
+      this.getList(true);
     },
     handleSelectionChange: function handleSelectionChange(val) {
       this.selected = val;
