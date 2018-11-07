@@ -6,6 +6,7 @@ import Tree from './tree.vue'
 import CustomButtons from './custom-buttons.vue'
 import ExtraParams from './extra-params.vue'
 import CustomId from './custom-id.vue'
+import CustomFirstPage from './custom-firstPage.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
@@ -14,6 +15,7 @@ storiesOf('ElDataTable', module)
   .add('自定义按钮', customButtons)
   .add('自定义主键', customId)
   .add('slot=form及额外的post/put参数', extraParams)
+  .add('自定义接口首页', customFirstPage)
 
 function basic() {
   return {
@@ -49,5 +51,11 @@ function customId() {
   return {
     components: {CustomId},
     template: `<custom-id/>`
+  }
+}
+function customFirstPage() {
+  return {
+    components: {CustomFirstPage},
+    template: `<custom-firstPage/>`
   }
 }
