@@ -518,7 +518,7 @@ export default {
       data: [],
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
-      page: this.firstPage,
+      page: 1,
       total: 0,
       loading: false,
       selected: [],
@@ -571,7 +571,7 @@ export default {
   },
   watch: {
     url: function(val, old) {
-      this.page = this.firstPage
+      this.page = 1
       this.getList()
     },
     dialogVisible: function(val, old) {
@@ -613,7 +613,12 @@ export default {
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
-      params += `page=${this.page}&size=${size}`
+      // 计算firstPage与当前选中页的差距的绝对值
+      // 在发送请求之前 根据page与默认值1的对比 计算出发送请求要传的page
+      let pageOffset = this.firstPage - 1
+      let page = this.page + pageOffset
+
+      params += `page=${page}&size=${size}`
 
       // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
       // TODO Object.values IE11不兼容, 暂时使用Object.keys
