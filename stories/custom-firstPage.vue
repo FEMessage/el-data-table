@@ -26,24 +26,9 @@
             $id: 'name',
             label: '用户名',
             rules: [{required: true, message: '请输入用户名', trigger: 'blur'}]
-          },
-          {
-            $type: 'input',
-            $id: 'description',
-            label: '分类说明',
-            rules: [{required: true, message: '请输入名称说明', trigger: 'blur'}]
-          },
-          {
-            $type: 'input',
-            $id: 'icon',
-            label: '图标',
-            rules: [
-              {required: true, message: '请输入iconfont class', trigger: 'blur'}
-            ]
           }
         ]
       }
-
     }
   }
 </script>
