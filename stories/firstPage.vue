@@ -1,8 +1,10 @@
 <template>
   <el-data-table
-    v-bind="$data"
     :firstPage="0"
     :url="url"
+    :columns="columns"
+    :hasDelete="true"
+    :form="form"
   >
   </el-data-table>
 </template>
