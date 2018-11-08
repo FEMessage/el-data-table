@@ -613,8 +613,7 @@ export default {
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
-      // 计算firstPage与当前选中页的差距的绝对值
-      // 在发送请求之前 根据page与默认值1的对比 计算出发送请求要传的page
+      // 根据偏移值计算接口正确的页数
       let pageOffset = this.firstPage - 1
       let page = this.page + pageOffset
 
