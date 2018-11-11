@@ -18,6 +18,13 @@
           {prop: 'createdBy', label: '创建人'},
           {prop: 'userInfo.createTime', label: '创建时间'}
         ],
+        searchForm: [
+          {
+            $type: 'input',
+            $id: 'name',
+            label: '用户名'
+          }
+        ],
         form: [
           {
             $type: 'input',
