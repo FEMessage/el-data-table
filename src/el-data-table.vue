@@ -6,7 +6,7 @@
             <slot name="search"></slot>
             <el-form-item>
                 <!--https://github.com/ElemeFE/element/pull/5920-->
-                <el-button native-type="submit" type="primary" @click="page = defaultFirstPage; getList(defaultFirstPage)" size="small">查询</el-button>
+                <el-button native-type="submit" type="primary" @click="page = defaultFirstPage; getListWithQuery()" size="small">查询</el-button>
                 <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
@@ -538,7 +538,8 @@ export default {
 
       // 初始的customQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
-      initCustomQuery: JSON.stringify(this.customQuery)
+      initCustomQuery: JSON.stringify(this.customQuery),
+      params: ''
     }
   },
   mounted() {
@@ -597,7 +598,7 @@ export default {
     }
   },
   methods: {
-    getList(shouldStoreQuery) {
+    getList() {
       let searchForm = this.$refs.searchForm
       let formQuery = searchForm ? searchForm.getFormValue() : {}
       // TODO Object.assign IE不支持, 所以后面Object.keys的保守其实是没有必要的。。。
@@ -635,6 +636,8 @@ export default {
             )}`),
           ''
         )
+
+      this.params = params
 
       // 请求开始
       this.loading = true
@@ -675,56 +678,59 @@ export default {
           this.$emit('error', err)
           this.loading = false
         })
+    },
+    getListWithQuery() {
+      this.getList()
+
+      if (!this.routerMode) return
 
       // 存储query记录, 便于后面恢复
-      if (this.routerMode && shouldStoreQuery > 0) {
-        let newUrl = ''
-        let searchQuery =
-          queryFlag +
-          params
-            .replace(/&/g, paramSeparator)
-            .replace(equalPattern, valueSeparator) +
-          paramSeparator
+      let newUrl = ''
+      let searchQuery =
+        queryFlag +
+        this.params
+          .replace(/&/g, paramSeparator)
+          .replace(equalPattern, valueSeparator) +
+        paramSeparator
 
-        // 非第一次查询
-        if (location.href.indexOf(queryFlag) > -1) {
-          newUrl = location.href.replace(queryPattern, searchQuery)
-        } else if (this.routerMode == 'hash') {
-          let search =
-            location.hash.indexOf('?') > -1
-              ? `&${searchQuery}`
-              : `?${searchQuery}`
-          newUrl =
-            location.origin +
-            location.pathname +
-            location.search +
-            location.hash +
-            search
-        } else {
-          let search = location.search ? `&${searchQuery}` : `?${searchQuery}`
-          newUrl =
-            location.origin +
-            location.pathname +
-            location.search +
-            search +
-            location.hash
-        }
-
-        history.pushState(history.state, 'el-data-table search', newUrl)
+      // 非第一次查询
+      if (location.href.indexOf(queryFlag) > -1) {
+        newUrl = location.href.replace(queryPattern, searchQuery)
+      } else if (this.routerMode == 'hash') {
+        let search =
+          location.hash.indexOf('?') > -1
+            ? `&${searchQuery}`
+            : `?${searchQuery}`
+        newUrl =
+          location.origin +
+          location.pathname +
+          location.search +
+          location.hash +
+          search
+      } else {
+        let search = location.search ? `&${searchQuery}` : `?${searchQuery}`
+        newUrl =
+          location.origin +
+          location.pathname +
+          location.search +
+          search +
+          location.hash
       }
+
+      history.pushState(history.state, 'el-data-table search', newUrl)
     },
     handleSizeChange(val) {
       if (this.size === val) return
 
       this.page = defaultFirstPage
       this.size = val
-      this.getList(true)
+      this.getListWithQuery()
     },
     handleCurrentChange(val) {
       if (this.page === val) return
 
       this.page = val
-      this.getList(true)
+      this.getListWithQuery()
     },
     handleSelectionChange(val) {
       this.selected = val
