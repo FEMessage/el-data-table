@@ -6,7 +6,7 @@
             <slot name="search"></slot>
             <el-form-item>
                 <!--https://github.com/ElemeFE/element/pull/5920-->
-                <el-button native-type="submit" type="primary" @click="page = firstPage; getList(1)" size="small">查询</el-button>
+                <el-button native-type="submit" type="primary" @click="page = defaultFirstPage; getList(1)" size="small">查询</el-button>
                 <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
@@ -173,6 +173,8 @@ import qs from 'qs'
 // 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
 // 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
 
+const defaultFirstPage = 1
+
 const dataPath = 'payload.content'
 const totalPath = 'payload.totalElements'
 const noPaginationDataPath = 'payload'
@@ -218,7 +220,7 @@ export default {
      */
     firstPage: {
       type: Number,
-      default: 1
+      default: defaultFirstPage
     },
     /**
      * 渲染组件的分页数据在接口返回的数据中的路径, 嵌套对象使用.表示即可
@@ -518,7 +520,8 @@ export default {
       data: [],
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
-      page: 1,
+      page: defaultFirstPage,
+      defaultFirstPage,
       total: 0,
       loading: false,
       selected: [],
@@ -571,7 +574,7 @@ export default {
   },
   watch: {
     url: function(val, old) {
-      this.page = 1
+      this.page = defaultFirstPage
       this.getList()
     },
     dialogVisible: function(val, old) {
@@ -614,7 +617,7 @@ export default {
       else url += '?'
 
       // 根据偏移值计算接口正确的页数
-      let pageOffset = this.firstPage - 1
+      let pageOffset = this.firstPage - defaultFirstPage
       let page = this.page + pageOffset
 
       params += `page=${page}&size=${size}`
@@ -713,7 +716,7 @@ export default {
     handleSizeChange(val) {
       if (this.size === val) return
 
-      this.page = this.firstPage
+      this.page = this.defaultFirstPage
       this.size = val
       this.getList(true)
     },
@@ -735,7 +738,7 @@ export default {
     resetSearch() {
       // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
-      this.page = this.firstPage
+      this.page = this.defaultFirstPage
 
       // 重置
       history.replaceState(
