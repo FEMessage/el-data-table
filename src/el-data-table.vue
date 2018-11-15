@@ -522,7 +522,8 @@ export default {
       size: this.paginationSize || this.paginationSizes[0],
       page: defaultFirstPage,
       defaultFirstPage,
-      total: 0,
+      // https://github.com/ElemeFE/element/issues/1153
+      total: null,
       loading: false,
       selected: [],
 
