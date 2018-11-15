@@ -617,11 +617,7 @@ export default {
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
-      // 根据偏移值计算接口正确的页数
-      let pageOffset = this.firstPage - defaultFirstPage
-      let page = this.page + pageOffset
-
-      params += `page=${page}&size=${size}`
+      params += `size=${size}`
 
       // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
       // TODO Object.values IE11不兼容, 暂时使用Object.keys
@@ -637,11 +633,15 @@ export default {
           ''
         )
 
+      // 根据偏移值计算接口正确的页数
+      let pageOffset = this.firstPage - defaultFirstPage
+      let page = this.page + pageOffset
+
       // 请求开始
       this.loading = true
 
       this.$axios
-        .get(url + params)
+        .get(url + params + `&page=${page}`)
         .then(resp => {
           let res = resp.data
           let data = []
@@ -682,7 +682,7 @@ export default {
         let newUrl = ''
         let searchQuery =
           queryFlag +
-          params
+          (params + `&page=${this.page}`)
             .replace(/&/g, paramSeparator)
             .replace(equalPattern, valueSeparator) +
           paramSeparator
