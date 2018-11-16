@@ -364,7 +364,8 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       size: this.paginationSize || this.paginationSizes[0],
       page: defaultFirstPage,
       defaultFirstPage: defaultFirstPage,
-      total: 0,
+      // https://github.com/ElemeFE/element/issues/1153
+      total: null,
       loading: false,
       selected: [],
 
@@ -464,11 +465,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       if (url.indexOf('?') > -1) { url += '&'; }
       else { url += '?'; }
 
-      // 根据偏移值计算接口正确的页数
-      var pageOffset = this.firstPage - defaultFirstPage;
-      var page = this.page + pageOffset;
-
-      params += "page=" + page + "&size=" + size;
+      params += "size=" + size;
 
       // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
       // TODO Object.values IE11不兼容, 暂时使用Object.keys
@@ -483,11 +480,15 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
           ''
         );
 
+      // 根据偏移值计算接口正确的页数
+      var pageOffset = this.firstPage - defaultFirstPage;
+      var page = this.page + pageOffset;
+
       // 请求开始
       this.loading = true;
 
       this.$axios
-        .get(url + params)
+        .get(url + params + "&page=" + page)
         .then(function (resp) {
           var res = resp.data;
           var data = [];
@@ -528,7 +529,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
         var newUrl = '';
         var searchQuery =
           queryFlag +
-          params
+          (params + "&page=" + (this.page))
             .replace(/&/g, paramSeparator)
             .replace(equalPattern, valueSeparator) +
           paramSeparator;
