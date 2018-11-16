@@ -257,6 +257,15 @@ export default {
       }
     },
     /**
+     * 点击查询按钮, 查询前执行的函数, 需要返回Promise
+     */
+    beforeSearch: {
+      type: Function,
+      default() {
+        return Promise.resolve()
+      }
+    },
+    /**
      * 路由模式, hash | history || '', 决定了查询参数存放的形式, 设置为空则不存储查询参数
      */
     routerMode: {
@@ -717,8 +726,14 @@ export default {
       this.$refs.searchForm.validate(valid => {
         if (!valid) return
 
-        this.page = defaultFirstPage
-        this.getList(true)
+        this.beforeSearch()
+          .then(() => {
+            this.page = defaultFirstPage
+            this.getList(true)
+          })
+          .catch(err => {
+            this.$emit('error', err)
+          })
       })
     },
     resetSearch() {

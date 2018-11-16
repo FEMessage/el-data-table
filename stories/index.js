@@ -7,6 +7,7 @@ import CustomButtons from './custom-buttons.vue'
 import ExtraParams from './extra-params.vue'
 import CustomId from './custom-id.vue'
 import FirstPage from './firstPage.vue'
+import BeforeSearch from './before-search.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
@@ -16,6 +17,7 @@ storiesOf('ElDataTable', module)
   .add('自定义主键', customId)
   .add('slot=form及额外的post/put参数', extraParams)
   .add('接口第一页页数为0', firstPage)
+  .add('before-search', beforeSearch)
 
 function basic() {
   return {
@@ -57,5 +59,12 @@ function firstPage() {
   return {
     components: {FirstPage},
     template: `<firstPage/>`
+  }
+}
+
+function beforeSearch() {
+  return {
+    components: {BeforeSearch},
+    template: `<before-search/>`
   }
 }
