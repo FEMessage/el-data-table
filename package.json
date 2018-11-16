@@ -34,11 +34,13 @@
     "postpublish": "git add docs && git add dist && git commit -a --amend"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "el-form-renderer": "^1.0.2",
-    "element-ui": "^2.2.0",
     "lodash.get": "^4.4.2",
-    "qs": "^6.5.2",
+    "qs": "^6.5.2"
+  },
+  "peerDependencies": {
+    "axios": "^0.18.0",
+    "el-form-renderer": "^1.1.1",
+    "element-ui": "^2.4.9",
     "vue": "^2.5.16"
   },
   "devDependencies": {
