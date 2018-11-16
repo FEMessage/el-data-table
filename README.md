@@ -4,9 +4,30 @@
 
 auto requesting by `axios`, supports pagination, tree data structure, custom search, custom operation column, makes rest api easily 👏
 
+## feature
+
+* 只需进行简单的配置，即可实现 RESTful 风格的 CRUD 四个接口的对接
+* 自带新增/修改/删除逻辑(默认新增/修改都是弹窗表单形式)
+* 支持表格内展示树形结构数据(该功能 element-ui 官方是不支持的)
+* 封装了拼接 query 查询逻辑，只需配置 json 即可进行 GET 请求查询
+* 可扩展自定义列按钮
+* 自带分页逻辑
+* 支持查询参数持久化，适配`hash`, `history`两种路由模式
+
+## documentation
+
+* [full api doc](https://femessage.github.io/el-data-table/)
+* [online demo](https://femessage.github.io/el-data-table/storybook/)
+
 ## pre install
 
-this component depends on [element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/leezng/el-form-renderer)
+this component peerDependencies on [element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/leezng/el-form-renderer) and [axios](https://github.com/axios/axios)
+
+make sure you have installed
+
+```sh
+yarn add element-ui el-form-renderer axios
+```
 
 ## install
 
@@ -15,11 +36,6 @@ encourage using [yarn](https://yarnpkg.com/en/docs/install#mac-stable) to instal
 ```sh
 yarn add el-data-table
 ```
-
-## documentation
-
-* [full api doc](https://femessage.github.io/el-data-table/)
-* [storybook demo](https://femessage.github.io/el-data-table/storybook/)
 
 ## usage
 
@@ -451,3 +467,4 @@ export default {
 * [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
 * [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
 * [从 vue-router 看前端路由的两种实现](https://zhuanlan.zhihu.com/p/27588422)
+* [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
