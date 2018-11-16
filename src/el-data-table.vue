@@ -201,7 +201,7 @@ export default {
   name: 'ElDataTable',
   props: {
     /**
-     * 请求url, 如果为空, 则不会发送请求
+     * 请求url, 如果为空, 则不会发送请求; 改变url, 则table会重新发送请求
      */
     url: {
       type: String,
