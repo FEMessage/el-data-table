@@ -6,7 +6,7 @@
             <slot name="search"></slot>
             <el-form-item>
                 <!--https://github.com/ElemeFE/element/pull/5920-->
-                <el-button native-type="submit" type="primary" @click="page = defaultFirstPage; getList(1)" size="small">查询</el-button>
+                <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
                 <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
@@ -521,7 +521,6 @@ export default {
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
       page: defaultFirstPage,
-      defaultFirstPage,
       // https://github.com/ElemeFE/element/issues/1153
       total: null,
       loading: false,
@@ -714,32 +713,18 @@ export default {
         history.pushState(history.state, 'el-data-table search', newUrl)
       }
     },
-    handleSizeChange(val) {
-      if (this.size === val) return
+    search() {
+      this.$refs.searchForm.validate(valid => {
+        if (!valid) return
 
-      this.page = this.defaultFirstPage
-      this.size = val
-      this.getList(true)
-    },
-    handleCurrentChange(val) {
-      if (this.page === val) return
-
-      this.page = val
-      this.getList(true)
-    },
-    handleSelectionChange(val) {
-      this.selected = val
-
-      /**
-       * 多选启用时生效, 返回(selected)已选中行的数组
-       * @event selection-change
-       */
-      this.$emit('selection-change', val)
+        this.page = defaultFirstPage
+        this.getList(true)
+      })
     },
     resetSearch() {
       // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
-      this.page = this.defaultFirstPage
+      this.page = defaultFirstPage
 
       // 重置
       history.replaceState(
@@ -763,6 +748,28 @@ export default {
         'update:customQuery',
         Object.assign(this.customQuery, JSON.parse(this.initCustomQuery))
       )
+    },
+    handleSizeChange(val) {
+      if (this.size === val) return
+
+      this.page = defaultFirstPage
+      this.size = val
+      this.getList(true)
+    },
+    handleCurrentChange(val) {
+      if (this.page === val) return
+
+      this.page = val
+      this.getList(true)
+    },
+    handleSelectionChange(val) {
+      this.selected = val
+
+      /**
+       * 多选启用时生效, 返回(selected)已选中行的数组
+       * @event selection-change
+       */
+      this.$emit('selection-change', val)
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
