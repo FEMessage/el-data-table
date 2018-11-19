@@ -247,6 +247,49 @@ searchForm: [
 
 ![searchForm](assets/image-20181106224933515.png)
 
+### beforeSearch
+
+This function will invoke after clicking search button. It should return promise, if it resolve, search will execute;
+if it reject, search won't execute.
+
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+  :searchForm="searchForm"
+  :beforeSearch="beforeSearch"
+>
+</el-data-table>
+```
+
+```js
+// script
+data() {
+return {
+  url: '',
+  columns: [
+	{prop: 'name', label: '用户名'},
+	{prop: 'createdBy', label: '创建人'},
+	{prop: 'userInfo.createTime', label: '创建时间'}
+  ],
+  searchForm: [
+	{
+	  $type: 'input',
+	  $id: 'name',
+	  label: '用户名',
+	  $el: {placeholder: '请输入用户名'}
+	  //            rules: [{required: true, trigger: 'blur', whitespace: true}]
+	}
+  ],
+  beforeSearch: () => {
+	this.url = 'https://xxx'
+	return Promise.resolve()
+  }
+}
+}
+```
+
 ### selection
 
 ```vue
@@ -460,6 +503,7 @@ export default {
 
 ## refer
 
+* [form rules detail see async-validator](https://github.com/yiminghe/async-validator)
 * [el-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
 * [html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
 * [What_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
