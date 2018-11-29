@@ -503,7 +503,8 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
           // 不分页
           if (!this$1.hasPagination) {
-            data = _get(res, dataPath) || _get(res, noPaginationDataPath) || [];
+            data =
+              _get(res, this$1.dataPath) || _get(res, noPaginationDataPath) || [];
           } else {
             data = _get(res, this$1.dataPath) || [];
             this$1.total = _get(res, this$1.totalPath);
