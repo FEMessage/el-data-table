@@ -65,7 +65,6 @@ import {
   MessageBox
 } from 'element-ui'
 
-Vue.use(ElDataTable)
 Vue.use(Button)
 Vue.use(Dialog)
 Vue.use(Form)
@@ -75,6 +74,7 @@ Vue.use(Pagination)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.component('el-form-renderer', ElFormRenderer)
+Vue.component('el-data-table', ElDataTable)
 
 // to show confirm before delete
 Vue.prototype.$confirm = MessageBox.confirm
