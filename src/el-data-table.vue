@@ -907,15 +907,26 @@ export default {
       })
     },
     onDefaultDelete(row) {
-      if (this.onDelete) {
-        return this.onDelete(row)
-      }
       this.$confirm('确认删除吗', '提示', {
         type: 'warning',
         beforeClose: (action, instance, done) => {
           if (action == 'confirm') {
             instance.confirmButtonLoading = true
 
+            if (this.onDelete) {
+              this.onDelete(row)
+                .then(resp => {
+                  this.showMessage(true)
+                  done()
+                  this.getList()
+                })
+                .finally(e => {
+                  instance.confirmButtonLoading = false
+                })
+              return
+            }
+
+            // 默认删除逻辑
             // 单个删除
             if (!this.hasSelect) {
               this.$axios

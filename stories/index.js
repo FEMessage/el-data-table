@@ -8,6 +8,7 @@ import ExtraParams from './extra-params.vue'
 import CustomId from './custom-id.vue'
 import FirstPage from './firstPage.vue'
 import BeforeSearch from './before-search.vue'
+import OnDelete from './on-delete.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
@@ -18,6 +19,7 @@ storiesOf('ElDataTable', module)
   .add('slot=form及额外的post/put参数', extraParams)
   .add('接口第一页页数为0', firstPage)
   .add('before-search', beforeSearch)
+  .add('on-delete', onDelete)
 
 function basic() {
   return {
@@ -66,5 +68,11 @@ function beforeSearch() {
   return {
     components: {BeforeSearch},
     template: `<before-search/>`
+  }
+}
+function onDelete() {
+  return {
+    components: {OnDelete},
+    template: `<on-delete/>`
   }
 }
