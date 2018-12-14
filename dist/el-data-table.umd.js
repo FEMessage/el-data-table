@@ -198,13 +198,14 @@
         type: Function
       },
       /**
-       * 点击修改按钮时的方法, 当默认新增方法不满足需求时使用
+       * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用
        */
       onEdit: {
         type: Function
       },
       /**
-       * 点击删除按钮时的方法, 当默认新增方法不满足需求时使用
+       * 点击删除按钮时的方法, 当默认删除方法不满足需求时使用, 需要返回promise
+       * 多选时, 参数为selected, 代表选中的行组成的数组; 非多选时参数为row, 代表单行的数据
        */
       onDelete: {
         type: Function
@@ -774,15 +775,26 @@
       onDefaultDelete: function onDefaultDelete(row) {
         var this$1 = this;
 
-        if (this.onDelete) {
-          return this.onDelete(row)
-        }
         this.$confirm('确认删除吗', '提示', {
           type: 'warning',
           beforeClose: function (action, instance, done) {
             if (action == 'confirm') {
               instance.confirmButtonLoading = true;
 
+              if (this$1.onDelete) {
+                this$1.onDelete(this$1.hasSelect ? this$1.selected : row)
+                  .then(function (resp) {
+                    this$1.showMessage(true);
+                    done();
+                    this$1.getList();
+                  })
+                  .finally(function (e) {
+                    instance.confirmButtonLoading = false;
+                  });
+                return
+              }
+
+              // 默认删除逻辑
               // 单个删除
               if (!this$1.hasSelect) {
                 this$1.$axios
