@@ -325,6 +325,42 @@ columns: [
 
 ![selection](assets/image-20181106225421654.png)
 
+### onDelete
+
+默认删除的请求地址是 DELETE url/id
+删除多个的请求地址是 DELETE url/id,id,id
+
+当不满足需求时, 可以使用 onDelete, 自定义删除方法, 返回 promise
+
+```vue
+<el-data-table
+  onDelete="onDelete"
+>
+</el-data-table>
+```
+
+```js
+import Axios from 'axios'
+
+export default {
+  data() {
+    return {
+      // 多选时, 参数为selected, 代表选中的行组成的数组; 非多选时参数为row, 代表单行的数据
+      onDelete: selected => {
+        return Axios.delete(
+          'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
+          {
+            data: {
+              rows: selected.id || selected.map(v => v.id)
+            }
+          }
+        )
+      }
+    }
+  }
+}
+```
+
 ### headerButtons
 
 buttons on the top of the table
