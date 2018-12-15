@@ -26,6 +26,15 @@ export default {
           atClick: selected => {
             let ids = selected.map(s => s.id)
             alert('selected ids: ' + ids)
+            return new Promise((resolve, reject) => setTimeout(resolve, 1500))
+          }
+        },
+        {
+          text: '请求后不刷新',
+          atClick: selected => {
+            return new Promise((resolve, reject) =>
+              setTimeout(() => resolve(false), 1500)
+            )
           }
         }
       ],
@@ -41,6 +50,11 @@ export default {
       hasEdit: false,
       hasNew: false,
       hasDelete: false
+    }
+  },
+  computed: {
+    loading() {
+      return true
     }
   }
 }

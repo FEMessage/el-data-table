@@ -18,7 +18,8 @@
                 <el-button v-for="(btn, i) in headerButtons"
                            v-if="'show' in btn ? btn.show(selected) : true"
                            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-                           @click="btn.atClick(selected)"
+                           @click="onHeaderButtonsClick(btn.atClick)"
+                           :loading="headerButtonsLoading"
                            v-bind="btn"
                            :key="i"
                            size="small" >{{btn.text}}</el-button>
@@ -297,8 +298,8 @@ export default {
       }
     },
     /**
-     * 头部的自定义按钮, 渲染的是element-ui的button, 支持属性
-     * type: '', text: '', atClick: row => {}, show: row => {返回true时显示}, disabled: selected => {返回true时禁用}
+     * 头部的自定义按钮, 渲染的是element-ui的button, 支持属性, 点击事件需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
+     * type: '', text: '', atClick: row => Promise.resolve(), show: row => {返回true时显示}, disabled: selected => {返回true时禁用}
      */
     headerButtons: {
       type: Array,
@@ -535,6 +536,8 @@ export default {
       total: null,
       loading: false,
       selected: [],
+
+      headerButtonsLoading: false,
 
       //弹窗
       dialogTitle: this.dialogNewTitle,
@@ -969,6 +972,21 @@ export default {
       }).catch(er => {
         /*取消*/
       })
+    },
+    onHeaderButtonsClick(fn) {
+      if (!fn) return
+
+      this.headerButtonsLoading = true
+
+      fn(this.selected)
+        .then(flag => {
+          if (flag === false) return
+          this.getList()
+        })
+        .catch(e => {})
+        .finally(e => {
+          this.headerButtonsLoading = false
+        })
     },
     // 树形table相关
     // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/components/TreeTable
