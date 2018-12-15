@@ -342,22 +342,26 @@ columns: [
 ```js
 import Axios from 'axios'
 
-export default {
-  data() {
-    return {
-      // 多选时, 参数为selected, 代表选中的行组成的数组; 非多选时参数为row, 代表单行的数据
-      onDelete: selected => {
-        return Axios.delete(
-          'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
-          {
-            data: {
-              rows: selected.id || selected.map(v => v.id)
-            }
-          }
-        )
+// 多选时, 参数为selected, 代表选中的行组成的数组
+onDelete: selected => {
+  return Axios.delete(
+    'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
+    {
+      data: selected.map(v => v.id)
+    }
+  )
+}
+
+// 非多选时参数为row, 代表单行的数据
+onDelete: row => {
+  return Axios.delete(
+    'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
+    {
+      data: {
+        id: row.id
       }
     }
-  }
+  )
 }
 ```
 
