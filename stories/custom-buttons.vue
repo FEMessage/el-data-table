@@ -41,9 +41,16 @@ export default {
       extraButtons: [
         {
           type: 'primary',
-          text: '自定义操作按钮',
-          atClick: selected => {
-            alert(`hello ${selected.login}`)
+          text: 'Promise.resolve()',
+          atClick: row => {
+            alert(row.id)
+            return new Promise((resolve, reject) => setTimeout(resolve, 1500))
+          }
+        },
+        {
+          text: 'Promise.reject()',
+          atClick: row => {
+            return Promise.reject()
           }
         }
       ],
