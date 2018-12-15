@@ -921,6 +921,7 @@ export default {
                   done()
                   this.getList()
                 })
+                .catch(e => {})
                 .finally(e => {
                   instance.confirmButtonLoading = false
                 })
