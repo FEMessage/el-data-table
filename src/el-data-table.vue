@@ -18,7 +18,8 @@
                 <el-button v-for="(btn, i) in headerButtons"
                            v-if="'show' in btn ? btn.show(selected) : true"
                            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-                           @click="btn.atClick(selected)"
+                           @click="onCustomButtonsClick(btn.atClick, selected)"
+                           v-loading="customButtonsLoading"
                            v-bind="btn"
                            :key="i"
                            size="small" >{{btn.text}}</el-button>
@@ -116,7 +117,9 @@
                     </el-button>
                     <el-button v-for="(btn, i) in extraButtons"
                                v-if="'show' in btn ? btn.show(scope.row) : true"
-                               v-bind="btn" @click="btn.atClick(scope.row)" :key="i" size="small">
+                               v-bind="btn" @click="onCustomButtonsClick(btn.atClick, scope.row)" :key="i" size="small"
+                               v-loading="customButtonsLoading"
+                    >
                         {{btn.text}}
                     </el-button>
                     <el-button v-if="!hasSelect && hasDelete && canDelete(scope.row)" type="danger" size="small"
@@ -287,8 +290,9 @@ export default {
       default: true
     },
     /**
-     * 操作列的自定义按钮, 渲染的是element-ui的button, 支持属性
-     * type: '', text: '', atClick: row => {}, show: row => {返回true时显示}
+     * 操作列的自定义按钮, 渲染的是element-ui的button, 支持style等属性.
+     * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
+     * type: '', text: '', atClick: row => Promise.resolve(), show: row => {返回true时显示}
      */
     extraButtons: {
       type: Array,
@@ -297,8 +301,9 @@ export default {
       }
     },
     /**
-     * 头部的自定义按钮, 渲染的是element-ui的button, 支持属性
-     * type: '', text: '', atClick: row => {}, show: row => {返回true时显示}, disabled: selected => {返回true时禁用}
+     * 头部的自定义按钮, 渲染的是element-ui的button, 支持style等属性.
+     * 点击事件 selected参数 表示选中行所组成的数组, 函数需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
+     * type: '', text: '', atClick: selected => Promise.resolve(), show: selected => {返回true时显示}, disabled: selected => {返回true时禁用}
      */
     headerButtons: {
       type: Array,
@@ -535,6 +540,8 @@ export default {
       total: null,
       loading: false,
       selected: [],
+
+      customButtonsLoading: false,
 
       //弹窗
       dialogTitle: this.dialogNewTitle,
@@ -969,6 +976,21 @@ export default {
       }).catch(er => {
         /*取消*/
       })
+    },
+    onCustomButtonsClick(fn, parameter) {
+      if (!fn) return
+
+      this.customButtonsLoading = true
+
+      fn(parameter)
+        .then(flag => {
+          if (flag === false) return
+          this.getList()
+        })
+        .catch(e => {})
+        .finally(e => {
+          this.customButtonsLoading = false
+        })
     },
     // 树形table相关
     // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/components/TreeTable

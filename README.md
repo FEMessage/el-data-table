@@ -390,6 +390,7 @@ headerButtons: [
   {
     text: '批量导出',
     disabled: selected => selected.length == 0,
+    // selected 是选中行所组成的数组
     atClick: selected => {
       let ids = selected.map(s => s.id)
       alert(ids)
@@ -423,7 +424,11 @@ extraButtons: [
   {
     type: 'primary',
     text: '跳转',
-    atClick: row => alert('跳转' + row.code)
+    // row 是单行的数据
+    atClick: row => {
+      alert('跳转' + row.code)
+      return Promise.resolve()
+    }
   }
 ]
 ```
