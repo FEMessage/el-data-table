@@ -18,8 +18,8 @@
                 <el-button v-for="(btn, i) in headerButtons"
                            v-if="'show' in btn ? btn.show(selected) : true"
                            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-                           @click="onHeaderButtonsClick(btn.atClick)"
-                           :loading="headerButtonsLoading"
+                           @click="onCustomButtonsClick(btn.atClick, selected)"
+                           :loading="customButtonsLoading"
                            v-bind="btn"
                            :key="i"
                            size="small" >{{btn.text}}</el-button>
@@ -537,7 +537,7 @@ export default {
       loading: false,
       selected: [],
 
-      headerButtonsLoading: false,
+      customButtonsLoading: false,
 
       //弹窗
       dialogTitle: this.dialogNewTitle,
@@ -973,19 +973,19 @@ export default {
         /*取消*/
       })
     },
-    onHeaderButtonsClick(fn) {
+    onCustomButtonsClick(fn, parameter) {
       if (!fn) return
 
-      this.headerButtonsLoading = true
+      this.customButtonsLoading = true
 
-      fn(this.selected)
+      fn(parameter)
         .then(flag => {
           if (flag === false) return
           this.getList()
         })
         .catch(e => {})
         .finally(e => {
-          this.headerButtonsLoading = false
+          this.customButtonsLoading = false
         })
     },
     // 树形table相关
