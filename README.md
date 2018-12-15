@@ -21,12 +21,12 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 ## pre install
 
-this component peerDependencies on [element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/leezng/el-form-renderer) and [axios](https://github.com/axios/axios)
+this component peerDependencies on [element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/FEMessage/el-form-renderer) and [axios](https://github.com/axios/axios)
 
 make sure you have installed
 
 ```sh
-yarn add element-ui el-form-renderer axios
+yarn add element-ui @femessage/el-form-renderer axios
 ```
 
 ## install
@@ -52,7 +52,7 @@ import Vue from 'vue'
 
 // register component and loading directive
 import ElDataTable from 'el-data-table'
-import ElFormRenderer from 'el-form-renderer'
+import ElFormRenderer from '@femessage/el-form-renderer'
 import {
   Button,
   Dialog,
