@@ -915,7 +915,13 @@ export default {
             instance.confirmButtonLoading = true
 
             if (this.onDelete) {
-              this.onDelete(this.hasSelect ? this.selected : row)
+              this.onDelete(
+                this.hasSelect
+                  ? !this.single
+                    ? this.selected
+                    : this.selected[0]
+                  : row
+              )
                 .then(resp => {
                   this.showMessage(true)
                   done()

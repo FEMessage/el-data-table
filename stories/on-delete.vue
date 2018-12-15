@@ -21,6 +21,7 @@ export default {
         'https://easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage',
       hasNew: false,
       hasEdit: false,
+      //      single: true,
       //      hasOperation: false,
       columns: [
         // 注释掉 type: selection时, 删除按钮变成一行一个, 此时onDelete回调参数为选中行的数据
