@@ -4,6 +4,8 @@
 
 auto requesting by `axios`, supports pagination, tree data structure, custom search, custom operation column, makes rest api easily 👏
 
+![](https://ws1.sinaimg.cn/large/b5e3d01fgy1fxrbi1wsszj218r0l5n2c.jpg)
+
 ## feature
 
 * 只需进行简单的配置，即可实现 RESTful 风格的 CRUD 四个接口的对接
