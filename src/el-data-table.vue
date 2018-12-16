@@ -349,13 +349,13 @@ export default {
       }
     },
     /**
-     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用
+     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用, 需要返回promise
      */
     onNew: {
       type: Function
     },
     /**
-     * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用
+     * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用, 需要返回promise
      */
     onEdit: {
       type: Function
@@ -799,9 +799,6 @@ export default {
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
-      if (this.onNew) {
-        return this.onNew(row)
-      }
       /**
        * 点击新增 触发new事件
        * @event new
@@ -841,9 +838,6 @@ export default {
       })
     },
     onDefaultEdit(row) {
-      if (this.onEdit) {
-        return this.onEdit(row)
-      }
       /**
        * 点击修改 触发edit事件
        * @event edit
@@ -884,22 +878,40 @@ export default {
           this.extraParams
         )
 
+        if (this.isTree) {
+          if (this.isNew)
+            data[this.treeParentKey] = this.row[this.treeParentValue]
+          else data[this.treeParentKey] = this.row[this.treeParentKey]
+        }
+
         this.beforeConfirm(data, this.isNew)
           .then(resp => {
-            // 默认新增
+            let condiction = 'isNew'
+            let customMethod = 'onNew'
+
+            if (this.isEdit) {
+              condiction = 'isEdit'
+              customMethod = 'onEdit'
+            }
+
+            if (this[condiction] && this[customMethod]) {
+              this[customMethod](data, this.row)
+                .then(resp => {
+                  this.getList()
+                  this.showMessage(true)
+                  this.cancel()
+                })
+                .catch(e => {})
+              return
+            }
+
+            // 默认新增/修改逻辑
             let method = 'post'
             let url = this.url + ''
 
             if (this.isEdit) {
               method = 'put'
               url += `/${this.row[this.id]}`
-            }
-
-            if (this.isTree) {
-              if (this.isNew)
-                data[this.treeParentKey] = this.row[this.treeParentValue]
-              else if (this.isEdit)
-                data[this.treeParentKey] = this.row[this.treeParentKey]
             }
 
             this.confirmLoading = true
