@@ -21,6 +21,24 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 * [full api doc](https://femessage.github.io/el-data-table/)
 * [online demo](https://femessage.github.io/el-data-table/storybook/)
 
+## demo
+
+you can run demo on your localhost, just follow these scripts
+
+```bash
+# clone the source code
+git clone https://github.com/FEMessage/el-data-table.git
+
+# enter the directory
+cd el-data-table
+
+# install the dependencies
+yarn
+
+# run demo in ./stories
+yarn storybook
+```
+
 ## pre install
 
 this component peerDependencies on [element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/FEMessage/el-form-renderer) and [axios](https://github.com/axios/axios)
