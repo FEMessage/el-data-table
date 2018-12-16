@@ -10,6 +10,7 @@ import FirstPage from './firstPage.vue'
 import BeforeSearch from './before-search.vue'
 import OnDelete from './on-delete.vue'
 import BeforeConfirm from './before-confirm.vue'
+import OnNewOrEdit from './on-new-or-edit.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
@@ -24,6 +25,10 @@ storiesOf('ElDataTable', module)
   .add('before-confirm', () => ({
     components: {BeforeConfirm},
     template: `<before-confirm/>`
+  }))
+  .add('on-new-or-edit', () => ({
+    components: {OnNewOrEdit},
+    template: `<on-new-or-edit/>`
   }))
 
 function basic() {

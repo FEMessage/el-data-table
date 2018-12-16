@@ -440,10 +440,62 @@ beforeConfirm(data, isNew) {
 }
 ```
 
+### onNew
+
+默认情况下, 新增的请求格式是 POST url body
+当默认新增方法不满足需求时可使用 onNew, 需要返回 promise
+参数(data, row) data 是 form 表单的数据, row 是当前行的数据, 只有 isTree 为 true 时, 点击操作列的新增按钮才会有值
+
+```vue
+<el-data-table
+  :onNew="onNew"
+>
+</el-data-table>
+```
+
+```js
+import Axios from 'axios'
+
+onNew(data, row) {
+  console.log(data, row)
+  return Axios.post(
+	'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-new',
+	data
+  )
+},
+```
+
+### onEdit
+
+默认情况下, 修改的请求格式是 PUT url/id body
+点击修改按钮时的方法, 当默认修改方法不满足需求时可使用 onEdit, 需要返回 promise
+参数(data, row) data 是 form 表单的数据, row 是当前行的数据
+
+```vue
+<el-data-table
+  :onEdit="onEdit"
+>
+</el-data-table>
+```
+
+```js
+import Axios from 'axios'
+
+onEdit(data, row) {
+  console.log(data, row)
+  return Axios.put(
+	'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-edit',
+	data
+  )
+}
+```
+
 ### onDelete
 
-默认删除的请求地址是 DELETE url/id
-删除多个的请求地址是 DELETE url/id,id,id
+默认情况下:
+
+* 删除单个的请求格式是 DELETE url/id
+* 删除多个的请求格式是 DELETE url/id,id,id
 
 当不满足需求时, 可以使用 onDelete, 自定义删除方法, 返回 promise
 
@@ -496,102 +548,6 @@ customQuery: {
   type: this.$route.query.type
 }
 ```
-
-### `onNew`/`onEdit`
-
-如果默认的新增、编辑弹窗不能满足需求,可以使用`onNew`/`onEdit`方法
-
-点击新增/编辑按钮, 会触发`onNew`/`onEdit`方法
-
-适用场景：想使用 el-data-table 默认的新编、编辑按钮，并需要自定义点击行为的情况
-
-例子: 点击新增/编辑按钮，跳转到详情页面
-
-```vue
-<template>
-  <el-data-table
-    onNew="onNew"
-    onEdit="onEdit"
-  >
-  </el-data-table>
-</template>
-<script>
-export default {
-  data() {
-    return {}
-  },
-  methods: {
-    onNew() {
-      this.$router.push({
-        path: detailPage
-      })
-    },
-    onEdit(row) {
-      this.$router.push({
-        path: detailPage,
-        query: {id: row.id}
-      })
-    }
-  }
-}
-</script>
-```
-
-### 监听 `new` /`edit` 事件
-
-如果想在默认的新增、编辑方法中增加额外的操作。可以监听 `new` 、`edit` 事件
-
-点击新增/修改按钮，会触发`new`/`edit`事件
-
-适用场景: 想利用 el-data-table 快速渲染弹窗表单的特性，并且复用默认的`new`/`edit`的逻辑，但弹窗含有自定义组件, 无法通过配置进行渲染的情况
-
-例子：在新增和编辑的弹窗中，除了常规的表单元素，还要增加一个上传图片组件，并且发送`POST`/`PUT`请求的 body 中，带上图片的 url
-
-```vue
-<template>
-  <el-data-table
-    :extraParams=extraParams
-    @new="clearExtraParams"
-    @edit="setExtraParams"
-  >
-    <div slot="form" prop="logo">
-      <div class="form-label"> 品牌logo</div>
-      <my-upload-component
-        :onLoadSuccess="onLoadSuccess"
-        :fileUrl="extraParams.logoUrl">
-      </my-upload-component>
-    </div>
-  </el-data-table>
-</template>
-<script>
-export default {
-  data() {
-    return {
-      extraParams: {
-        logoUrl: ''
-      }
-    }
-  },
-  methods: {
-    onLoadSuccess(url) {
-      this.extraParams.logoUrl = url // 将成功后的url 放进extraParams
-    },
-    clearExtraParams() {
-      this.extraParams.logoUrl = '' //清空extraParams
-    },
-    setExtraParams(row) {
-      this.extraParams.logoUrl = row.logoUrl //将原有的logoUrl 放入extraParams
-    }
-  }
-}
-</script>
-```
-
-技巧点：
-
-1.  上传成功后把图片 url 放在 `extraParams` 上
-2.  点击新增按钮时，清除 `extraParams.logoUrl`
-3.  点击编辑按钮时，设置`extraParams.logoUrl`
 
 ## refer
 
