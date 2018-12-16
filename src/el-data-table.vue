@@ -809,21 +809,13 @@ export default {
       this.dialogVisible = true
     },
     onDefaultView(row) {
-      if (this.onView) {
-        return this.onView(row)
-      }
-      /**
-       * 点击查看 触发view事件
-       * @event view
-       */
-      this.$emit('view', row)
-
       this.row = row
       this.isView = true
       this.isNew = false
       this.isEdit = false
       this.dialogTitle = this.dialogViewTitle
       this.dialogVisible = true
+
       // 给表单填充值
       this.$nextTick(() => {
         this.form.forEach(entry => {
