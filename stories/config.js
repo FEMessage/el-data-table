@@ -16,10 +16,10 @@ export default {
     },
     {
       $type: 'select',
-      $id: 'sex',
-      label: '性别',
-      rules: [{required: true, message: '请选择性别', trigger: 'blur'}],
-      $options: ['男生', '女生'].map(f => ({label: f, value: f})),
+      $id: 'type',
+      label: '账户类型',
+      rules: [{required: true, message: '请选择账户类型', trigger: 'blur'}],
+      $options: ['Organization', 'User'].map(f => ({label: f, value: f})),
       $el: {
         placeholder: '请选择'
       }

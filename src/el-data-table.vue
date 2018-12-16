@@ -290,9 +290,9 @@ export default {
       default: true
     },
     /**
-     * 操作列的自定义按钮, 渲染的是element-ui的button, 支持style等属性.
+     * 操作列的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
+     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示 }
      * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
-     * type: '', text: '', atClick: row => Promise.resolve(), show: row => {返回true时显示}
      */
     extraButtons: {
       type: Array,
@@ -301,9 +301,9 @@ export default {
       }
     },
     /**
-     * 头部的自定义按钮, 渲染的是element-ui的button, 支持style等属性.
+     * 头部的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
+     * {type: '', text: '', atClick: selected => Promise.resolve(), show: selected => return true时显示, disabled: selected => return true时禁用}
      * 点击事件 selected参数 表示选中行所组成的数组, 函数需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
-     * type: '', text: '', atClick: selected => Promise.resolve(), show: selected => {返回true时显示}, disabled: selected => {返回true时禁用}
      */
     headerButtons: {
       type: Array,
@@ -512,12 +512,13 @@ export default {
       type: Object
     },
     /**
-     * 在新增/修改弹窗 点击确认时调用，返回false则不会继续执行confirm逻辑
+     * 在新增/修改弹窗 点击确认时调用，返回Promise, 如果reject, 则不会发送新增/修改请求
+     * 参数: (data, isNew) data为表单数据, isNew true 表示是新增弹窗, false 为 编辑弹窗
      */
     beforeConfirm: {
       type: Function,
       default() {
-        return true
+        return Promise.resolve()
       }
     },
     /**
@@ -869,15 +870,13 @@ export default {
       this.dialogVisible = false
     },
     confirm() {
-      if (!this.beforeConfirm()) return
+      if (this.isView) {
+        this.cancel()
+        return
+      }
 
       this.$refs[dialogForm].validate(valid => {
         if (!valid) return false
-
-        if (this.isView) {
-          this.cancel()
-          return
-        }
 
         let data = Object.assign(
           {},
@@ -885,33 +884,37 @@ export default {
           this.extraParams
         )
 
-        // 默认新增
-        let method = 'post'
-        let url = this.url + ''
-
-        if (this.isEdit) {
-          method = 'put'
-          url += `/${this.row[this.id]}`
-        }
-
-        if (this.isTree) {
-          if (this.isNew)
-            data[this.treeParentKey] = this.row[this.treeParentValue]
-          else if (this.isEdit)
-            data[this.treeParentKey] = this.row[this.treeParentKey]
-        }
-
-        this.confirmLoading = true
-
-        this.$axios[method](url, data)
+        this.beforeConfirm(data, this.isNew)
           .then(resp => {
-            this.getList()
-            this.showMessage(true)
-            this.cancel()
+            // 默认新增
+            let method = 'post'
+            let url = this.url + ''
+
+            if (this.isEdit) {
+              method = 'put'
+              url += `/${this.row[this.id]}`
+            }
+
+            if (this.isTree) {
+              if (this.isNew)
+                data[this.treeParentKey] = this.row[this.treeParentValue]
+              else if (this.isEdit)
+                data[this.treeParentKey] = this.row[this.treeParentKey]
+            }
+
+            this.confirmLoading = true
+
+            this.$axios[method](url, data)
+              .then(resp => {
+                this.getList()
+                this.showMessage(true)
+                this.cancel()
+              })
+              .catch(err => {
+                this.confirmLoading = false
+              })
           })
-          .catch(err => {
-            this.confirmLoading = false
-          })
+          .catch(e => {})
       })
     },
     onDefaultDelete(row) {

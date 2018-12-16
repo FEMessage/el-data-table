@@ -9,6 +9,7 @@ import CustomId from './custom-id.vue'
 import FirstPage from './firstPage.vue'
 import BeforeSearch from './before-search.vue'
 import OnDelete from './on-delete.vue'
+import BeforeConfirm from './before-confirm.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
@@ -20,6 +21,10 @@ storiesOf('ElDataTable', module)
   .add('接口第一页页数为0', firstPage)
   .add('before-search', beforeSearch)
   .add('on-delete', onDelete)
+  .add('before-confirm', () => ({
+    components: {BeforeConfirm},
+    template: `<before-confirm/>`
+  }))
 
 function basic() {
   return {
