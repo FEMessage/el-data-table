@@ -135,9 +135,9 @@
         default: true
       },
       /**
-       * 操作列的自定义按钮, 渲染的是element-ui的button, 支持style等属性.
+       * 操作列的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
+       * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示 }
        * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
-       * type: '', text: '', atClick: row => Promise.resolve(), show: row => {返回true时显示}
        */
       extraButtons: {
         type: Array,
@@ -146,9 +146,9 @@
         }
       },
       /**
-       * 头部的自定义按钮, 渲染的是element-ui的button, 支持style等属性.
+       * 头部的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
+       * {type: '', text: '', atClick: selected => Promise.resolve(), show: selected => return true时显示, disabled: selected => return true时禁用}
        * 点击事件 selected参数 表示选中行所组成的数组, 函数需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
-       * type: '', text: '', atClick: selected => Promise.resolve(), show: selected => {返回true时显示}, disabled: selected => {返回true时禁用}
        */
       headerButtons: {
         type: Array,
@@ -194,13 +194,15 @@
         }
       },
       /**
-       * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用
+       * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用, 需要返回promise
+       * 参数(data, row) data 是form表单的数据, row 是当前行的数据, 只有isTree为true时, 点击操作列的新增按钮才会有值
        */
       onNew: {
         type: Function
       },
       /**
-       * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用
+       * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用, 需要返回promise
+       * 参数(data, row) data 是form表单的数据, row 是当前行的数据
        */
       onEdit: {
         type: Function
@@ -357,12 +359,13 @@
         type: Object
       },
       /**
-       * 在新增/修改弹窗 点击确认时调用，返回false则不会继续执行confirm逻辑
+       * 在新增/修改弹窗 点击确认时调用，返回Promise, 如果reject, 则不会发送新增/修改请求
+       * 参数: (data, isNew) data为表单数据, isNew true 表示是新增弹窗, false 为 编辑弹窗
        */
       beforeConfirm: {
         type: Function,
         default: function default$11() {
-          return true
+          return Promise.resolve()
         }
       },
       /**
@@ -403,6 +406,32 @@
         initCustomQuery: JSON.stringify(this.customQuery)
       }
     },
+    watch: {
+      url: function(val, old) {
+        this.page = defaultFirstPage;
+        this.getList();
+      },
+      dialogVisible: function(val, old) {
+        var this$1 = this;
+
+        if (!val) {
+          this.isNew = false;
+          this.isEdit = false;
+          this.isView = false;
+          this.confirmLoading = false;
+
+          this.$refs[dialogForm].resetFields();
+
+          // fix element bug https://github.com/ElemeFE/element/issues/8615
+          // 重置select 为multiple==true时值为[undefined]
+          this.form.forEach(function (entry) {
+            if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
+              this$1.$refs[dialogForm].updateValue({id: entry.$id, value: []});
+            }
+          });
+        }
+      }
+    },
     mounted: function mounted() {
       var this$1 = this;
 
@@ -435,32 +464,6 @@
       this.$nextTick(function () {
         this$1.getList();
       });
-    },
-    watch: {
-      url: function(val, old) {
-        this.page = defaultFirstPage;
-        this.getList();
-      },
-      dialogVisible: function(val, old) {
-        var this$1 = this;
-
-        if (!val) {
-          this.isNew = false;
-          this.isEdit = false;
-          this.isView = false;
-          this.confirmLoading = false;
-
-          this.$refs[dialogForm].resetFields();
-
-          // fix element bug https://github.com/ElemeFE/element/issues/8615
-          // 重置select 为multiple==true时值为[undefined]
-          this.form.forEach(function (entry) {
-            if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-              this$1.$refs[dialogForm].updateValue({id: entry.$id, value: []});
-            }
-          });
-        }
-      }
     },
     methods: {
       getList: function getList(shouldStoreQuery) {
@@ -654,15 +657,6 @@
       onDefaultNew: function onDefaultNew(row) {
         if ( row === void 0 ) row = {};
 
-        if (this.onNew) {
-          return this.onNew(row)
-        }
-        /**
-         * 点击新增 触发new事件
-         * @event new
-         */
-        this.$emit('new', row);
-
         this.row = row;
         this.isNew = true;
         this.isEdit = false;
@@ -673,21 +667,13 @@
       onDefaultView: function onDefaultView(row) {
         var this$1 = this;
 
-        if (this.onView) {
-          return this.onView(row)
-        }
-        /**
-         * 点击查看 触发view事件
-         * @event view
-         */
-        this.$emit('view', row);
-
         this.row = row;
         this.isView = true;
         this.isNew = false;
         this.isEdit = false;
         this.dialogTitle = this.dialogViewTitle;
         this.dialogVisible = true;
+
         // 给表单填充值
         this.$nextTick(function () {
           this$1.form.forEach(function (entry) {
@@ -699,15 +685,6 @@
       },
       onDefaultEdit: function onDefaultEdit(row) {
         var this$1 = this;
-
-        if (this.onEdit) {
-          return this.onEdit(row)
-        }
-        /**
-         * 点击修改 触发edit事件
-         * @event edit
-         */
-        this.$emit('edit', row);
 
         this.row = row;
         this.isEdit = true;
@@ -731,15 +708,13 @@
       confirm: function confirm() {
         var this$1 = this;
 
-        if (!this.beforeConfirm()) { return }
+        if (this.isView) {
+          this.cancel();
+          return
+        }
 
         this.$refs[dialogForm].validate(function (valid) {
           if (!valid) { return false }
-
-          if (this$1.isView) {
-            this$1.cancel();
-            return
-          }
 
           var data = Object.assign(
             {},
@@ -747,33 +722,55 @@
             this$1.extraParams
           );
 
-          // 默认新增
-          var method = 'post';
-          var url = this$1.url + '';
-
-          if (this$1.isEdit) {
-            method = 'put';
-            url += "/" + (this$1.row[this$1.id]);
-          }
-
           if (this$1.isTree) {
             if (this$1.isNew)
               { data[this$1.treeParentKey] = this$1.row[this$1.treeParentValue]; }
-            else if (this$1.isEdit)
-              { data[this$1.treeParentKey] = this$1.row[this$1.treeParentKey]; }
+            else { data[this$1.treeParentKey] = this$1.row[this$1.treeParentKey]; }
           }
 
-          this$1.confirmLoading = true;
-
-          this$1.$axios[method](url, data)
+          this$1.beforeConfirm(data, this$1.isNew)
             .then(function (resp) {
-              this$1.getList();
-              this$1.showMessage(true);
-              this$1.cancel();
+              var condiction = 'isNew';
+              var customMethod = 'onNew';
+
+              if (this$1.isEdit) {
+                condiction = 'isEdit';
+                customMethod = 'onEdit';
+              }
+
+              if (this$1[condiction] && this$1[customMethod]) {
+                this$1[customMethod](data, this$1.row)
+                  .then(function (resp) {
+                    this$1.getList();
+                    this$1.showMessage(true);
+                    this$1.cancel();
+                  })
+                  .catch(function (e) {});
+                return
+              }
+
+              // 默认新增/修改逻辑
+              var method = 'post';
+              var url = this$1.url + '';
+
+              if (this$1.isEdit) {
+                method = 'put';
+                url += "/" + (this$1.row[this$1.id]);
+              }
+
+              this$1.confirmLoading = true;
+
+              this$1.$axios[method](url, data)
+                .then(function (resp) {
+                  this$1.getList();
+                  this$1.showMessage(true);
+                  this$1.cancel();
+                })
+                .catch(function (err) {
+                  this$1.confirmLoading = false;
+                });
             })
-            .catch(function (err) {
-              this$1.confirmLoading = false;
-            });
+            .catch(function (e) {});
         });
       },
       onDefaultDelete: function onDefaultDelete(row) {
