@@ -801,12 +801,6 @@ export default {
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
-      /**
-       * 点击新增 触发new事件
-       * @event new
-       */
-      this.$emit('new', row)
-
       this.row = row
       this.isNew = true
       this.isEdit = false
@@ -840,12 +834,6 @@ export default {
       })
     },
     onDefaultEdit(row) {
-      /**
-       * 点击修改 触发edit事件
-       * @event edit
-       */
-      this.$emit('edit', row)
-
       this.row = row
       this.isEdit = true
       this.isNew = false
