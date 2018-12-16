@@ -249,49 +249,6 @@ searchForm: [
 
 ![searchForm](assets/image-20181106224933515.png)
 
-### beforeSearch
-
-This function will invoke after clicking search button. It should return promise, if it resolve, search will execute;
-if it reject, search won't execute.
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
-  :searchForm="searchForm"
-  :beforeSearch="beforeSearch"
->
-</el-data-table>
-```
-
-```js
-// script
-data() {
-return {
-  url: '',
-  columns: [
-	{prop: 'name', label: '用户名'},
-	{prop: 'createdBy', label: '创建人'},
-	{prop: 'userInfo.createTime', label: '创建时间'}
-  ],
-  searchForm: [
-	{
-	  $type: 'input',
-	  $id: 'name',
-	  label: '用户名',
-	  $el: {placeholder: '请输入用户名'}
-	  //            rules: [{required: true, trigger: 'blur', whitespace: true}]
-	}
-  ],
-  beforeSearch: () => {
-	this.url = 'https://xxx'
-	return Promise.resolve()
-  }
-}
-}
-```
-
 ### selection
 
 ```vue
@@ -326,46 +283,6 @@ columns: [
 ```
 
 ![selection](assets/image-20181106225421654.png)
-
-### onDelete
-
-默认删除的请求地址是 DELETE url/id
-删除多个的请求地址是 DELETE url/id,id,id
-
-当不满足需求时, 可以使用 onDelete, 自定义删除方法, 返回 promise
-
-```vue
-<el-data-table
-  onDelete="onDelete"
->
-</el-data-table>
-```
-
-```js
-import Axios from 'axios'
-
-// 多选时, 参数为selected, 代表选中的行组成的数组
-onDelete: selected => {
-  return Axios.delete(
-    'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
-    {
-      data: selected.map(v => v.id)
-    }
-  )
-}
-
-// 非多选时参数为row, 代表单行的数据
-onDelete: row => {
-  return Axios.delete(
-    'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
-    {
-      data: {
-        id: row.id
-      }
-    }
-  )
-}
-```
 
 ### headerButtons
 
@@ -434,6 +351,113 @@ extraButtons: [
 ```
 
 ![image-20181106231010055](assets/image-20181106231010055.png)
+
+### beforeSearch
+
+This function will invoke after clicking search button. It should return promise, if it resolve, search will execute;
+if it reject, search won't execute.
+
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+  :searchForm="searchForm"
+  :beforeSearch="beforeSearch"
+>
+</el-data-table>
+```
+
+```js
+// script
+return {
+  url: '',
+  columns: [
+    {prop: 'name', label: '用户名'},
+    {prop: 'createdBy', label: '创建人'},
+    {prop: 'userInfo.createTime', label: '创建时间'}
+  ],
+  searchForm: [
+    {
+      $type: 'input',
+      $id: 'name',
+      label: '用户名',
+      $el: {placeholder: '请输入用户名'}
+      //            rules: [{required: true, trigger: 'blur', whitespace: true}]
+    }
+  ],
+  beforeSearch: () => {
+    this.url = 'https://xxx'
+    return Promise.resolve()
+  }
+}
+```
+
+### beforeConfirm
+
+在新增/修改弹窗点击确认, 并完成表单 form 表单校验后调用，需要返回 Promise.
+如果 resolve, 则会发送新增/修改请求; 如果 reject, 则不会发送新增/修改请求参数: (data, isNew) data 为表单数据, isNew true 表示是新增弹窗, false 为 编辑弹窗
+
+```template
+<el-data-table
+  :beforeConfirm="beforeConfirm"
+>
+</el-data-table>
+```
+
+```js
+beforeConfirm(data, isNew) {
+  console.log(data, isNew)
+
+  if (isNew) {
+	alert('新增可以发送请求')
+	return Promise.resolve()
+  } else {
+	alert('修改不可以发送请求')
+	return Promise.reject()
+  }
+}
+```
+
+### onDelete
+
+默认删除的请求地址是 DELETE url/id
+删除多个的请求地址是 DELETE url/id,id,id
+
+当不满足需求时, 可以使用 onDelete, 自定义删除方法, 返回 promise
+
+```vue
+<el-data-table
+  onDelete="onDelete"
+>
+</el-data-table>
+```
+
+```js
+import Axios from 'axios'
+
+// 多选时, 参数为selected, 代表选中的行组成的数组
+onDelete: selected => {
+  return Axios.delete(
+    'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
+    {
+      data: selected.map(v => v.id)
+    }
+  )
+}
+
+// 非多选时参数为row, 代表单行的数据
+onDelete: row => {
+  return Axios.delete(
+    'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
+    {
+      data: {
+        id: row.id
+      }
+    }
+  )
+}
+```
 
 ### extraParams on new/edit
 
