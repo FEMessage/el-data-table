@@ -559,6 +559,30 @@ export default {
       initCustomQuery: JSON.stringify(this.customQuery)
     }
   },
+  watch: {
+    url: function(val, old) {
+      this.page = defaultFirstPage
+      this.getList()
+    },
+    dialogVisible: function(val, old) {
+      if (!val) {
+        this.isNew = false
+        this.isEdit = false
+        this.isView = false
+        this.confirmLoading = false
+
+        this.$refs[dialogForm].resetFields()
+
+        // fix element bug https://github.com/ElemeFE/element/issues/8615
+        // 重置select 为multiple==true时值为[undefined]
+        this.form.forEach(entry => {
+          if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
+            this.$refs[dialogForm].updateValue({id: entry.$id, value: []})
+          }
+        })
+      }
+    }
+  },
   mounted() {
     let searchForm = this.$refs.searchForm
 
@@ -589,30 +613,6 @@ export default {
     this.$nextTick(() => {
       this.getList()
     })
-  },
-  watch: {
-    url: function(val, old) {
-      this.page = defaultFirstPage
-      this.getList()
-    },
-    dialogVisible: function(val, old) {
-      if (!val) {
-        this.isNew = false
-        this.isEdit = false
-        this.isView = false
-        this.confirmLoading = false
-
-        this.$refs[dialogForm].resetFields()
-
-        // fix element bug https://github.com/ElemeFE/element/issues/8615
-        // 重置select 为multiple==true时值为[undefined]
-        this.form.forEach(entry => {
-          if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-            this.$refs[dialogForm].updateValue({id: entry.$id, value: []})
-          }
-        })
-      }
-    }
   },
   methods: {
     getList(shouldStoreQuery) {
