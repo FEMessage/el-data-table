@@ -182,6 +182,8 @@ export default {
 
 ![url and columns](assets/image-20181106222453747.png)
 
+> if `url` change, the table will reload
+
 ### new/edit form
 
 this will show new or edit form, when you click new or edit button
