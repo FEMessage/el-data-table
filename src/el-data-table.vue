@@ -350,12 +350,14 @@ export default {
     },
     /**
      * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用, 需要返回promise
+     * 参数(data, row) data 是form表单的数据, row 是当前行的数据, 只有isTree为true时, 点击操作列的新增按钮才会有值
      */
     onNew: {
       type: Function
     },
     /**
      * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用, 需要返回promise
+     * 参数(data, row) data 是form表单的数据, row 是当前行的数据
      */
     onEdit: {
       type: Function

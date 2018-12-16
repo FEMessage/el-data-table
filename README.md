@@ -440,10 +440,62 @@ beforeConfirm(data, isNew) {
 }
 ```
 
+### onNew
+
+默认情况下, 新增的请求格式是 POST url body
+当默认新增方法不满足需求时可使用 onNew, 需要返回 promise
+参数(data, row) data 是 form 表单的数据, row 是当前行的数据, 只有 isTree 为 true 时, 点击操作列的新增按钮才会有值
+
+```vue
+<el-data-table
+  :onNew="onNew"
+>
+</el-data-table>
+```
+
+```js
+import Axios from 'axios'
+
+onNew(data, row) {
+  console.log(data, row)
+  return Axios.post(
+	'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-new',
+	data
+  )
+},
+```
+
+### onEdit
+
+默认情况下, 修改的请求格式是 PUT url/id body
+点击修改按钮时的方法, 当默认修改方法不满足需求时可使用 onEdit, 需要返回 promise
+参数(data, row) data 是 form 表单的数据, row 是当前行的数据
+
+```vue
+<el-data-table
+  :onEdit="onEdit"
+>
+</el-data-table>
+```
+
+```js
+import Axios from 'axios'
+
+onEdit(data, row) {
+  console.log(data, row)
+  return Axios.put(
+	'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-edit',
+	data
+  )
+}
+```
+
 ### onDelete
 
-默认删除的请求地址是 DELETE url/id
-删除多个的请求地址是 DELETE url/id,id,id
+默认情况下:
+
+* 删除单个的请求格式是 DELETE url/id
+* 删除多个的请求格式是 DELETE url/id,id,id
 
 当不满足需求时, 可以使用 onDelete, 自定义删除方法, 返回 promise
 
