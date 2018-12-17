@@ -43,10 +43,16 @@ yarn storybook
 
 this component peerDependencies on [element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/FEMessage/el-form-renderer) and [axios](https://github.com/axios/axios)
 
-make sure you have installed
+make sure you have installed in your project
 
 ```sh
 yarn add element-ui @femessage/el-form-renderer axios
+```
+
+if you want to develop the component on your localhost, you should install with -P
+
+```sh
+yarn add element-ui @femessage/el-form-renderer axios -P
 ```
 
 ## install
