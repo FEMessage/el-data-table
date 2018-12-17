@@ -6,7 +6,18 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 ![](https://ws1.sinaimg.cn/large/b5e3d01fgy1fxrbi1wsszj218r0l5n2c.jpg)
 
-## feature
+## Table of Contents
+
+* **Feature(#Feature)**
+* **Demo(#Demo)**
+* **Documentation(#Documentation)**
+* **Install(#Install)**
+* **Quick Start(#Quick-Start)**
+* **Example(#Example)**
+* **Reference(#Reference)**
+* **License(License)**
+
+## Feature
 
 * 只需进行简单的配置，即可实现 RESTful 风格的 CRUD 四个接口的对接
 * 自带新增/修改/删除逻辑(默认新增/修改都是弹窗表单形式)
@@ -16,12 +27,16 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 * 自带分页逻辑
 * 支持查询参数持久化，适配`hash`, `history`两种路由模式
 
-## documentation
+[⬆ Back to Top](#Table-Of-Contents)
+
+## Documentation
 
 * [full api doc](https://femessage.github.io/el-data-table/)
 * [online demo](https://femessage.github.io/el-data-table/storybook/)
 
-## demo
+[⬆ Back to Top](#Table-Of-Contents)
+
+## Demo
 
 you can run demo on your localhost, just follow these scripts
 
@@ -39,6 +54,8 @@ yarn
 yarn storybook
 ```
 
+[⬆ Back to Top](#Table-Of-Contents)
+
 ## pre install
 
 this component peerDependencies on [element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/FEMessage/el-form-renderer) and [axios](https://github.com/axios/axios)
@@ -55,7 +72,9 @@ if you want to develop the component on your localhost, you should install with 
 yarn add element-ui @femessage/el-form-renderer axios -P
 ```
 
-## install
+[⬆ Back to Top](#Table-Of-Contents)
+
+## Install
 
 encourage using [yarn](https://yarnpkg.com/en/docs/install#mac-stable) to install
 
@@ -63,7 +82,9 @@ encourage using [yarn](https://yarnpkg.com/en/docs/install#mac-stable) to instal
 yarn add el-data-table
 ```
 
-## usage
+[⬆ Back to Top](#Table-Of-Contents)
+
+## Quick Start
 
 ### global register component
 
@@ -117,7 +138,9 @@ Vue.prototype.$axios = axios
 </template>
 ```
 
-## example
+[⬆ Back to Top](#Table-Of-Contents)
+
+## Example
 
 ### basic
 
@@ -555,7 +578,7 @@ customQuery: {
 }
 ```
 
-## refer
+## Reference
 
 * [form rules detail see async-validator](https://github.com/yiminghe/async-validator)
 * [el-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
@@ -567,6 +590,10 @@ customQuery: {
 * [从 vue-router 看前端路由的两种实现](https://zhuanlan.zhihu.com/p/27588422)
 * [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
 
+[⬆ Back to Top](#Table-Of-Contents)
+
 ## License
 
 [MIT](./LICENSE)
+
+[⬆ Back to Top](#Table-Of-Contents)
