@@ -566,3 +566,7 @@ customQuery: {
 * [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
 * [从 vue-router 看前端路由的两种实现](https://zhuanlan.zhihu.com/p/27588422)
 * [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
+
+## License
+
+[MIT](./LICENSE)
