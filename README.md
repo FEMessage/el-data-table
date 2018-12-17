@@ -8,14 +8,14 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 ## Table of Contents
 
-* **Feature(#Feature)**
-* **Demo(#Demo)**
-* **Documentation(#Documentation)**
-* **Install(#Install)**
-* **Quick Start(#Quick-Start)**
-* **Example(#Example)**
-* **Reference(#Reference)**
-* **License(License)**
+* **[Feature](#feature)**
+* **[Demo](#demo)**
+* **[Documentation](#documentation)**
+* **[Install](#install)**
+* **[Quick Start](#quick-start)**
+* **[Example](#example)**
+* **[Reference](#reference)**
+* **[License](license)**
 
 ## Feature
 
@@ -27,14 +27,14 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 * 自带分页逻辑
 * 支持查询参数持久化，适配`hash`, `history`两种路由模式
 
-[⬆ Back to Top](#Table-Of-Contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Documentation
 
 * [full api doc](https://femessage.github.io/el-data-table/)
 * [online demo](https://femessage.github.io/el-data-table/storybook/)
 
-[⬆ Back to Top](#Table-Of-Contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Demo
 
@@ -54,7 +54,7 @@ yarn
 yarn storybook
 ```
 
-[⬆ Back to Top](#Table-Of-Contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## pre install
 
@@ -72,7 +72,7 @@ if you want to develop the component on your localhost, you should install with 
 yarn add element-ui @femessage/el-form-renderer axios -P
 ```
 
-[⬆ Back to Top](#Table-Of-Contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Install
 
@@ -82,7 +82,7 @@ encourage using [yarn](https://yarnpkg.com/en/docs/install#mac-stable) to instal
 yarn add el-data-table
 ```
 
-[⬆ Back to Top](#Table-Of-Contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Quick Start
 
@@ -138,7 +138,7 @@ Vue.prototype.$axios = axios
 </template>
 ```
 
-[⬆ Back to Top](#Table-Of-Contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Example
 
@@ -590,10 +590,10 @@ customQuery: {
 * [从 vue-router 看前端路由的两种实现](https://zhuanlan.zhihu.com/p/27588422)
 * [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
 
-[⬆ Back to Top](#Table-Of-Contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## License
 
 [MIT](./LICENSE)
 
-[⬆ Back to Top](#Table-Of-Contents)
+[⬆ Back to Top](#table-of-contents)
