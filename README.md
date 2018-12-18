@@ -8,6 +8,7 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 ## Table of Contents
 
+* **[Introduction](#introduction)**
 * **[Feature](#feature)**
 * **[Demo](#demo)**
 * **[Documentation](#documentation)**
@@ -17,15 +18,46 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 * **[Reference](#reference)**
 * **[License](license)**
 
+## Introduction
+
+为什么要在 element-ui 的 el-table 的基础上封装一个 el-data-table?
+
+我常听到有以下几种声音：
+
+1.  el-table 已可以覆盖大部分场景，暂无扩展需求
+2.  封装了这么多东西，耦合太严重了
+3.  涉及过多的业务逻辑，有点僵化，业务操作还是交给开发者去处理
+
+首先 el-table 的确很灵活，只不过，在实现分页请求的时候，仅有 el-table 还不够，还需要组合 el-pagination 组件来实现。而分页处理的内容大多都是重复的，如果不封装，只会产生冗余的代码。
+
+而中后台太多都是 CRUD 的操作，结合 restful API，使用得只传一个 url 让组件做 CRUD 成为了可能。
+
+其次，很多有经验的“老手”觉得组件越灵活越好。
+
+但对于经验尚浅的“新手”，他们并不熟悉常见的业务场景，对一些基本操作，如果表单校验，空格过滤，添加 loading，异常处理，他们只会漏掉，而这正是产生 bug 的源头。
+
+对于一线的业务开发人员而言，面对做不完的业务，其实他们并不想去处理重复的业务逻辑，他们只想解放双手，早点下班。
+
+正是在这样的背景下，产生了 el-data-table，它主要做了两件事：
+
+1.  封装了 restful 的 CRUD 操作
+2.  把 template 的内容移动到 script 中
+
+### CRUD
+
+el-data-table 就是为了解决业务问题而生的，故而封装了 CRUD 的逻辑在里面。
+
+### 数据驱动
+
+把 template 的内容移动到 script 中, 意味着 template 可以精简，js 可以抽取出来，方便复用；同时，js 里的数据其实就是一段 json，这也让代码生成工具有了用武之地。
+
 ## Feature
 
-* 只需进行简单的配置，即可实现 RESTful 风格的 CRUD 四个接口的对接
-* 自带新增/修改/删除逻辑(默认新增/修改都是弹窗表单形式)
+* 只需进行 json 配置，即可实现 restful 风格的 CRUD 四个接口的对接
 * 支持表格内展示树形结构数据(该功能 element-ui 官方是不支持的)
-* 封装了拼接 query 查询逻辑，只需配置 json 即可进行 GET 请求查询
-* 可扩展自定义列按钮
 * 自带分页逻辑
-* 支持查询参数持久化，适配`hash`, `history`两种路由模式
+* 可扩展自定义列按钮，以及自定义操作函数
+* 支持分页查询后，点击详情再返回，恢复上一次的查询状态
 
 [⬆ Back to Top](#table-of-contents)
 
