@@ -16,7 +16,7 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 * **[Quick Start](#quick-start)**
 * **[Example](#example)**
   * **[basic](#basic)**
-  * **[url and columns](#url and columns)**
+  * **[url and columns](#url-and-columns)**
   * **[searchForm](#searchForm)**
   * **[selection](#selection)**
   * **[headerButtons](#headerButtons)**
