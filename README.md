@@ -15,6 +15,17 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 * **[Install](#install)**
 * **[Quick Start](#quick-start)**
 * **[Example](#example)**
+  * **[basic](#basic)**
+  * **[url and columns](#url and columns)**
+  * **[searchForm](#searchForm)**
+  * **[selection](#selection)**
+  * **[headerButtons](#headerButtons)**
+  * **[extraButtons](#extraButtons)**
+  * **[beforeSearch](#beforeSearch)**
+  * **[beforeConfirm](#beforeConfirm)**
+  * **[onNew](#onNew)**
+  * **[onEdit](#onEdit)**
+  * **[onDelete](#onDelete)**
 * **[Reference](#reference)**
 * **[License](license)**
 
@@ -321,6 +332,8 @@ that's the default setting, you can get your custom setting according to your ap
 
 now I'll show you more code example, here we go🚴
 
+[⬆ Back to Top](#table-of-contents)
+
 ### url and columns
 
 ```vue
@@ -362,6 +375,8 @@ export default {
 ![url and columns](assets/image-20181106222453747.png)
 
 > if `url` change, the table will reload
+
+[⬆ Back to Top](#table-of-contents)
 
 ### new/edit form
 
@@ -409,6 +424,8 @@ form: [
 
 ![new/edit form](assets/image-20181106224258372.png)
 
+[⬆ Back to Top](#table-of-contents)
+
 ### searchForm
 
 ```vue
@@ -448,6 +465,8 @@ searchForm: [
 
 ![searchForm](assets/image-20181106224933515.png)
 
+[⬆ Back to Top](#table-of-contents)
+
 ### selection
 
 ```vue
@@ -483,6 +502,8 @@ columns: [
 
 ![selection](assets/image-20181106225421654.png)
 
+[⬆ Back to Top](#table-of-contents)
+
 ### headerButtons
 
 buttons on the top of the table
@@ -517,6 +538,8 @@ headerButtons: [
 
 ![headerButtons](assets/image-20181106230058138.png)
 
+[⬆ Back to Top](#table-of-contents)
+
 ### extraButtons
 
 extra buttons in operation column
@@ -550,6 +573,8 @@ extraButtons: [
 ```
 
 ![image-20181106231010055](assets/image-20181106231010055.png)
+
+[⬆ Back to Top](#table-of-contents)
 
 ### beforeSearch
 
@@ -592,6 +617,8 @@ return {
 }
 ```
 
+[⬆ Back to Top](#table-of-contents)
+
 ### beforeConfirm
 
 在新增/修改弹窗点击确认, 并完成表单 form 表单校验后调用，需要返回 Promise.
@@ -619,6 +646,8 @@ beforeConfirm(data, isNew) {
 }
 ```
 
+[⬆ Back to Top](#table-of-contents)
+
 ### onNew
 
 默认情况下, 新增的请求格式是 POST url body
@@ -644,6 +673,8 @@ onNew(data, row) {
 },
 ```
 
+[⬆ Back to Top](#table-of-contents)
+
 ### onEdit
 
 默认情况下, 修改的请求格式是 PUT url/id body
@@ -668,6 +699,8 @@ onEdit(data, row) {
   )
 }
 ```
+
+[⬆ Back to Top](#table-of-contents)
 
 ### onDelete
 
@@ -710,6 +743,8 @@ onDelete: row => {
   )
 }
 ```
+
+[⬆ Back to Top](#table-of-contents)
 
 ### extraParams on new/edit
 
