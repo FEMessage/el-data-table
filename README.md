@@ -20,6 +20,129 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 ## Introduction
 
+### CRUD
+
+el-data-table 就是为了解决业务问题而生的，故而封装了 CRUD 的逻辑在里面。
+
+以用户接口示例，设其相对路径为:
+
+```sh
+/api/v1/users
+```
+
+则其 restful CRUD 接口如下：
+
+* 查询
+
+```sh
+GET /api/v1/users?page=1&size=10
+```
+
+* 新增
+
+```sh
+POST /api/v1/users
+```
+
+* 修改(编辑)
+
+```sh
+PUT /api/v1/users/:id
+```
+
+* 删除
+
+```sh
+DELETE /api/v1/users/:id
+```
+
+则只需要使用以下代码，即可完成 CRUD 功能
+
+```vue
+<template>
+  <el-data-table v-bind="tableConfig"></el-data-table>
+</template>
+```
+
+```js
+<script>
+export default {
+  data() {
+    return {
+      tableConfig: {
+        url: '/example/users',
+        columns: [
+          {
+            prop: 'name',
+            label: '用户名'
+          }
+        ],
+        searchForm: [
+          {
+            $type: 'input',
+            $id: 'name',
+            label: '用户名',
+            $el: {
+              placeholder: '请输入'
+            }
+          }
+        ],
+        form: [
+          {
+            $type: 'input',
+            $id: 'name',
+            label: '用户名',
+            $el: {
+              placeholder: '请输入'
+            },
+            rules: [
+              {
+                required: true,
+                message: '请输入用户名',
+                trigger: 'blur'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
+</script>
+```
+
+效果如下：
+
+* 查询
+
+![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc4rvgsaxj21i60ls0ul.jpg)
+
+![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc4wpwt65j21z20qiwj9.jpg)
+
+* 新增
+
+![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc4tjfhkmj21z20pcdk3.jpg)
+
+* 修改
+
+![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc4xoiq6nj21yy0qcjvy.jpg)
+
+* 删除
+
+![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc4yxw47kj21z20q6n2c.jpg)
+
+### 数据驱动
+
+把 template 的内容移动到 script 中, 意味着 template 可以精简，js 可以抽取出来，方便复用；同时，js 里的数据其实就是一段 json，这也让代码生成工具有了用武之地。
+
+![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc5dawjm4j216r0j5jss.jpg)
+
+![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc5b55tzfj216v0g1mye.jpg)
+
+![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc5bvw1qvj21630pcgnj.jpg)
+
+### WHY
+
 为什么要在 element-ui 的 el-table 的基础上封装一个 el-data-table?
 
 我常听到有以下几种声音：
@@ -38,18 +161,7 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 对于一线的业务开发人员而言，面对做不完的业务，其实他们并不想去处理重复的业务逻辑，他们只想解放双手，早点下班。
 
-正是在这样的背景下，产生了 el-data-table，它主要做了两件事：
-
-1.  封装了 restful 的 CRUD 操作
-2.  把 template 的内容移动到 script 中
-
-### CRUD
-
-el-data-table 就是为了解决业务问题而生的，故而封装了 CRUD 的逻辑在里面。
-
-### 数据驱动
-
-把 template 的内容移动到 script 中, 意味着 template 可以精简，js 可以抽取出来，方便复用；同时，js 里的数据其实就是一段 json，这也让代码生成工具有了用武之地。
+正是在这样的背景下，产生了 el-data-table。
 
 ## Feature
 
