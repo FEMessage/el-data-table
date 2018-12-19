@@ -131,6 +131,8 @@ export default {
 
 ![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc4yxw47kj21z20q6n2c.jpg)
 
+[⬆ Back to Top](#table-of-contents)
+
 ### 数据驱动
 
 把 template 的内容移动到 script 中, 意味着 template 可以精简，js 可以抽取出来，方便复用；同时，js 里的数据其实就是一段 json，这也让代码生成工具有了用武之地。
@@ -140,6 +142,8 @@ export default {
 ![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc5b55tzfj216v0g1mye.jpg)
 
 ![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc5bvw1qvj21630pcgnj.jpg)
+
+[⬆ Back to Top](#table-of-contents)
 
 ### WHY
 
@@ -162,6 +166,8 @@ export default {
 对于一线的业务开发人员而言，面对做不完的业务，其实他们并不想去处理重复的业务逻辑，他们只想解放双手，早点下班。
 
 正是在这样的背景下，产生了 el-data-table。
+
+[⬆ Back to Top](#table-of-contents)
 
 ## Feature
 
