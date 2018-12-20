@@ -609,6 +609,12 @@ export default {
           if (k == 'page' || k == 'size') return
           searchForm.updateValue({id: k, value: params[k]})
         })
+        
+        // 设置customQuery
+        Object.keys(this.customQuery).forEach(k => {
+          if (k == 'page' || k == 'size') { return }
+          this.customQuery[k] = params[k]
+        });
       }
     }
 
