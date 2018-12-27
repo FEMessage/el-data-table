@@ -1,3 +1,4 @@
+// prettier-ignore
 export default {
   name: 'OperationButton',
 
@@ -26,4 +27,4 @@ export default {
       this.$emit('click')
     }
   }
-}
+};
