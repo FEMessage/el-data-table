@@ -105,16 +105,27 @@
                              v-bind="operationAttrs"
             >
                 <template slot-scope="scope">
-                    <el-button v-if="isTree && hasNew" type="primary" size="small"
-                               @click="onDefaultNew(scope.row)">新增</el-button>
-                    <el-button v-if="hasEdit" size="small"
-                               @click="onDefaultEdit(scope.row)">
-                        修改
-                    </el-button>
-                    <el-button v-if="hasView" type="info" size="small"
-                               @click="onDefaultView(scope.row)">
-                        查看
-                    </el-button>
+                    <operation-button
+                      v-if="isTree && hasNew"
+                      :option="Object.assign({ type: 'primary' }, hasNew)"
+                      @click="onDefaultNew(scope.row)"
+                    >
+                      新增
+                    </operation-button>
+                    <operation-button
+                      v-if="hasEdit"
+                      :option="hasEdit"
+                      @click="onDefaultEdit(scope.row)"
+                    >
+                      修改
+                    </operation-button>
+                    <operation-button
+                      v-if="hasView"
+                      :option="Object.assign({ type: 'info' }, hasView)"
+                      @click="onDefaultView(scope.row)"
+                    >
+                      查看
+                    </operation-button>
                     <el-button v-for="(btn, i) in extraButtons"
                                v-if="'show' in btn ? btn.show(scope.row) : true"
                                v-bind="btn" @click="onCustomButtonsClick(btn.atClick, scope.row)" :key="i" size="small"
@@ -122,10 +133,13 @@
                     >
                         {{btn.text}}
                     </el-button>
-                    <el-button v-if="!hasSelect && hasDelete && canDelete(scope.row)" type="danger" size="small"
-                               @click="onDefaultDelete(scope.row)">
-                        删除
-                    </el-button>
+                    <operation-button
+                      v-if="!hasSelect && hasDelete && canDelete(scope.row)"
+                      :option="Object.assign({ type: 'danger' }, hasDelete)"
+                      @click="onDefaultDelete(scope.row)"
+                    >
+                      删除
+                    </operation-button>
                 </template>
             </el-table-column>
 
@@ -163,6 +177,11 @@
 <script>
 import _get from 'lodash.get'
 import qs from 'qs'
+
+/**
+ * 操作栏按钮
+ */
+import OperationButton from './operation/button'
 
 // 默认返回的数据格式如下
 //          {
@@ -202,6 +221,9 @@ const queryPattern = new RegExp('q=.*' + paramSeparator)
 
 export default {
   name: 'ElDataTable',
+  components: {
+    OperationButton
+  },
   props: {
     /**
      * 请求url, 如果为空, 则不会发送请求; 改变url, 则table会重新发送请求
@@ -313,30 +335,34 @@ export default {
     },
     /**
      * 是否有新增按钮
+     * 该值为 object 时为原组件[[el-button]属性](https://element.eleme.io/#/en-US/component/button#attributes)
      */
     hasNew: {
-      type: Boolean,
+      type: [Boolean, Object],
       default: true
     },
     /**
      * 是否有编辑按钮
+     * 该值为 object 时为原组件[[el-button]属性](https://element.eleme.io/#/en-US/component/button#attributes)
      */
     hasEdit: {
-      type: Boolean,
+      type: [Boolean, Object],
       default: true
     },
     /**
      * 是否有查看按钮
+     * 该值为 object 时为原组件[[el-button]属性](https://element.eleme.io/#/en-US/component/button#attributes)
      */
     hasView: {
-      type: Boolean,
+      type: [Boolean, Object],
       default: false
     },
     /**
      * table头部是否有删除按钮(该按钮要多选时才会出现)
+     * 该值为 object 时为原组件[[el-button]属性](https://element.eleme.io/#/en-US/component/button#attributes)
      */
     hasDelete: {
-      type: Boolean,
+      type: [Boolean, Object],
       default: true
     },
     /**
