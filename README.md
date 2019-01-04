@@ -10,8 +10,8 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 * **[Introduction](#introduction)**
 * **[Feature](#feature)**
-* **[Demo](#demo)**
 * **[Documentation](#documentation)**
+* **[Demo](#demo)**
 * **[Install](#install)**
 * **[Quick Start](#quick-start)**
 * **[Example](#example)**
