@@ -579,7 +579,7 @@ export default {
         // 重置select 为multiple==true时值为[undefined]
         this.form.forEach(entry => {
           if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-            this.$refs[dialogForm].updateValue({id: entry.$id, value: []})
+            this.$refs[dialogForm].updateForm({id: entry.$id, value: []})
           }
         })
       }
@@ -607,7 +607,7 @@ export default {
         // 对slot=search无效
         Object.keys(params).forEach(k => {
           if (k == 'page' || k == 'size') return
-          searchForm.updateValue({id: k, value: params[k]})
+          searchForm.updateForm({id: k, value: params[k]})
         })
       }
     }
@@ -818,11 +818,7 @@ export default {
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.form.forEach(entry => {
-          let value = row[entry.$id]
-
-          this.$refs[dialogForm].updateValue({id: entry.$id, value})
-        })
+        this.$refs[dialogForm].updateForm(row)
       })
     },
     onDefaultEdit(row) {
@@ -835,11 +831,7 @@ export default {
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.form.forEach(entry => {
-          let value = row[entry.$id]
-
-          this.$refs[dialogForm].updateValue({id: entry.$id, value})
-        })
+        this.$refs[dialogForm].updateForm(row)
       })
     },
     cancel() {
