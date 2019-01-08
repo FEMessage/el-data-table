@@ -90,7 +90,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     },
     /**
      * 查询字段渲染, 配置参考el-form-renderer
-     * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
+     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
      */
     searchForm: {
       type: Array,
@@ -328,7 +328,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
-     * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
+     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
      */
     form: {
       type: Array,
@@ -420,7 +420,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
         // 重置select 为multiple==true时值为[undefined]
         this.form.forEach(function (entry) {
           if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-            this$1.$refs[dialogForm].updateValue({id: entry.$id, value: []});
+            this$1.$refs[dialogForm].updateForm({id: entry.$id, value: []});
           }
         });
       }
@@ -450,7 +450,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
         // 对slot=search无效
         Object.keys(params).forEach(function (k) {
           if (k == 'page' || k == 'size') { return }
-          searchForm.updateValue({id: k, value: params[k]});
+          searchForm.updateForm({id: k, value: params[k]});
         });
       }
     }
@@ -670,11 +670,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
       // 给表单填充值
       this.$nextTick(function () {
-        this$1.form.forEach(function (entry) {
-          var value = row[entry.$id];
-
-          this$1.$refs[dialogForm].updateValue({id: entry.$id, value: value});
-        });
+        this$1.$refs[dialogForm].updateForm(row);
       });
     },
     onDefaultEdit: function onDefaultEdit(row) {
@@ -689,11 +685,7 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
 
       // 给表单填充值
       this.$nextTick(function () {
-        this$1.form.forEach(function (entry) {
-          var value = row[entry.$id];
-
-          this$1.$refs[dialogForm].updateValue({id: entry.$id, value: value});
-        });
+        this$1.$refs[dialogForm].updateForm(row);
       });
     },
     cancel: function cancel() {
