@@ -145,7 +145,7 @@
             :layout="paginationLayout"
         >
         </el-pagination>
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog" @open="handleOpen">
             <!--https://github.com/FEMessage/el-form-renderer-->
             <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
                 <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
@@ -833,6 +833,9 @@ export default {
       this.$nextTick(() => {
         this.$refs[dialogForm].updateForm(row)
       })
+    },
+    handleOpen() {
+      this.$nextTick(() => this.$emit('dialog-open'))
     },
     cancel() {
       this.dialogVisible = false
