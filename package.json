@@ -38,8 +38,8 @@
     "qs": "^6.5.2"
   },
   "peerDependencies": {
+    "@femessage/el-form-renderer": "^1.2.0",
     "axios": "^0.18.0",
-    "el-form-renderer": "^1.1.1",
     "element-ui": "^2.4.9",
     "vue": "^2.5.16"
   },

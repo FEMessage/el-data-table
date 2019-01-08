@@ -146,7 +146,7 @@
         >
         </el-pagination>
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
-            <!--https://github.com/leezng/el-form-renderer-->
+            <!--https://github.com/FEMessage/el-form-renderer-->
             <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
                 <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
                 <slot name="form"></slot>
@@ -251,7 +251,7 @@ export default {
     },
     /**
      * 查询字段渲染, 配置参考el-form-renderer
-     * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
+     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
      */
     searchForm: {
       type: Array,
@@ -489,7 +489,7 @@ export default {
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
-     * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
+     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
      */
     form: {
       type: Array,
@@ -579,7 +579,7 @@ export default {
         // 重置select 为multiple==true时值为[undefined]
         this.form.forEach(entry => {
           if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-            this.$refs[dialogForm].updateValue({id: entry.$id, value: []})
+            this.$refs[dialogForm].updateForm({id: entry.$id, value: []})
           }
         })
       }
@@ -607,7 +607,7 @@ export default {
         // 对slot=search无效
         Object.keys(params).forEach(k => {
           if (k == 'page' || k == 'size') return
-          searchForm.updateValue({id: k, value: params[k]})
+          searchForm.updateForm({id: k, value: params[k]})
         })
       }
     }
@@ -818,11 +818,7 @@ export default {
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.form.forEach(entry => {
-          let value = row[entry.$id]
-
-          this.$refs[dialogForm].updateValue({id: entry.$id, value})
-        })
+        this.$refs[dialogForm].updateForm(row)
       })
     },
     onDefaultEdit(row) {
@@ -835,11 +831,7 @@ export default {
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.form.forEach(entry => {
-          let value = row[entry.$id]
-
-          this.$refs[dialogForm].updateValue({id: entry.$id, value})
-        })
+        this.$refs[dialogForm].updateForm(row)
       })
     },
     cancel() {
