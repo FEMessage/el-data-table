@@ -3,7 +3,7 @@ import {configure} from '@storybook/vue'
 import Vue from 'vue'
 import axios from 'axios'
 
-import ElFormRenderer from 'el-form-renderer'
+import ElFormRenderer from '@femessage/el-form-renderer'
 import {
   Button,
   Dialog,
