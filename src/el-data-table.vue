@@ -577,11 +577,16 @@ export default {
 
         // fix element bug https://github.com/ElemeFE/element/issues/8615
         // 重置select 为multiple==true时值为[undefined]
-        this.form.forEach(entry => {
+        const multipleSelect = this.form.reduce((acc, entry) => {
           if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-            this.$refs[dialogForm].updateForm({id: entry.$id, value: []})
+            acc[entry.$id] = []
           }
-        })
+          return acc
+        }, {})
+
+        if (Object.keys(multipleSelect).length) {
+          this.$refs[dialogForm].updateForm(multipleSelect)
+        }
       }
     }
   },
@@ -605,10 +610,14 @@ export default {
         this.size = params.size * 1
 
         // 对slot=search无效
-        Object.keys(params).forEach(k => {
-          if (k == 'page' || k == 'size') return
-          searchForm.updateForm({id: k, value: params[k]})
-        })
+        searchForm.updateForm(
+          Object.keys(params).reduce((acc, k) => {
+            if (k !== 'page' && k !== 'size') {
+              acc[k] = params[k]
+            }
+            return acc
+          }, {})
+        )
       }
     }
 
