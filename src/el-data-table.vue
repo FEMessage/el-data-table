@@ -574,19 +574,6 @@ export default {
         this.confirmLoading = false
 
         this.$refs[dialogForm].resetFields()
-
-        // fix element bug https://github.com/ElemeFE/element/issues/8615
-        // 重置select 为multiple==true时值为[undefined]
-        const multipleSelect = this.form.reduce((acc, entry) => {
-          if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-            acc[entry.$id] = []
-          }
-          return acc
-        }, {})
-
-        if (Object.keys(multipleSelect).length) {
-          this.$refs[dialogForm].updateForm(multipleSelect)
-        }
       }
     }
   },
