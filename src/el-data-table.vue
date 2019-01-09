@@ -6,15 +6,21 @@
             <slot name="search"></slot>
             <el-form-item>
                 <!--https://github.com/ElemeFE/element/pull/5920-->
-                <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
-                <el-button @click="resetSearch" size="small">重置</el-button>
+                <el-button native-type="submit" type="primary" @click="search" size="small">
+                  {{ $lang.searchForm.searchButtonText }}
+                </el-button>
+                <el-button @click="resetSearch" size="small">
+                  {{ $lang.searchForm.resetButtonText }}
+                </el-button>
             </el-form-item>
         </el-form-renderer>
 
         <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 ">
             <el-form-item>
                 <el-button v-if="hasNew" type="primary" size="small"
-                           @click="onDefaultNew">新增</el-button>
+                           @click="onDefaultNew">
+                           {{ $lang.headerButtons.newButtonText }}
+                </el-button>
                 <el-button v-for="(btn, i) in headerButtons"
                            v-if="'show' in btn ? btn.show(selected) : true"
                            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
@@ -25,7 +31,9 @@
                            size="small" >{{btn.text}}</el-button>
                 <el-button v-if="hasSelect && hasDelete" type="danger" size="small"
                            @click="onDefaultDelete($event)"
-                           :disabled="single ? (!selected.length || selected.length > 1) : !selected.length">删除</el-button>
+                           :disabled="single ? (!selected.length || selected.length > 1) : !selected.length">
+                           {{ $lang.headerButtons.deleteButtonText }}
+                </el-button>
             </el-form-item>
         </el-form>
 
@@ -101,19 +109,21 @@
             </template>
 
             <!--默认操作列-->
-            <el-table-column label="操作" v-if="hasOperation"
+            <el-table-column :label="$lang.operation.columnText" v-if="hasOperation"
                              v-bind="operationAttrs"
             >
                 <template slot-scope="scope">
                     <el-button v-if="isTree && hasNew" type="primary" size="small"
-                               @click="onDefaultNew(scope.row)">新增</el-button>
+                               @click="onDefaultNew(scope.row)">
+                        {{ $lang.operation.newButtonText }}
+                    </el-button>
                     <el-button v-if="hasEdit" size="small"
                                @click="onDefaultEdit(scope.row)">
-                        修改
+                        {{ $lang.operation.editButtonText }}
                     </el-button>
                     <el-button v-if="hasView" type="info" size="small"
                                @click="onDefaultView(scope.row)">
-                        查看
+                        {{ $lang.operation.viewButtonText }}
                     </el-button>
                     <el-button v-for="(btn, i) in extraButtons"
                                v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -124,7 +134,7 @@
                     </el-button>
                     <el-button v-if="!hasSelect && hasDelete && canDelete(scope.row)" type="danger" size="small"
                                @click="onDefaultDelete(scope.row)">
-                        删除
+                        {{ $lang.operation.deleteButtonText }}
                     </el-button>
                 </template>
             </el-table-column>
@@ -153,8 +163,12 @@
             </el-form-renderer>
 
             <div slot="footer" v-show="!isView">
-                <el-button @click="cancel" size="small">取 消</el-button>
-                <el-button type="primary" @click="confirm" v-loading="confirmLoading" size="small">确 定</el-button>
+                <el-button @click="cancel" size="small">
+                    {{ $lang.dialog.cancelButtonText }}
+                </el-button>
+                <el-button type="primary" @click="confirm" v-loading="confirmLoading" size="small">
+                    {{ $lang.dialog.confirmButtonText }}
+                </el-button>
             </div>
         </el-dialog>
     </div>
@@ -163,6 +177,11 @@
 <script>
 import _get from 'lodash.get'
 import qs from 'qs'
+
+/**
+ * 导入语言
+ */
+import { InitialLang, MixinLang } from './lang'
 
 // 默认返回的数据格式如下
 //          {
@@ -202,7 +221,15 @@ const queryPattern = new RegExp('q=.*' + paramSeparator)
 
 export default {
   name: 'ElDataTable',
+  mixins: [MixinLang],
   props: {
+    /**
+     * 语言
+     */
+    lang: {
+      type: String,
+      default: 'zh'
+    },
     /**
      * 请求url, 如果为空, 则不会发送请求; 改变url, 则table会重新发送请求
      */
@@ -474,18 +501,24 @@ export default {
      */
     dialogNewTitle: {
       type: String,
-      default: '新增'
+      default() {
+        return InitialLang(this.lang).dialog.newTitle
+      }
     },
     /**
      * 修改弹窗的标题
      */
     dialogEditTitle: {
       type: String,
-      default: '修改'
+      default() {
+        return InitialLang(this.lang).dialog.editTitle
+      }
     },
     dialogViewTitle: {
       type: String,
-      default: '查看'
+      default() {
+        return InitialLang(this.lang).dialog.viewTitle
+      }
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
@@ -912,8 +945,17 @@ export default {
       })
     },
     onDefaultDelete(row) {
-      this.$confirm('确认删除吗', '提示', {
+      const {
+        message,
+        title,
+        cancelButtonText,
+        confirmButtonText
+      } = this.$lang.deleteMessageBox
+
+      this.$confirm(message, title, {
         type: 'warning',
+        cancelButtonText,
+        confirmButtonText,
         beforeClose: (action, instance, done) => {
           if (action == 'confirm') {
             instance.confirmButtonLoading = true
@@ -1040,15 +1082,20 @@ export default {
       return record[this.treeChildKey] && record[this.treeChildKey].length > 0
     },
     showMessage(isSuccess = true) {
+      const {
+        successText,
+        failText
+      } = this.$lang.showMessage
+
       if (isSuccess) {
         this.$message({
           type: 'success',
-          message: '操作成功'
+          message: successText
         })
       } else {
         this.$message({
           type: 'error',
-          message: '操作失败'
+          message: failText
         })
       }
     }
