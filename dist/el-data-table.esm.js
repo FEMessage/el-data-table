@@ -406,8 +406,6 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
       this.getList();
     },
     dialogVisible: function(val, old) {
-      var this$1 = this;
-
       if (!val) {
         this.isNew = false;
         this.isEdit = false;
@@ -415,14 +413,6 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
         this.confirmLoading = false;
 
         this.$refs[dialogForm].resetFields();
-
-        // fix element bug https://github.com/ElemeFE/element/issues/8615
-        // 重置select 为multiple==true时值为[undefined]
-        this.form.forEach(function (entry) {
-          if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-            this$1.$refs[dialogForm].updateForm({id: entry.$id, value: []});
-          }
-        });
       }
     }
   },
@@ -448,10 +438,14 @@ var component = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
         this.size = params.size * 1;
 
         // 对slot=search无效
-        Object.keys(params).forEach(function (k) {
-          if (k == 'page' || k == 'size') { return }
-          searchForm.updateForm({id: k, value: params[k]});
-        });
+        searchForm.updateForm(
+          Object.keys(params).reduce(function (acc, k) {
+            if (k !== 'page' && k !== 'size') {
+              acc[k] = params[k];
+            }
+            return acc
+          }, {})
+        );
       }
     }
 
