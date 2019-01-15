@@ -27,7 +27,7 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
   * **[onEdit](#onEdit)**
   * **[onDelete](#onDelete)**
 * **[Reference](#reference)**
-* **[License](license)**
+* **[License](#license)**
 
 ## Introduction
 
