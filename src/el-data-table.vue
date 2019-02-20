@@ -966,8 +966,20 @@ export default {
       if (!fn) return
 
       this.customButtonsLoading = true
+      // 把 context 暴露出去就可以让开发者做更多东西
+      // 但同时也会给自己的软件增加风险？
+      // fn(parameter, this)
+      // 然后 外面使用 atClick: async (row, context) => 'some work'
+      // 而且用户调用方法还要把传递出去的 row 再次 传入，有点啰嗦的感觉
+      
+      // 这样的话，能限定开发者的使用权限, 但每次点击都需要重新绑定方法
+      const methods = {
+        handleShowView: this.onDefaultView.bind(this, parameter),
+        handleEdit: this.onDefaultEdit.bind(this, parameter),
+        handleDelete: this.onDefaultDelete.bind(this, parameter),
+      }
 
-      fn(parameter)
+      fn(parameter, methods)
         .then(flag => {
           if (flag === false) return
           this.getList()
