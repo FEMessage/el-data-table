@@ -270,6 +270,7 @@ import {
   Pagination,
   Table,
   TableColumn,
+  Message,
   MessageBox
 } from 'element-ui'
 
@@ -286,6 +287,10 @@ Vue.component('el-data-table', ElDataTable)
 
 // to show confirm before delete
 Vue.prototype.$confirm = MessageBox.confirm
+
+// show tips
+Vue.prototype.$message = Message
+
 // if the table component cannot access `this.$axios`, it cannot send request
 import axios from 'axios'
 Vue.prototype.$axios = axios
