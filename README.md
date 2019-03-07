@@ -23,6 +23,8 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
   * **[extraButtons](#extraButtons)**
   * **[beforeSearch](#beforeSearch)**
   * **[beforeConfirm](#beforeConfirm)**
+  * **[customQuery](#customQuery)**
+  * **[extraParams](#extraParams)**
   * **[onNew](#onNew)**
   * **[onEdit](#onEdit)**
   * **[onDelete](#onDelete)**
@@ -653,6 +655,35 @@ beforeConfirm(data, isNew) {
 
 [⬆ Back to Top](#table-of-contents)
 
+### customQuery
+
+查询时，在 url 上添加额外的参数
+
+```js
+customQuery: {
+  type: 1
+}
+```
+
+[⬆ Back to Top](#table-of-contents)
+
+假设`url`参数配置为`/api/v1/users`
+
+则实际查询请求为：`/api/v1/users?type=1`
+
+### extraParams
+
+新增/修改请求时，在 body 里添加额外的参数
+
+```js
+extraParams: {
+  version: 0,
+  isTree: false
+}
+```
+
+[⬆ Back to Top](#table-of-contents)
+
 ### onNew
 
 默认情况下, 新增的请求格式是 POST url body
@@ -750,23 +781,6 @@ onDelete: row => {
 ```
 
 [⬆ Back to Top](#table-of-contents)
-
-### extraParams on new/edit
-
-```js
-extraParams: {
-  version: 0,
-  isTree: false
-}
-```
-
-### customQuery on search
-
-```js
-customQuery: {
-  type: this.$route.query.type
-}
-```
 
 ## Reference
 
