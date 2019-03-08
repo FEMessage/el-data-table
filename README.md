@@ -18,6 +18,7 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
   * **[basic](#basic)**
   * **[url and columns](#url-and-columns)**
   * **[searchForm](#searchForm)**
+  * **[formatter](#formatter)**
   * **[selection](#selection)**
   * **[headerButtons](#headerButtons)**
   * **[extraButtons](#extraButtons)**
@@ -471,6 +472,37 @@ searchForm: [
 ```
 
 ![searchForm](assets/image-20181106224933515.png)
+
+[⬆ Back to Top](#table-of-contents)
+
+### formatter
+
+```vue
+<!-- template -->
+<el-data-table
+  :url="url"
+  :columns="columns"
+>
+```
+
+```js
+// script
+columns: [
+  // formatter: you can return the jsx syntax
+  {
+    prop: 'imageUrl',
+    label: '商品图片',
+    formatter: row => (
+      <div>
+        <img src={row.imageUrl} 
+        onClick={this.handlePreviewUrl.bind(this, row.imageUrl)} />
+      </div>
+    )
+  }
+]
+```
+
+![selection](https://i.screenshot.net/wj600hn)
 
 [⬆ Back to Top](#table-of-contents)
 
