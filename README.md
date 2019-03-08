@@ -493,7 +493,7 @@ columns: [
     prop: 'imageUrl',
     label: '商品图片',
     formatter: row => (
-      <div class='imageUrl'>
+      <div>
         <img src={row.imageUrl} 
         onClick={this.handlePreviewUrl.bind(this, row.imageUrl)} />
       </div>
