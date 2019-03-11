@@ -12,6 +12,7 @@ import OnDelete from './on-delete.vue'
 import BeforeConfirm from './before-confirm.vue'
 import OnNewOrEdit from './on-new-or-edit.vue'
 import Expand from './expand.vue'
+import LoadingButtons from './loading-buttons.vue'
 
 storiesOf('ElDataTable', module)
   .add('基本CRUD', basic)
@@ -34,6 +35,10 @@ storiesOf('ElDataTable', module)
   .add('expand', () => ({
     components: {Expand},
     template: `<expand/>`
+  }))
+  .add('loading-buttons', () => ({
+    components: {LoadingButtons},
+    template: `<loading-buttons/>`
   }))
 
 function basic() {
