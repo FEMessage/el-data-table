@@ -1,5 +1,9 @@
 # el-data-table
 
+![npm download](https://img.shields.io/npm/dm/el-data-table.svg)
+![npm version](https://img.shields.io/npm/v/el-data-table.svg)
+![npm license](https://img.shields.io/npm/l/el-data-table.svg)
+
 使用`axios`自动发送请求，支持树形结构，支持分页，支持自定义查询, 自定义操作列, 让 RESTful 风格的 CRUD 更简单 👏
 
 auto requesting by `axios`, supports pagination, tree data structure, custom search, custom operation column, makes rest api easily 👏
@@ -494,8 +498,10 @@ columns: [
     label: '商品图片',
     formatter: row => (
       <div>
-        <img src={row.imageUrl} 
-        onClick={this.handlePreviewUrl.bind(this, row.imageUrl)} />
+        <img
+          src={row.imageUrl}
+          onClick={this.handlePreviewUrl.bind(this, row.imageUrl)}
+        />
       </div>
     )
   }
