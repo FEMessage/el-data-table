@@ -220,7 +220,7 @@ cd el-data-table
 yarn
 
 # run demo in ./stories
-yarn storybook
+yarn story
 ```
 
 [⬆ Back to Top](#table-of-contents)
