@@ -34,5 +34,8 @@ export default {
     {prop: 'login', label: '名称'},
     {prop: 'type', label: '账户类型'},
     {prop: 'html_url', label: '主页地址'}
-  ]
+  ],
+  operationAttrs: {
+    minWidth: '110px'
+  }
 }
