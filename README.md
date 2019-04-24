@@ -1,5 +1,10 @@
 # el-data-table
 
+[![NPM Download](https://img.shields.io/npm/dm/el-data-table.svg)](https://www.npmjs.com/package/el-data-table)
+[![NPM Version](https://img.shields.io/npm/v/el-data-table.svg)](https://www.npmjs.com/package/el-data-table)
+[![NPM License](https://img.shields.io/npm/l/el-data-table.svg)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-data-table/pulls)
+
 使用`axios`自动发送请求，支持树形结构，支持分页，支持自定义查询, 自定义操作列, 让 RESTful 风格的 CRUD 更简单 👏
 
 auto requesting by `axios`, supports pagination, tree data structure, custom search, custom operation column, makes rest api easily 👏
@@ -215,7 +220,7 @@ cd el-data-table
 yarn
 
 # run demo in ./stories
-yarn storybook
+yarn story
 ```
 
 [⬆ Back to Top](#table-of-contents)
@@ -494,8 +499,10 @@ columns: [
     label: '商品图片',
     formatter: row => (
       <div>
-        <img src={row.imageUrl} 
-        onClick={this.handlePreviewUrl.bind(this, row.imageUrl)} />
+        <img
+          src={row.imageUrl}
+          onClick={this.handlePreviewUrl.bind(this, row.imageUrl)}
+        />
       </div>
     )
   }
