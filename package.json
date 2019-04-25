@@ -81,7 +81,7 @@
       "^.+\\.vue$": "./node_modules/vue-jest"
     }
   },
-  "vue-sfc-cli": "1.1.0",
+  "vue-sfc-cli": "1.2.0",
   "engines": {
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
