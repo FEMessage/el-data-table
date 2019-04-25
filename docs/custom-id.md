@@ -1,3 +1,4 @@
+```vue
 <template>
   <el-data-table
     v-bind="$data"
@@ -6,14 +7,13 @@
 </template>
 <script>
 // put/delete, 对应接口不存在, 但没关系, 主要是看请求参数
-import ElDataTable from '../src/el-data-table.vue'
-import config from './config'
+const config = require('./config').default
+
 export default {
   name: 'custom-id',
-  components: {ElDataTable},
   data: function() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
+      url: 'https:\/\/easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
       // 主键设置为status
       id: 'status',
       columns: [
@@ -57,3 +57,4 @@ export default {
   }
 }
 </script>
+```

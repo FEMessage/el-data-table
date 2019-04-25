@@ -1,3 +1,4 @@
+```vue
 <template>
   <el-data-table
     v-bind="$data"
@@ -8,12 +9,12 @@
 <script>
 // 显示基本crud
 // post/delete/put 接口会报错, 因为调用的是github的api
-import ElDataTable from '../src/el-data-table.vue'
-import config from './config'
+const config = require('./config').default
+
 export default {
-  components: {ElDataTable},
-  data: function() {
+  data() {
     return config
   }
 }
 </script>
+```

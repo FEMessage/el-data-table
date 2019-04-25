@@ -1,3 +1,4 @@
+```vue
 <template>
   <el-data-table
       v-bind="$data"
@@ -14,13 +15,9 @@
       </el-data-table>
 </template>
 <script>
-import ElDataTable from '../src/el-data-table.vue'
-import config from './config'
-import ElTag from 'element-ui/lib/tag'
-import ElRate from 'element-ui/lib/rate'
+const config = require('./config').default
 
 export default {
-  components: {ElDataTable, ElTag, ElRate},
   data: function() {
     let searchForm = [
       {
@@ -35,7 +32,7 @@ export default {
 
     let cfg = JSON.parse(JSON.stringify(config))
     cfg.searchForm = searchForm
-    cfg.url = 'https://api.github.com/search/users'
+    cfg.url = 'https:\/\/api.github.com/search/users'
 
     cfg.customQuery = {rate: 0}
 
@@ -43,3 +40,4 @@ export default {
   }
 }
 </script>
+```

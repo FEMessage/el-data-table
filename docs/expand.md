@@ -1,3 +1,4 @@
+```vue
 <template>
   <el-data-table
     v-bind="$data"
@@ -26,14 +27,11 @@
   </el-data-table>
 </template>
 <script>
-import ElDataTable from '../src/el-data-table.vue'
-
 export default {
-  components: {ElDataTable},
   data() {
     return {
       url:
-        'https://easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/reservation',
+        'https:\/\/easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/reservation',
       columns: [
         {prop: 'memberName', label: '客户姓名'},
         {prop: 'memberAddress', label: '客户所在地'},
@@ -47,3 +45,4 @@ export default {
   }
 }
 </script>
+```

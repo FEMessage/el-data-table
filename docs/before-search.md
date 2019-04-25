@@ -1,17 +1,15 @@
+```vue
 <template>
   <el-data-table
-    v-bind="$data"
+    :url="url"
+    :columns="columns"
+    :searchForm="searchForm"
+    :beforeSearch="beforeSearch"
   >
   </el-data-table>
 </template>
 <script>
-import ElDataTable from '../src/el-data-table.vue'
-
-let url =
-  'https://easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage'
-
 export default {
-  components: {ElDataTable},
   data() {
     return {
       url: '',
@@ -30,10 +28,11 @@ export default {
         }
       ],
       beforeSearch: () => {
-        this.url = url
+        this.url = 'https:\/\/easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage'
         return Promise.resolve()
       }
     }
   }
 }
 </script>
+```
