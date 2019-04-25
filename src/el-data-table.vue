@@ -1,12 +1,13 @@
 <template>
     <div class="el-data-table">
         <!--搜索字段-->
-        <el-form-renderer v-if="searchForm.length > 0" inline :content="searchForm" ref="searchForm">
+        <el-form-renderer v-if="searchForm.length > 0 || !!$slots.search" inline :content="searchForm" ref="searchForm">
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
-                <el-button type="primary" @click="onSearch">查询</el-button>
-                <el-button @click="onResetSearch">重置</el-button>
+                <!--https://github.com/ElemeFE/element/pull/5920-->
+                <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
+                <el-button @click="resetSearch" size="small">重置</el-button>
             </el-form-item>
         </el-form-renderer>
 
@@ -17,7 +18,8 @@
                 <el-button v-for="(btn, i) in headerButtons"
                            v-if="'show' in btn ? btn.show(selected) : true"
                            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-                           @click="btn.atClick(selected)"
+                           @click="onCustomButtonsClick(btn.atClick, selected)"
+                           :loading="customButtonsLoading"
                            v-bind="btn"
                            :key="i"
                            size="small" >{{btn.text}}</el-button>
@@ -29,7 +31,7 @@
 
         <el-table
             ref="table"
-            v-bind="table"
+            v-bind="tableAttrs"
             :data="data"
             :row-style="showRow"
             v-loading="loading"
@@ -100,17 +102,25 @@
 
             <!--默认操作列-->
             <el-table-column label="操作" v-if="hasOperation"
-                             v-bind="operationColumn"
+                             v-bind="operationAttrs"
             >
                 <template slot-scope="scope">
                     <el-button v-if="isTree && hasNew" type="primary" size="small"
                                @click="onDefaultNew(scope.row)">新增</el-button>
-                    <el-button v-for="(btn, i) in extraButtons"
-                               v-if="'show' in btn ? btn.show(scope.row) : true"
-                               v-bind="btn" @click="btn.atClick(scope.row)" :key="i" size="small">{{btn.text}}</el-button>
                     <el-button v-if="hasEdit" size="small"
                                @click="onDefaultEdit(scope.row)">
                         修改
+                    </el-button>
+                    <el-button v-if="hasView" type="info" size="small"
+                               @click="onDefaultView(scope.row)">
+                        查看
+                    </el-button>
+                    <el-button v-for="(btn, i) in extraButtons"
+                               v-if="'show' in btn ? btn.show(scope.row) : true"
+                               v-bind="btn" @click="onCustomButtonsClick(btn.atClick, scope.row)" :key="i" size="small"
+                               :loading="customButtonsLoading"
+                    >
+                        {{btn.text}}
                     </el-button>
                     <el-button v-if="!hasSelect && hasDelete && canDelete(scope.row)" type="danger" size="small"
                                @click="onDefaultDelete(scope.row)">
@@ -128,23 +138,23 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="page"
-            :page-sizes="[10, 20, 30, 40, 50]"
+            :page-sizes="paginationSizes"
             :page-size="size"
             :total="total"
             style="text-align: right; padding: 10px 0"
-            layout="total, sizes, prev, pager, next, jumper"
+            :layout="paginationLayout"
         >
         </el-pagination>
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
-            <!--https://github.com/leezng/el-form-renderer-->
-            <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs">
+            <!--https://github.com/FEMessage/el-form-renderer-->
+            <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
                 <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
                 <slot name="form"></slot>
             </el-form-renderer>
 
             <div slot="footer" v-show="!isView">
                 <el-button @click="cancel" size="small">取 消</el-button>
-                <el-button type="primary" @click="confirm" v-loading="confirmLoading" size="small">确 定</el-button>
+                <el-button type="primary" @click="confirm" :loading="confirmLoading" size="small">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -152,10 +162,9 @@
 
 <script>
 import _get from 'lodash.get'
-import axios from 'axios'
+import qs from 'qs'
 
 // 默认返回的数据格式如下
-// 可根据实际情况传入 data/total 两个字段的路径
 //          {
 //            "code":0,
 //            "msg":"ok",
@@ -164,7 +173,10 @@ import axios from 'axios'
 //              "totalElements":2, // 总数
 //            }
 //          }
+// 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
 // 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
+
+const defaultFirstPage = 1
 
 const dataPath = 'payload.content'
 const totalPath = 'payload.totalElements'
@@ -173,28 +185,45 @@ const noPaginationDataPath = 'payload'
 const treeChildKey = 'children'
 const treeParentKey = 'parentId'
 const treeParentValue = 'id'
+const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
 
-/**
- *
- */
+const equal = '='
+const equalPattern = /=/g
+
+const valueSeparator = '~'
+const paramSeparator = ','
+
+const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
+
+const queryFlag = 'q='
+const queryPattern = new RegExp('q=.*' + paramSeparator)
+
 export default {
   name: 'ElDataTable',
   props: {
     /**
-     * 请求url, 如果为空, 则不会发送请求
+     * 请求url, 如果为空, 则不会发送请求; 改变url, 则table会重新发送请求
      */
     url: {
       type: String,
       default: ''
     },
     /**
+     * 主键，默认值 id，
+     * 修改/删除时会用到,请求会根据定义的属性值获取主键,即row[this.id]
+     */
+    id: {
+      type: String,
+      default: defaultId
+    },
+    /**
      * 分页请求的第一页的值(有的接口0是第一页)
      */
     firstPage: {
       type: Number,
-      default: 1
+      default: defaultFirstPage
     },
     /**
      * 渲染组件的分页数据在接口返回的数据中的路径, 嵌套对象使用.表示即可
@@ -222,13 +251,29 @@ export default {
     },
     /**
      * 查询字段渲染, 配置参考el-form-renderer
-     * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
+     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
      */
     searchForm: {
       type: Array,
       default() {
         return []
       }
+    },
+    /**
+     * 点击查询按钮, 查询前执行的函数, 需要返回Promise
+     */
+    beforeSearch: {
+      type: Function,
+      default() {
+        return Promise.resolve()
+      }
+    },
+    /**
+     * 路由模式, hash | history || '', 决定了查询参数存放的形式, 设置为空则不存储查询参数
+     */
+    routerMode: {
+      type: String,
+      default: 'hash'
     },
     /**
      * 单选, 适用场景: 不可以批量删除
@@ -245,8 +290,9 @@ export default {
       default: true
     },
     /**
-     * 操作列的自定义按钮, 渲染的是element-ui的button, 支持属性
-     * type: '', text: '', atClick: row => {}, show: row => {返回true时显示}
+     * 操作列的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
+     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示 }
+     * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
      */
     extraButtons: {
       type: Array,
@@ -255,8 +301,9 @@ export default {
       }
     },
     /**
-     * 头部的自定义按钮, 渲染的是element-ui的button, 支持属性
-     * type: '', text: '', atClick: row => {}, show: row => {返回true时显示}, disabled: selected => {返回true时禁用}
+     * 头部的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
+     * {type: '', text: '', atClick: selected => Promise.resolve(), show: selected => return true时显示, disabled: selected => return true时禁用}
+     * 点击事件 selected参数 表示选中行所组成的数组, 函数需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
      */
     headerButtons: {
       type: Array,
@@ -279,6 +326,13 @@ export default {
       default: true
     },
     /**
+     * 是否有查看按钮
+     */
+    hasView: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * table头部是否有删除按钮(该按钮要多选时才会出现)
      */
     hasDelete: {
@@ -295,19 +349,22 @@ export default {
       }
     },
     /**
-     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用
+     * 点击新增按钮时的方法, 当默认新增方法不满足需求时使用, 需要返回promise
+     * 参数(data, row) data 是form表单的数据, row 是当前行的数据, 只有isTree为true时, 点击操作列的新增按钮才会有值
      */
     onNew: {
       type: Function
     },
     /**
-     * 点击修改按钮时的方法, 当默认新增方法不满足需求时使用
+     * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用, 需要返回promise
+     * 参数(data, row) data 是form表单的数据, row 是当前行的数据
      */
     onEdit: {
       type: Function
     },
     /**
-     * 点击删除按钮时的方法, 当默认新增方法不满足需求时使用
+     * 点击删除按钮时的方法, 当默认删除方法不满足需求时使用, 需要返回promise
+     * 多选时, 参数为selected, 代表选中的行组成的数组; 非多选时参数为row, 代表单行的数据
      */
     onDelete: {
       type: Function
@@ -318,6 +375,30 @@ export default {
     hasPagination: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 分页组件的子组件布局，子组件名用逗号分隔，对应element-ui pagination的layout属性
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     */
+    paginationLayout: {
+      type: String,
+      default: 'total, sizes, prev, pager, next, jumper'
+    },
+    /**
+     * 分页组件的每页显示个数选择器的选项设置，对应element-ui pagination的page-sizes属性
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     */
+    paginationSizes: {
+      type: Array,
+      default: () => [10, 20, 30, 40, 50]
+    },
+    /**
+     * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
+     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     */
+    paginationSize: {
+      type: Number,
+      default: 10
     },
     /**
      * 不分页时的size的大小
@@ -406,11 +487,9 @@ export default {
       type: String,
       default: '查看'
     },
-    //
-    //
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
-     * @link https://github.com/leezng/el-form-renderer/blob/dev/README.zh-CN.md
+     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
      */
     form: {
       type: Array,
@@ -435,6 +514,16 @@ export default {
       type: Object
     },
     /**
+     * 在新增/修改弹窗 点击确认时调用，返回Promise, 如果reject, 则不会发送新增/修改请求
+     * 参数: (data, isNew) data为表单数据, isNew true 表示是新增弹窗, false 为 编辑弹窗
+     */
+    beforeConfirm: {
+      type: Function,
+      default() {
+        return Promise.resolve()
+      }
+    },
+    /**
      * 外部的注入额外的查询参数, 键值对形式
      */
     customQuery: {
@@ -447,13 +536,15 @@ export default {
   data() {
     return {
       data: [],
-      query: {},
       hasSelect: this.columns.length && this.columns[0].type == 'selection',
-      size: 10,
-      page: this.firstPage,
-      total: 0,
+      size: this.paginationSize || this.paginationSizes[0],
+      page: defaultFirstPage,
+      // https://github.com/ElemeFE/element/issues/1153
+      total: null,
       loading: false,
       selected: [],
+
+      customButtonsLoading: false,
 
       //弹窗
       dialogTitle: this.dialogNewTitle,
@@ -470,16 +561,9 @@ export default {
       initCustomQuery: JSON.stringify(this.customQuery)
     }
   },
-  mounted() {
-    this.getList()
-  },
   watch: {
-    query: function(val, old) {
-      this.page = this.firstPage
-      this.getList()
-    },
     url: function(val, old) {
-      this.page = this.firstPage
+      this.page = defaultFirstPage
       this.getList()
     },
     dialogVisible: function(val, old) {
@@ -490,21 +574,53 @@ export default {
         this.confirmLoading = false
 
         this.$refs[dialogForm].resetFields()
-
-        // fix element bug https://github.com/ElemeFE/element/issues/8615
-        // 重置select 为multiple==true时值为[undefined]
-        this.form.forEach(entry => {
-          if (entry.$type === 'select' && entry.$el && entry.$el.multiple) {
-            this.$refs[dialogForm].updateValue({id: entry.$id, value: []})
-          }
-        })
       }
     }
   },
+  mounted() {
+    let searchForm = this.$refs.searchForm
+
+    if (searchForm) {
+      // 阻止表单提交的默认行为
+      // https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2
+      searchForm.$el.setAttribute('action', 'javascript:;')
+
+      // 恢复查询条件
+      let matches = location.href.match(queryPattern)
+
+      if (matches) {
+        let query = matches[0].substr(2).replace(valueSeparatorPattern, equal)
+        let params = qs.parse(query, {delimiter: paramSeparator})
+
+        // page size 特殊处理
+        this.page = params.page * 1
+        this.size = params.size * 1
+
+        // 对slot=search无效
+        searchForm.updateForm(
+          Object.keys(params).reduce((acc, k) => {
+            if (k !== 'page' && k !== 'size') {
+              acc[k] = params[k]
+            }
+            return acc
+          }, {})
+        )
+      }
+    }
+
+    this.$nextTick(() => {
+      this.getList()
+    })
+  },
   methods: {
-    getList() {
+    getList(shouldStoreQuery) {
+      let searchForm = this.$refs.searchForm
+      let formQuery = searchForm ? searchForm.getFormValue() : {}
+      // TODO Object.assign IE不支持, 所以后面Object.keys的保守其实是没有必要的。。。
+      let query = Object.assign({}, formQuery, this.customQuery)
+
       let url = this.url
-      let query = Object.assign({}, this.query, this.customQuery)
+      let params = ''
       let size = this.hasPagination ? this.size : this.noPaginationSize
 
       if (!url) {
@@ -512,33 +628,43 @@ export default {
         return
       }
 
-      // 拼接 query
+      // 构造查询url
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
-      url += `page=${this.page}&size=${size}`
+      params += `size=${size}`
 
-      // query 有可能值为 0
-      let params = Object.keys(query)
-        .filter(
-          k => query[k] !== '' && query[k] !== null && query[k] !== undefined
+      // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
+      // TODO Object.values IE11不兼容, 暂时使用Object.keys
+      params += Object.keys(query)
+        .filter(k => {
+          return query[k] !== '' && query[k] !== null && query[k] !== undefined
+        })
+        .reduce(
+          (params, k) =>
+            (params += `&${k}=${encodeURIComponent(
+              query[k].toString().trim()
+            )}`),
+          ''
         )
-        .reduce((params, k) => (params += `&${k}=${query[k]}`), '')
 
-      url += params
+      // 根据偏移值计算接口正确的页数
+      let pageOffset = this.firstPage - defaultFirstPage
+      let page = this.page + pageOffset
 
       // 请求开始
       this.loading = true
 
-      axios
-        .get(url)
+      this.$axios
+        .get(url + params + `&page=${page}`)
         .then(resp => {
           let res = resp.data
           let data = []
 
           // 不分页
           if (!this.hasPagination) {
-            data = _get(res, this.dataPath || noPaginationDataPath) || []
+            data =
+              _get(res, this.dataPath) || _get(res, noPaginationDataPath) || []
           } else {
             data = _get(res, this.dataPath) || []
             this.total = _get(res, this.totalPath)
@@ -559,38 +685,80 @@ export default {
           this.$emit('update', data, res)
         })
         .catch(err => {
+          /**
+           * 请求数据失败，返回err对象
+           * @event error
+           */
+          this.$emit('error', err)
           this.loading = false
         })
-    },
-    handleSizeChange(val) {
-      if (this.size === val) return
 
-      this.size = val
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      if (this.page === val) return
+      // 存储query记录, 便于后面恢复
+      if (this.routerMode && shouldStoreQuery > 0) {
+        let newUrl = ''
+        let searchQuery =
+          queryFlag +
+          (params + `&page=${this.page}`)
+            .replace(/&/g, paramSeparator)
+            .replace(equalPattern, valueSeparator) +
+          paramSeparator
 
-      this.page = val
-      this.getList()
-    },
-    handleSelectionChange(val) {
-      this.selected = val
+        // 非第一次查询
+        if (location.href.indexOf(queryFlag) > -1) {
+          newUrl = location.href.replace(queryPattern, searchQuery)
+        } else if (this.routerMode == 'hash') {
+          let search =
+            location.hash.indexOf('?') > -1
+              ? `&${searchQuery}`
+              : `?${searchQuery}`
+          newUrl =
+            location.origin +
+            location.pathname +
+            location.search +
+            location.hash +
+            search
+        } else {
+          let search = location.search ? `&${searchQuery}` : `?${searchQuery}`
+          newUrl =
+            location.origin +
+            location.pathname +
+            location.search +
+            search +
+            location.hash
+        }
 
-      /**
-       * 多选启用时生效, 返回(selected)已选中行的数组
-       * @event selection-change
-       */
-      this.$emit('selection-change', val)
+        history.pushState(history.state, 'el-data-table search', newUrl)
+      }
     },
-    onSearch() {
-      const data = this.$refs.searchForm.getFormValue()
-      const customQuery = this.customQuery
-      this.query = Object.assign({}, data, customQuery)
+    search() {
+      this.$refs.searchForm.validate(valid => {
+        if (!valid) return
+
+        this.beforeSearch()
+          .then(() => {
+            this.page = defaultFirstPage
+            this.getList(true)
+          })
+          .catch(err => {
+            this.$emit('error', err)
+          })
+      })
     },
-    onResetSearch() {
+    resetSearch() {
+      // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
-      this.query = {}
+      this.page = defaultFirstPage
+
+      // 重置
+      history.replaceState(
+        history.state,
+        '',
+        location.href.replace(queryPattern, '')
+      )
+
+      this.$nextTick(() => {
+        this.getList()
+      })
 
       /**
        * 按下重置按钮后触发,
@@ -604,13 +772,31 @@ export default {
         Object.assign(this.customQuery, JSON.parse(this.initCustomQuery))
       )
     },
+    handleSizeChange(val) {
+      if (this.size === val) return
+
+      this.page = defaultFirstPage
+      this.size = val
+      this.getList(true)
+    },
+    handleCurrentChange(val) {
+      if (this.page === val) return
+
+      this.page = val
+      this.getList(true)
+    },
+    handleSelectionChange(val) {
+      this.selected = val
+
+      /**
+       * 多选启用时生效, 返回(selected)已选中行的数组
+       * @event selection-change
+       */
+      this.$emit('selection-change', val)
+    },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
-      if (this.onNew) {
-        return this.onNew(row)
-      }
-
       this.row = row
       this.isNew = true
       this.isEdit = false
@@ -618,11 +804,20 @@ export default {
       this.dialogTitle = this.dialogNewTitle
       this.dialogVisible = true
     },
-    onDefaultEdit(row) {
-      if (this.onEdit) {
-        return this.onEdit(row)
-      }
+    onDefaultView(row) {
+      this.row = row
+      this.isView = true
+      this.isNew = false
+      this.isEdit = false
+      this.dialogTitle = this.dialogViewTitle
+      this.dialogVisible = true
 
+      // 给表单填充值
+      this.$nextTick(() => {
+        this.$refs[dialogForm].updateForm(row)
+      })
+    },
+    onDefaultEdit(row) {
       this.row = row
       this.isEdit = true
       this.isNew = false
@@ -632,24 +827,20 @@ export default {
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.form.forEach(entry => {
-          let value = row[entry.$id]
-
-          this.$refs[dialogForm].updateValue({id: entry.$id, value})
-        })
+        this.$refs[dialogForm].updateForm(row)
       })
     },
     cancel() {
       this.dialogVisible = false
     },
     confirm() {
+      if (this.isView) {
+        this.cancel()
+        return
+      }
+
       this.$refs[dialogForm].validate(valid => {
         if (!valid) return false
-
-        if (this.isView) {
-          this.cancel()
-          return
-        }
 
         let data = Object.assign(
           {},
@@ -657,49 +848,89 @@ export default {
           this.extraParams
         )
 
-        // 默认新增
-        let method = 'post'
-        let url = this.url + ''
-
-        if (this.isEdit) {
-          method = 'put'
-          url += `/${this.row.id || this.row._id}`
-        }
-
         if (this.isTree) {
           if (this.isNew)
             data[this.treeParentKey] = this.row[this.treeParentValue]
-          else if (this.isEdit)
-            data[this.treeParentKey] = this.row[this.treeParentKey]
+          else data[this.treeParentKey] = this.row[this.treeParentKey]
         }
 
-        this.confirmLoading = true
-
-        axios[method](url, data)
+        this.beforeConfirm(data, this.isNew)
           .then(resp => {
-            this.getList()
-            this.showMessage(true)
-            this.cancel()
+            let condiction = 'isNew'
+            let customMethod = 'onNew'
+
+            if (this.isEdit) {
+              condiction = 'isEdit'
+              customMethod = 'onEdit'
+            }
+
+            if (this[condiction] && this[customMethod]) {
+              this[customMethod](data, this.row)
+                .then(resp => {
+                  this.getList()
+                  this.showMessage(true)
+                  this.cancel()
+                })
+                .catch(e => {})
+              return
+            }
+
+            // 默认新增/修改逻辑
+            let method = 'post'
+            let url = this.url + ''
+
+            if (this.isEdit) {
+              method = 'put'
+              url += `/${this.row[this.id]}`
+            }
+
+            this.confirmLoading = true
+
+            this.$axios[method](url, data)
+              .then(resp => {
+                this.getList()
+                this.showMessage(true)
+                this.cancel()
+              })
+              .catch(err => {
+                this.confirmLoading = false
+              })
           })
-          .catch(err => {
-            this.confirmLoading = false
-          })
+          .catch(e => {})
       })
     },
     onDefaultDelete(row) {
-      if (this.onDelete) {
-        return this.onDelete(row)
-      }
       this.$confirm('确认删除吗', '提示', {
         type: 'warning',
         beforeClose: (action, instance, done) => {
           if (action == 'confirm') {
             instance.confirmButtonLoading = true
 
+            if (this.onDelete) {
+              this.onDelete(
+                this.hasSelect
+                  ? !this.single
+                    ? this.selected
+                    : this.selected[0]
+                  : row
+              )
+                .then(resp => {
+                  this.showMessage(true)
+                  done()
+                  this.getList()
+                })
+                .catch(e => {})
+                .finally(e => {
+                  instance.confirmButtonLoading = false
+                })
+              return
+            }
+
+            // 默认删除逻辑
             // 单个删除
             if (!this.hasSelect) {
-              axios
-                .delete(this.url + '/' + row.id || row._id)
+              this.$axios
+                .delete(this.url + '/' + row[this.id])
                 .then(resp => {
                   instance.confirmButtonLoading = false
                   done()
@@ -711,11 +942,9 @@ export default {
                 })
             } else {
               // 多选模式
-              axios
+              this.$axios
                 .delete(
-                  this.url +
-                    '/' +
-                    this.selected.map(v => v._id || v.id).toString()
+                  this.url + '/' + this.selected.map(v => v[this.id]).toString()
                 )
                 .then(resp => {
                   instance.confirmButtonLoading = false
@@ -732,6 +961,21 @@ export default {
       }).catch(er => {
         /*取消*/
       })
+    },
+    onCustomButtonsClick(fn, parameter) {
+      if (!fn) return
+
+      this.customButtonsLoading = true
+
+      fn(parameter)
+        .then(flag => {
+          if (flag === false) return
+          this.getList()
+        })
+        .catch(e => {})
+        .finally(e => {
+          this.customButtonsLoading = false
+        })
     },
     // 树形table相关
     // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/components/TreeTable
@@ -754,7 +998,7 @@ export default {
 
         if (record[this.treeChildKey] && record[this.treeChildKey].length > 0) {
           const children = this.tree2Array(
-            record.children,
+            record[this.treeChildKey],
             expandAll,
             record,
             _level
@@ -781,7 +1025,7 @@ export default {
     // 图标显示
     iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
-      return record.children && record.children.length > 0
+      return record[this.treeChildKey] && record[this.treeChildKey].length > 0
     },
     showMessage(isSuccess = true) {
       if (isSuccess) {
