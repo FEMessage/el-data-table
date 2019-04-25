@@ -15,7 +15,7 @@
             <el-form-item>
                 <el-button v-if="hasNew" type="primary" size="small"
                            @click="onDefaultNew">新增</el-button>
-                <el-loading-button v-for="(btn, i) in headerButtons"
+                <self-loading-button v-for="(btn, i) in headerButtons"
                                    v-if="'show' in btn ? btn.show(selected) : true"
                                    :disabled="'disabled' in btn ? btn.disabled(selected) : false"
                                    :click="btn.atClick"
@@ -23,7 +23,7 @@
                                    :callback="getList"
                                    v-bind="btn"
                                    :key="i"
-                                   size="small" >{{btn.text}}</el-loading-button>
+                                   size="small" >{{btn.text}}</self-loading-button>
                 <el-button v-if="hasSelect && hasDelete" type="danger" size="small"
                            @click="onDefaultDelete($event)"
                            :disabled="single ? (!selected.length || selected.length > 1) : !selected.length">删除</el-button>
@@ -116,7 +116,7 @@
                                @click="onDefaultView(scope.row)">
                         查看
                     </el-button>
-                    <el-loading-button v-for="(btn, i) in extraButtons"
+                    <self-loading-button v-for="(btn, i) in extraButtons"
                                        v-if="'show' in btn ? btn.show(scope.row) : true"
                                        v-bind="btn"
                                        :click="btn.atClick"
@@ -126,7 +126,7 @@
                                        size="small"
                     >
                         {{btn.text}}
-                    </el-loading-button>
+                    </self-loading-button>
                     <el-button v-if="!hasSelect && hasDelete && canDelete(scope.row)" type="danger" size="small"
                                @click="onDefaultDelete(scope.row)">
                         删除
@@ -168,7 +168,7 @@
 <script>
 import _get from 'lodash.get'
 import qs from 'qs'
-import ElLoadingButton from './el-loading-button.vue'
+import SelfLoadingButton from './self-loading-button.vue'
 
 // 默认返回的数据格式如下
 //          {
@@ -209,7 +209,7 @@ const queryPattern = new RegExp('q=.*' + paramSeparator)
 export default {
   name: 'ElDataTable',
   components: {
-    ElLoadingButton
+    SelfLoadingButton
   },
   props: {
     /**
