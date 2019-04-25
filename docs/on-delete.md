@@ -1,3 +1,5 @@
+删除钩子
+
 ```vue
 <template>
   <div>
