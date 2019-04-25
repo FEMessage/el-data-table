@@ -7,8 +7,8 @@
       :columns="columns"
       :form="form"
       :hasPagination="false"
+      :isTree="true"
       :expandAll="true"
-      :tableAttrs="{ rowKey: 'id' }"
       >
       </el-data-table>
 </template>
