@@ -1,19 +1,18 @@
+提交前的操作
+
+```vue
 <template>
-  <div class="before-confirm">
-    <el-data-table
-        v-bind="$data"
-        :beforeConfirm="beforeConfirm"
-    >
-    </el-data-table>
-  </div>
+  <el-data-table
+    v-bind="$data"
+    :beforeConfirm="beforeConfirm"
+  ></el-data-table>
 </template>
 
 <script>
-import ElDataTable from '../src/el-data-table.vue'
-import config from './config'
+const config = require('./config').default
+
 export default {
   name: 'before-confirm',
-  components: {ElDataTable},
   data() {
     return config
   },
@@ -34,3 +33,4 @@ export default {
 </script>
 <style>
 </style>
+```

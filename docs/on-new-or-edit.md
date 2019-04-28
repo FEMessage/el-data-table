@@ -1,3 +1,6 @@
+新增或编辑钩子
+
+```vue
 <template>
   <div class="on-new-or-edit">
     <p>默认情况下:
@@ -17,15 +20,12 @@
 </template>
 
 <script>
-import Axios from 'axios'
-import ElDataTable from '../src/el-data-table.vue'
 export default {
   name: 'on-new-or-edit',
-  components: {ElDataTable},
   data() {
     return {
       url:
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-get',
+        'https:\/\/www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-get',
       columns: [
         {prop: 'name', label: '用户名'},
         {prop: 'createdBy', label: '创建人'},
@@ -45,15 +45,15 @@ export default {
   methods: {
     onNew(data, row) {
       console.log(data, row)
-      return Axios.post(
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-new',
+      return this.$axios.post(
+        'https:\/\/www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-new',
         data
       )
     },
     onEdit(data, row) {
       console.log(data, row)
-      return Axios.put(
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-edit',
+      return this.$axios.put(
+        'https:\/\/www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-edit',
         data
       )
     }
@@ -62,3 +62,4 @@ export default {
 </script>
 <style>
 </style>
+```

@@ -1,23 +1,23 @@
+树形结构
+
+```vue
 <template>
   <el-data-table
       :url="url"
       :columns="columns"
       :form="form"
-      :isTree="true"
       :hasPagination="false"
+      :isTree="true"
       :expandAll="true"
       >
       </el-data-table>
 </template>
 <script>
-import ElDataTable from '../src/el-data-table.vue'
-
 // 注意看post/put请求, 带上了树形结构相应的 parentId
 export default {
-  components: {ElDataTable},
   data: function() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/tree',
+      url: 'https:\/\/easy-mock.com/mock/5b586c9dfce1393a862d034d/example/tree',
       columns: [
         {prop: 'name', label: '分类名称', minWidth: '140px'},
         {prop: 'description', label: '分类说明', minWidth: '140px'},
@@ -49,3 +49,4 @@ export default {
   }
 }
 </script>
+```

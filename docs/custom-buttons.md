@@ -1,13 +1,15 @@
+自定义按钮
+
+```vue
 <template>
   <el-data-table v-bind="$data"></el-data-table>
 </template>
+
 <script>
-import ElDataTable from '../src/el-data-table.vue'
-import config from './config'
+const config = require('./config').default
 
 export default {
-  components: {ElDataTable},
-  data: function() {
+  data() {
     return {
       url: config.url,
       dataPath: config.dataPath,
@@ -58,11 +60,8 @@ export default {
       hasNew: false,
       hasDelete: false
     }
-  },
-  computed: {
-    loading() {
-      return true
-    }
   }
 }
 </script>
+
+```

@@ -1,3 +1,6 @@
+额外参数
+
+```vue
 <template>
   <el-data-table
       :url="url"
@@ -13,7 +16,7 @@
           <div class="el-form-item__label" :style="{width: '80px'}">品牌logo</div>
           <el-upload
             class="avatar-uploader"
-            action="https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/tree"
+            action="https:\/\/easy-mock.com/mock/5b586c9dfce1393a862d034d/example/tree"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :on-error="handleAvatarSuccess"
@@ -25,9 +28,7 @@
       </el-data-table>
 </template>
 <script>
-import ElUpload from 'element-ui/lib/upload'
-import ElDataTable from '../src/el-data-table.vue'
-import config from './config'
+const config = require('./config').default
 
 const checkName = (rule, value, callback) => {
   if (!!value && value.length > 30) {
@@ -42,10 +43,9 @@ const checkName = (rule, value, callback) => {
 }
 
 export default {
-  components: {ElDataTable, ElUpload},
   data: function() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
+      url: 'https:\/\/easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
       columns: [
         {prop: 'code', label: '品牌编号'},
         {prop: 'name', label: '品牌名称'},
@@ -87,18 +87,6 @@ export default {
     }
   },
   methods: {
-    //logoFormatter(row) {
-    //  return (
-    //    <img
-    //      src={row.logoUrl ? row.logoUrl : ''}
-    //      style={{
-    //        width: '100px',
-    //            background: 'transparent',
-    //            padding: '0'
-    //      }}
-    //    />
-    //  )
-    //},
     handleAvatarSuccess(res, file) {
       this.extraParams.logoUrl = URL.createObjectURL(file.raw)
     },
@@ -150,3 +138,4 @@ export default {
   display: block;
 }
 </style>
+```

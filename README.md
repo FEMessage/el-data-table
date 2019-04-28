@@ -1,9 +1,11 @@
 # el-data-table
 
+[![Build Status](https://travis-ci.com/FEMessage/el-data-table.svg?branch=master)](https://travis-ci.com/FEMessage/el-data-table)
 [![NPM Download](https://img.shields.io/npm/dm/el-data-table.svg)](https://www.npmjs.com/package/el-data-table)
 [![NPM Version](https://img.shields.io/npm/v/el-data-table.svg)](https://www.npmjs.com/package/el-data-table)
 [![NPM License](https://img.shields.io/npm/l/el-data-table.svg)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-data-table/pulls)
+[![Automated Release Notes by gren](https://img.shields.io/badge/%F0%9F%A4%96-release%20notes-00B2EE.svg)](https://github-tools.github.io/github-release-notes/)
 
 使用`axios`自动发送请求，支持树形结构，支持分页，支持自定义查询, 自定义操作列, 让 RESTful 风格的 CRUD 更简单 👏
 
@@ -15,7 +17,6 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 * **[Introduction](#introduction)**
 * **[Feature](#feature)**
-* **[Documentation](#documentation)**
 * **[Demo](#demo)**
 * **[Install](#install)**
 * **[Quick Start](#quick-start)**
@@ -198,48 +199,9 @@ export default {
 
 [⬆ Back to Top](#table-of-contents)
 
-## Documentation
-
-* [full api doc](https://femessage.github.io/el-data-table/)
-* [online demo](https://femessage.github.io/el-data-table/storybook/)
-
-[⬆ Back to Top](#table-of-contents)
-
 ## Demo
 
-you can run demo on your localhost, just follow these scripts
-
-```bash
-# clone the source code
-git clone https://github.com/FEMessage/el-data-table.git
-
-# enter the directory
-cd el-data-table
-
-# install the dependencies
-yarn
-
-# run demo in ./stories
-yarn story
-```
-
-[⬆ Back to Top](#table-of-contents)
-
-## pre install
-
-this component peerDependencies on [element-ui](http://element.eleme.io/#/zh-CN/component/table) and [el-form-renderer](https://github.com/FEMessage/el-form-renderer) and [axios](https://github.com/axios/axios)
-
-make sure you have installed in your project
-
-```sh
-yarn add element-ui @femessage/el-form-renderer axios
-```
-
-if you want to develop the component on your localhost, you should install with -P
-
-```sh
-yarn add element-ui @femessage/el-form-renderer axios -P
-```
+* [doc and online demo](https://femessage.github.io/el-data-table/)
 
 [⬆ Back to Top](#table-of-contents)
 
