@@ -1,7 +1,10 @@
 <template>
     <div class="el-data-table">
+        <!-- @submit.native.prevent -->
+        <!-- 阻止表单提交的默认行为 -->
+        <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
         <!--搜索字段-->
-        <el-form-renderer v-if="searchForm.length > 0 || !!$slots.search" inline :content="searchForm" ref="searchForm">
+        <el-form-renderer v-if="searchForm.length > 0 || !!$slots.search" inline :content="searchForm" ref="searchForm" @submit.native.prevent>
           <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
             <slot name="search"></slot>
             <el-form-item>
@@ -588,10 +591,6 @@ export default {
     let searchForm = this.$refs.searchForm
 
     if (searchForm) {
-      // 阻止表单提交的默认行为
-      // https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2
-      searchForm.$el.setAttribute('action', 'javascript:;')
-
       // 恢复查询条件
       let matches = location.href.match(queryPattern)
 
