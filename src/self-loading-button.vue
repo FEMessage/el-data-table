@@ -2,7 +2,6 @@
   <el-button v-bind="$attrs"
              v-on="$listeners"
              :loading="loading"
-             :type="type"
              @click="handleClick">
     <slot></slot>
   </el-button>
