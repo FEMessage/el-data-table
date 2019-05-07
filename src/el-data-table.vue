@@ -739,8 +739,8 @@ export default {
     search() {
       this.$refs.searchForm.validate(valid => {
         if (!valid) return
-
-        this.beforeSearch()
+        let getFormValue = this.$refs.searchForm.getFormValue()
+        this.beforeSearch(getFormValue)
           .then(() => {
             this.page = defaultFirstPage
             this.getList(true)
