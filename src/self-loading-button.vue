@@ -12,6 +12,9 @@
 export default {
   name: 'ElLoadingButton',
   props: {
+    /**
+     * 如果没有这个props，则通过attrs传`type`时，会导致el-button的`native-type`也被改变
+     */
     type: String,
     /**
      * 点击按钮绑定的函数
