@@ -673,6 +673,24 @@ export default {
               _get(res, this.dataPath) || _get(res, noPaginationDataPath) || []
           } else {
             data = _get(res, this.dataPath) || []
+            // TODO 判断接口返回数据是否大于当前size（解决接口返回数据过多，数据渲染与size不符）
+            if(data.length>size)
+            {
+              this.$message({
+                message: '接口异常，返回数据与size不符',
+                type: 'warning'
+              });
+              let temporaryArray = [];
+              for(let v of data)
+              {
+                temporaryArray.push(v);
+                if(temporaryArray.length===size)
+                {
+                  data = temporaryArray;
+                  break;
+                }
+              }
+            }
             this.total = _get(res, this.totalPath)
           }
 
