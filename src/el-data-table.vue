@@ -51,6 +51,8 @@
       :row-style="showRow"
       v-loading="loading"
       @selection-change="handleSelectionChange"
+      @select="handleSelect"
+      @select-all="handleSelectAll"
     >
       <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
       <template v-if="isTree">
@@ -555,6 +557,13 @@ export default {
       default() {
         return {}
       }
+    },
+    /**
+     * 切换页面是否保存多选项
+     */
+    selectCrossPages: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -566,7 +575,8 @@ export default {
       // https://github.com/ElemeFE/element/issues/1153
       total: null,
       loading: false,
-      selected: [],
+      selectedThisPage: [],
+      selectedCrossPages: new Map(),
 
       //弹窗
       dialogTitle: this.dialogNewTitle,
@@ -581,6 +591,16 @@ export default {
       // 初始的customQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
       initCustomQuery: JSON.stringify(this.customQuery)
+    }
+  },
+  computed: {
+    /**
+     * 已选中的行的数组
+     */
+    selected() {
+      return this.selectCrossPages
+        ? [...this.selectedCrossPages.values()]
+        : this.selectedThisPage
     }
   },
   watch: {
@@ -701,6 +721,7 @@ export default {
            * @event update
            */
           this.$emit('update', data, res)
+          this.updateSelected()
         })
         .catch(err => {
           /**
@@ -804,13 +825,42 @@ export default {
       this.getList(true)
     },
     handleSelectionChange(val) {
-      this.selected = val
+      if (this.selectCrossPages) return
+      this.selectedThisPage = val
 
       /**
        * 多选启用时生效, 返回(selected)已选中行的数组
        * @event selection-change
        */
       this.$emit('selection-change', val)
+    },
+    handleSelect(selection, row) {
+      if (!this.selectCrossPages) return
+      const isChosen = !!selection.find(r => r === row)
+      if (isChosen) {
+        this.selectedCrossPages.set(row[this.id], row)
+      } else {
+        this.selectedCrossPages.delete(row[this.id])
+      }
+      this.selectedCrossPages = new Map(this.selectedCrossPages)
+      this.$emit('selection-change', this.selected)
+    },
+    handleSelectAll(selection) {
+      if (!this.selectCrossPages) return
+      if (selection.length) {
+        this.data.forEach(r => this.selectedCrossPages.set(r[this.id], r))
+      } else {
+        this.data.forEach(r => this.selectedCrossPages.delete(r[this.id]))
+      }
+      this.selectedCrossPages = new Map(this.selectedCrossPages)
+      this.$emit('selection-change', this.selected)
+    },
+    updateSelected() {
+      this.$nextTick(() => {
+        this.data
+          .filter(row => this.selectedCrossPages.has(row[this.id]))
+          .forEach(row => this.$refs.table.toggleRowSelection(row, true))
+      })
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
@@ -935,6 +985,7 @@ export default {
                 .then(resp => {
                   this.showMessage(true)
                   done()
+                  this.selectedCrossPages = new Map()
                   this.getList()
                 })
                 .catch(e => {})
@@ -968,6 +1019,7 @@ export default {
                   instance.confirmButtonLoading = false
                   done()
                   this.showMessage(true)
+                  this.selectedCrossPages = new Map()
                   this.getList()
                 })
                 .catch(er => {

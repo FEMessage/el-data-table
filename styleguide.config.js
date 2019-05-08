@@ -21,11 +21,7 @@ module.exports = {
   ribbon: {
     url: 'https://github.com/FEMessage/el-data-table'
   },
-  require: [
-    './styleguide/element.js',
-    './styleguide/axios.js',
-    './styleguide/el-form-renderer.js'
-  ],
+  require: ['./styleguide/global.requires.js'],
   sections: [
     {
       name: 'Components',
@@ -63,8 +59,6 @@ module.exports = {
         }
       ]
     },
-    plugins: [
-      new VueLoaderPlugin()
-    ]
+    plugins: [new VueLoaderPlugin()]
   }
 }
