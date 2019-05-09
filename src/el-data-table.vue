@@ -4,23 +4,26 @@
     <!-- 阻止表单提交的默认行为 -->
     <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
     <!--搜索字段-->
-    <el-form-renderer
-      v-if="searchForm.length > 0 || !!$slots.search"
-      inline
-      :content="searchForm"
-      ref="searchForm"
-      @submit.native.prevent
-    >
-      <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
-      <slot name="search"></slot>
-      <el-form-item>
-        <!--https://github.com/ElemeFE/element/pull/5920-->
-        <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
-        <el-button @click="resetSearch" size="small">重置</el-button>
-      </el-form-item>
-    </el-form-renderer>
+    <el-collapse-transition v-if="hasSearchForm">
+      <div v-show="!searchCollapse">
+        <el-form-renderer
+          inline
+          :content="searchForm"
+          ref="searchForm"
+          @submit.native.prevent
+        >
+          <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
+          <slot name="search"></slot>
+          <el-form-item>
+            <!--https://github.com/ElemeFE/element/pull/5920-->
+            <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
+            <el-button @click="resetSearch" size="small">重置</el-button>
+          </el-form-item>
+        </el-form-renderer>
+      </div>
+    </el-collapse-transition>
 
-    <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 ">
+    <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || hasSearchForm ">
       <el-form-item>
         <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">新增</el-button>
         <self-loading-button
@@ -41,6 +44,16 @@
           @click="onDefaultDelete($event)"
           :disabled="single ? (!selected.length || selected.length > 1) : !selected.length"
         >删除</el-button>
+        <el-button
+          v-if="hasSearchForm"
+          type="primary"
+          plain
+          size="small"
+          :icon="`el-icon-arrow-${searchCollapse ? 'down' : 'up'}`"
+          @click="searchCollapse = !searchCollapse"
+        >
+          {{ searchCollapse ? '展开' : '折叠' }}搜索
+        </el-button>
       </el-form-item>
     </el-form>
 
@@ -580,7 +593,13 @@ export default {
 
       // 初始的customQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
-      initCustomQuery: JSON.stringify(this.customQuery)
+      initCustomQuery: JSON.stringify(this.customQuery),
+      searchCollapse: false
+    }
+  },
+  computed: {
+    hasSearchForm() {
+      return this.searchForm.length || this.$slots.search
     }
   },
   watch: {

@@ -2,7 +2,6 @@
   <el-data-table
     v-bind="$data"
     :hasEdit="false"
-    :hasNew="false"
     :hasDelete="false"
     :customQuery="customQuery"
   >
@@ -33,7 +32,6 @@ export default {
     cfg.url = 'https://api.github.com/search/users'
 
     cfg.customQuery = {rate: 0}
-    cfg.hasNew = true
 
     return cfg
   }
