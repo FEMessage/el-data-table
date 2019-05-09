@@ -1,0 +1,3 @@
+```vue
+<template><playground /></template>
+```

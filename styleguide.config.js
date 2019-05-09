@@ -14,6 +14,7 @@ const demoSections = [
     content: filePath
   }))
 )
+const isDeveloping = process.env.NODE_ENV !== 'production'
 
 module.exports = {
   styleguideDir: 'docs',
@@ -25,7 +26,7 @@ module.exports = {
     './styleguide/element.js',
     './styleguide/axios.js',
     './styleguide/el-form-renderer.js'
-  ],
+  ].concat(isDeveloping ? ['./styleguide/playground.js'] : []),
   sections: [
     {
       name: 'Components',
@@ -36,7 +37,11 @@ module.exports = {
       name: 'Demo',
       sections: demoSections
     }
-  ],
+  ].concat(
+    isDeveloping
+      ? [{name: 'Playground', content: './styleguide/playground.md'}]
+      : []
+  ),
   webpackConfig: {
     module: {
       rules: [
@@ -63,8 +68,6 @@ module.exports = {
         }
       ]
     },
-    plugins: [
-      new VueLoaderPlugin()
-    ]
+    plugins: [new VueLoaderPlugin()]
   }
 }
