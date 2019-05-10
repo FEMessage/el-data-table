@@ -126,12 +126,12 @@
         <template slot-scope="scope">
           <el-button
             v-if="isTree && hasNew"
-            type="primary"
+            type="text"
             size="small"
             @click="onDefaultNew(scope.row)"
           >新增</el-button>
-          <el-button v-if="hasEdit" size="small" @click="onDefaultEdit(scope.row)">修改</el-button>
-          <el-button v-if="hasView" type="info" size="small" @click="onDefaultView(scope.row)">查看</el-button>
+          <el-button v-if="hasEdit" type="text" size="small" @click="onDefaultEdit(scope.row)">修改</el-button>
+          <el-button v-if="hasView" type="text" size="small" @click="onDefaultView(scope.row)">查看</el-button>
           <self-loading-button
             v-for="(btn, i) in extraButtons"
             v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -140,12 +140,14 @@
             :params="scope.row"
             :callback="getList"
             :key="i"
+            type="text"
             size="small"
           >{{btn.text}}</self-loading-button>
           <el-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
-            type="danger"
+            type="text"
             size="small"
+            style="color: #E24156"
             @click="onDefaultDelete(scope.row)"
           >删除</el-button>
         </template>
