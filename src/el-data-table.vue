@@ -51,6 +51,8 @@
       :row-style="showRow"
       v-loading="loading"
       @selection-change="handleSelectionChange"
+      @select="handleSelect"
+      @select-all="handleSelectAll"
     >
       <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
       <template v-if="isTree">
@@ -303,6 +305,13 @@ export default {
      * 单选, 适用场景: 不可以批量删除
      */
     single: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 切换页面是否保存多选项
+     */
+    storeSelection: {
       type: Boolean,
       default: false
     },
@@ -566,7 +575,8 @@ export default {
       // https://github.com/ElemeFE/element/issues/1153
       total: null,
       loading: false,
-      selected: [],
+      selectedThisPage: [],
+      selectedCrossPages: {},
 
       //弹窗
       dialogTitle: this.dialogNewTitle,
@@ -581,6 +591,16 @@ export default {
       // 初始的customQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
       initCustomQuery: JSON.stringify(this.customQuery)
+    }
+  },
+  computed: {
+    /**
+     * 已选中的行的数组
+     */
+    selected() {
+      return this.storeSelection
+        ? Object.values(this.selectedCrossPages)
+        : this.selectedThisPage
     }
   },
   watch: {
@@ -701,6 +721,15 @@ export default {
            * @event update
            */
           this.$emit('update', data, res)
+
+          // 开启selectCrossPages时，自动勾选多选状态
+          if (this.storeSelection) {
+            this.$nextTick(() => {
+              this.data
+                .filter(r => r[this.id] in this.selectedCrossPages)
+                .forEach(r => this.$refs.table.toggleRowSelection(r, true))
+            })
+          }
         })
         .catch(err => {
           /**
@@ -804,13 +833,38 @@ export default {
       this.getList(true)
     },
     handleSelectionChange(val) {
-      this.selected = val
+      if (this.storeSelection) return
+
+      this.selectedThisPage = val
 
       /**
        * 多选启用时生效, 返回(selected)已选中行的数组
        * @event selection-change
        */
       this.$emit('selection-change', val)
+    },
+    handleSelect(selection, row) {
+      if (!this.storeSelection) return
+
+      const isChosen = !!selection.find(r => r === row)
+      if (isChosen) {
+        this.selectedCrossPages[row[this.id]] = row
+      } else {
+        delete this.selectedCrossPages[row[this.id]]
+      }
+      this.selectedCrossPages = Object.assign({}, this.selectedCrossPages)
+      this.$emit('selection-change', this.selected)
+    },
+    handleSelectAll(selection) {
+      if (!this.storeSelection) return
+
+      if (selection.length) {
+        this.data.forEach(r => (this.selectedCrossPages[r[this.id]] = r))
+      } else {
+        this.data.forEach(r => delete this.selectedCrossPages[r[this.id]])
+      }
+      this.selectedCrossPages = Object.assign({}, this.selectedCrossPages)
+      this.$emit('selection-change', this.selected)
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
@@ -935,6 +989,7 @@ export default {
                 .then(resp => {
                   this.showMessage(true)
                   done()
+                  this.selectedCrossPages = {}
                   this.getList()
                 })
                 .catch(e => {})
@@ -968,6 +1023,7 @@ export default {
                   instance.confirmButtonLoading = false
                   done()
                   this.showMessage(true)
+                  this.selectedCrossPages = {}
                   this.getList()
                 })
                 .catch(er => {
