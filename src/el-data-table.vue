@@ -221,6 +221,8 @@ const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
 const queryFlag = 'q='
 const queryPattern = new RegExp('q=.*' + paramSeparator)
 
+const resetSearchPattern = /\?.*/
+
 export default {
   name: 'ElDataTable',
   components: {
@@ -771,7 +773,7 @@ export default {
       history.replaceState(
         history.state,
         '',
-        location.href.replace(queryPattern, '')
+        location.href.replace(resetSearchPattern, '')
       )
 
       this.$nextTick(() => {
