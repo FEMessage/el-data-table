@@ -6,7 +6,7 @@
     <!--搜索字段-->
     <el-form-renderer
       v-if="hasSearchForm"
-      v-show="!searchCollapse"
+      v-show="!searchCollapse || !searchFormCollapsing"
       inline
       :content="searchForm"
       ref="searchForm"
@@ -21,7 +21,7 @@
       </el-form-item>
     </el-form-renderer>
 
-    <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || hasSearchForm">
+    <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || searchCollapse">
       <el-form-item>
         <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">新增</el-button>
         <self-loading-button
@@ -43,14 +43,13 @@
           :disabled="single ? (!selected.length || selected.length > 1) : !selected.length"
         >删除</el-button>
         <el-button
-          v-if="hasSearchForm"
-          type="primary"
-          plain
+          v-if="searchCollapse"
+          type="default"
           size="small"
-          :icon="`el-icon-arrow-${searchCollapse ? 'down' : 'up'}`"
-          @click="searchCollapse = !searchCollapse"
+          :icon="`el-icon-arrow-${searchFormCollapsing ? 'down' : 'up'}`"
+          @click="searchFormCollapsing = !searchFormCollapsing"
         >
-          {{ searchCollapse ? '展开' : '折叠' }}搜索
+          {{ searchFormCollapsing ? '展开' : '折叠' }}搜索
         </el-button>
       </el-form-item>
     </el-form>
@@ -566,6 +565,13 @@ export default {
       default() {
         return {}
       }
+    },
+    /**
+     * 是否开启搜索栏折叠功能
+     */
+    searchCollapse: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -592,7 +598,7 @@ export default {
       // 初始的customQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
       initCustomQuery: JSON.stringify(this.customQuery),
-      searchCollapse: false
+      searchFormCollapsing: false
     }
   },
   computed: {
