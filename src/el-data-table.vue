@@ -147,7 +147,7 @@
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
             type="text"
             size="small"
-            style="color: #f56c6c"
+            style="color: #E24156"
             @click="onDefaultDelete(scope.row)"
           >删除</el-button>
         </template>
