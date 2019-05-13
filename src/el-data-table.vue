@@ -6,7 +6,7 @@
     <!--搜索字段-->
     <el-form-renderer
       v-if="hasSearchForm"
-      v-show="!canSearchCollapse || !isSearchCollapse"
+      v-show="!isSearchCollapse"
       inline
       :content="searchForm"
       ref="searchForm"
