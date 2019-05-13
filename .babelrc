@@ -2,13 +2,6 @@
   "presets": [
     ["@babel/env", { "modules": false }]
   ],
-  "env": {
-    "test": {
-      "presets": [
-        ["@babel/env", { "targets": { "node": "current" }}]
-      ]
-    }
-  },
   "plugins": [
     ["@babel/transform-runtime", {
       "regenerator": true
