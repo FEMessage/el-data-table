@@ -5,7 +5,8 @@
     <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
     <!--搜索字段-->
     <el-form-renderer
-      v-if="searchForm.length > 0 || !!$slots.search"
+      v-if="hasSearchForm"
+      v-show="!isSearchCollapse"
       inline
       :content="searchForm"
       ref="searchForm"
@@ -20,7 +21,7 @@
       </el-form-item>
     </el-form-renderer>
 
-    <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 ">
+    <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
       <el-form-item>
         <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">新增</el-button>
         <self-loading-button
@@ -41,6 +42,15 @@
           @click="onDefaultDelete($event)"
           :disabled="single ? (!selected.length || selected.length > 1) : !selected.length"
         >删除</el-button>
+        <el-button
+          v-if="canSearchCollapse"
+          type="default"
+          size="small"
+          :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
+          @click="isSearchCollapse = !isSearchCollapse"
+        >
+          {{ isSearchCollapse ? '展开' : '折叠' }}搜索
+        </el-button>
       </el-form-item>
     </el-form>
 
@@ -284,6 +294,13 @@ export default {
       default() {
         return []
       }
+    },
+    /**
+     * 是否开启搜索栏折叠功能
+     */
+    canSearchCollapse: {
+      type: Boolean,
+      default: false
     },
     /**
      * 点击查询按钮, 查询前执行的函数, 需要返回Promise
@@ -582,7 +599,13 @@ export default {
 
       // 初始的customQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
-      initCustomQuery: JSON.stringify(this.customQuery)
+      initCustomQuery: JSON.stringify(this.customQuery),
+      isSearchCollapse: false
+    }
+  },
+  computed: {
+    hasSearchForm() {
+      return this.searchForm.length || this.$slots.search
     }
   },
   watch: {
