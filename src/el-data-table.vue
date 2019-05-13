@@ -1,171 +1,195 @@
 <template>
-    <div class="el-data-table">
-        <!-- @submit.native.prevent -->
-        <!-- 阻止表单提交的默认行为 -->
-        <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
-        <!--搜索字段-->
-        <el-form-renderer v-if="searchForm.length > 0 || !!$slots.search" inline :content="searchForm" ref="searchForm" @submit.native.prevent>
-          <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
-            <slot name="search"></slot>
-            <el-form-item>
-                <!--https://github.com/ElemeFE/element/pull/5920-->
-                <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
-                <el-button @click="resetSearch" size="small">重置</el-button>
-            </el-form-item>
-        </el-form-renderer>
+  <div class="el-data-table">
+    <!-- @submit.native.prevent -->
+    <!-- 阻止表单提交的默认行为 -->
+    <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
+    <!--搜索字段-->
+    <el-form-renderer
+      v-if="hasSearchForm"
+      v-show="!isSearchCollapse"
+      inline
+      :content="searchForm"
+      ref="searchForm"
+      @submit.native.prevent
+    >
+      <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
+      <slot name="search"></slot>
+      <el-form-item>
+        <!--https://github.com/ElemeFE/element/pull/5920-->
+        <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
+        <el-button @click="resetSearch" size="small">重置</el-button>
+      </el-form-item>
+    </el-form-renderer>
 
-        <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 ">
-            <el-form-item>
-                <el-button v-if="hasNew" type="primary" size="small"
-                           @click="onDefaultNew">新增</el-button>
-                <self-loading-button v-for="(btn, i) in headerButtons"
-                                   v-if="'show' in btn ? btn.show(selected) : true"
-                                   :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-                                   :click="btn.atClick"
-                                   :params="selected"
-                                   :callback="getList"
-                                   v-bind="btn"
-                                   :key="i"
-                                   size="small" >{{btn.text}}</self-loading-button>
-                <el-button v-if="hasSelect && hasDelete" type="danger" size="small"
-                           @click="onDefaultDelete($event)"
-                           :disabled="single ? (!selected.length || selected.length > 1) : !selected.length">删除</el-button>
-            </el-form-item>
-        </el-form>
-
-        <el-table
-            ref="table"
-            v-bind="tableAttrs"
-            :data="data"
-            :row-style="showRow"
-            v-loading="loading"
-            @selection-change="handleSelectionChange"
+    <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
+      <el-form-item>
+        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">新增</el-button>
+        <self-loading-button
+          v-for="(btn, i) in headerButtons"
+          v-if="'show' in btn ? btn.show(selected) : true"
+          :disabled="'disabled' in btn ? btn.disabled(selected) : false"
+          :click="btn.atClick"
+          :params="selected"
+          :callback="getList"
+          v-bind="btn"
+          :key="i"
+          size="small"
+        >{{btn.text}}</self-loading-button>
+        <el-button
+          v-if="hasSelect && hasDelete"
+          type="danger"
+          size="small"
+          @click="onDefaultDelete($event)"
+          :disabled="single ? (!selected.length || selected.length > 1) : !selected.length"
+        >删除</el-button>
+        <el-button
+          v-if="canSearchCollapse"
+          type="default"
+          size="small"
+          :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
+          @click="isSearchCollapse = !isSearchCollapse"
         >
+          {{ isSearchCollapse ? '展开' : '折叠' }}搜索
+        </el-button>
+      </el-form-item>
+    </el-form>
 
-            <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
-            <template v-if="isTree">
+    <el-table
+      ref="table"
+      v-bind="tableAttrs"
+      :data="data"
+      :row-style="showRow"
+      v-loading="loading"
+      @selection-change="handleSelectionChange"
+    >
+      <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
+      <template v-if="isTree">
+        <!--有多选-->
+        <template v-if="hasSelect">
+          <el-table-column key="selection-key" v-bind="columns[0]"></el-table-column>
 
-                <!--有多选-->
-                <template v-if="hasSelect">
-                    <el-table-column key="selection-key" v-bind="columns[0]">
-                    </el-table-column>
-
-                    <el-table-column
-                        key="tree-ctrl"
-                        v-bind="columns[1]" >
-                        <template slot-scope="scope">
-                            <span v-if="isTree" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
-              <span v-if="isTree && iconShow(scope.$index, scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
+          <el-table-column key="tree-ctrl" v-bind="columns[1]">
+            <template slot-scope="scope">
+              <span
+                v-if="isTree"
+                v-for="space in scope.row._level"
+                class="ms-tree-space"
+                :key="space"
+              ></span>
+              <span
+                v-if="isTree && iconShow(scope.$index, scope.row)"
+                class="tree-ctrl"
+                @click="toggleExpanded(scope.$index)"
+              >
                 <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
                 <i v-else class="el-icon-minus"></i>
               </span>
-                            {{scope.row[columns[1].prop]}}
-                        </template>
-                    </el-table-column>
+              {{scope.row[columns[1].prop]}}
+            </template>
+          </el-table-column>
 
-                    <el-table-column
-                        v-for="(col) in columns.filter((c, i) => i !== 0 && i !== 1)"
-                        :key="col.prop"
-                        v-bind="col" >
-                    </el-table-column>
-                </template>
+          <el-table-column
+            v-for="(col) in columns.filter((c, i) => i !== 0 && i !== 1)"
+            :key="col.prop"
+            v-bind="col"
+          ></el-table-column>
+        </template>
 
-                <!--无选择-->
-                <template v-else>
-
-                    <!--展开这列, 丢失 el-table-column属性-->
-                    <el-table-column
-                        key="tree-ctrl"
-                        v-bind="columns[0]" >
-                        <template slot-scope="scope">
-                            <span v-if="isTree" v-for="space in scope.row._level" class="ms-tree-space" :key="space"></span>
-              <span v-if="isTree && iconShow(scope.$index, scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
+        <!--无选择-->
+        <template v-else>
+          <!--展开这列, 丢失 el-table-column属性-->
+          <el-table-column key="tree-ctrl" v-bind="columns[0]">
+            <template slot-scope="scope">
+              <span
+                v-if="isTree"
+                v-for="space in scope.row._level"
+                class="ms-tree-space"
+                :key="space"
+              ></span>
+              <span
+                v-if="isTree && iconShow(scope.$index, scope.row)"
+                class="tree-ctrl"
+                @click="toggleExpanded(scope.$index)"
+              >
                 <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
                 <i v-else class="el-icon-minus"></i>
               </span>
-                            {{scope.row[columns[0].prop]}}
-                        </template>
-                    </el-table-column>
-
-                    <el-table-column
-                        v-for="(col) in columns.filter((c, i) => i !== 0)"
-                        :key="col.prop"
-                        v-bind="col" >
-                    </el-table-column>
-                </template>
+              {{scope.row[columns[0].prop]}}
             </template>
+          </el-table-column>
 
-            <!--非树-->
-            <template v-else>
-                <el-table-column
-                    v-for="(col) in columns"
-                    :key="col.prop"
-                    v-bind="col" >
-                </el-table-column>
-            </template>
+          <el-table-column
+            v-for="(col) in columns.filter((c, i) => i !== 0)"
+            :key="col.prop"
+            v-bind="col"
+          ></el-table-column>
+        </template>
+      </template>
 
-            <!--默认操作列-->
-            <el-table-column label="操作" v-if="hasOperation"
-                             v-bind="operationAttrs"
-            >
-                <template slot-scope="scope">
-                    <el-button v-if="isTree && hasNew" type="primary" size="small"
-                               @click="onDefaultNew(scope.row)">新增</el-button>
-                    <el-button v-if="hasEdit" size="small"
-                               @click="onDefaultEdit(scope.row)">
-                        修改
-                    </el-button>
-                    <el-button v-if="hasView" type="info" size="small"
-                               @click="onDefaultView(scope.row)">
-                        查看
-                    </el-button>
-                    <self-loading-button v-for="(btn, i) in extraButtons"
-                                       v-if="'show' in btn ? btn.show(scope.row) : true"
-                                       v-bind="btn"
-                                       :click="btn.atClick"
-                                       :params="scope.row"
-                                       :callback="getList"
-                                       :key="i"
-                                       size="small"
-                    >
-                        {{btn.text}}
-                    </self-loading-button>
-                    <el-button v-if="!hasSelect && hasDelete && canDelete(scope.row)" type="danger" size="small"
-                               @click="onDefaultDelete(scope.row)">
-                        删除
-                    </el-button>
-                </template>
-            </el-table-column>
+      <!--非树-->
+      <template v-else>
+        <el-table-column v-for="(col) in columns" :key="col.prop" v-bind="col"></el-table-column>
+      </template>
 
-            <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
-            <slot></slot>
+      <!--默认操作列-->
+      <el-table-column label="操作" v-if="hasOperation" v-bind="operationAttrs">
+        <template slot-scope="scope">
+          <el-button
+            v-if="isTree && hasNew"
+            type="text"
+            size="small"
+            @click="onDefaultNew(scope.row)"
+          >新增</el-button>
+          <el-button v-if="hasEdit" type="text" size="small" @click="onDefaultEdit(scope.row)">修改</el-button>
+          <el-button v-if="hasView" type="text" size="small" @click="onDefaultView(scope.row)">查看</el-button>
+          <self-loading-button
+            v-for="(btn, i) in extraButtons"
+            v-if="'show' in btn ? btn.show(scope.row) : true"
+            v-bind="btn"
+            :click="btn.atClick"
+            :params="scope.row"
+            :callback="getList"
+            :key="i"
+            type="text"
+            size="small"
+          >{{btn.text}}</self-loading-button>
+          <el-button
+            v-if="!hasSelect && hasDelete && canDelete(scope.row)"
+            type="text"
+            size="small"
+            style="color: #E24156"
+            @click="onDefaultDelete(scope.row)"
+          >删除</el-button>
+        </template>
+      </el-table-column>
 
-        </el-table>
-        <el-pagination
-            v-if="hasPagination"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="page"
-            :page-sizes="paginationSizes"
-            :page-size="size"
-            :total="total"
-            style="text-align: right; padding: 10px 0"
-            :layout="paginationLayout"
-        >
-        </el-pagination>
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
-            <!--https://github.com/FEMessage/el-form-renderer-->
-            <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
-                <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
-                <slot name="form"></slot>
-            </el-form-renderer>
+      <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
+      <slot></slot>
+    </el-table>
+    <el-pagination
+      v-if="hasPagination"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="page"
+      :page-sizes="paginationSizes"
+      :page-size="size"
+      :total="total"
+      style="text-align: right; padding: 10px 0"
+      :layout="paginationLayout"
+    ></el-pagination>
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
+      <!--https://github.com/FEMessage/el-form-renderer-->
+      <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
+        <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
+        <slot name="form"></slot>
+      </el-form-renderer>
 
-            <div slot="footer" v-show="!isView">
-                <el-button @click="cancel" size="small">取 消</el-button>
-                <el-button type="primary" @click="confirm" :loading="confirmLoading" size="small">确 定</el-button>
-            </div>
-        </el-dialog>
-    </div>
+      <div slot="footer" v-show="!isView">
+        <el-button @click="cancel" size="small">取 消</el-button>
+        <el-button type="primary" @click="confirm" :loading="confirmLoading" size="small">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -270,6 +294,13 @@ export default {
       default() {
         return []
       }
+    },
+    /**
+     * 是否开启搜索栏折叠功能
+     */
+    canSearchCollapse: {
+      type: Boolean,
+      default: false
     },
     /**
      * 点击查询按钮, 查询前执行的函数, 需要返回Promise
@@ -568,7 +599,13 @@ export default {
 
       // 初始的customQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
-      initCustomQuery: JSON.stringify(this.customQuery)
+      initCustomQuery: JSON.stringify(this.customQuery),
+      isSearchCollapse: false
+    }
+  },
+  computed: {
+    hasSearchForm() {
+      return this.searchForm.length || this.$slots.search
     }
   },
   watch: {
