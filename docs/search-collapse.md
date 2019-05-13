@@ -8,7 +8,7 @@ search表单可以折叠、展开
       :hasNew="false"
       :hasDelete="false"
       :customQuery="customQuery"
-      :searchCollapse="true"
+      :canSearchCollapse="true"
       >
         <template slot="search">
           <el-tag>slot=search</el-tag>
