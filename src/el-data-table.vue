@@ -294,6 +294,13 @@ export default {
       }
     },
     /**
+     * 是否开启搜索栏折叠功能
+     */
+    canSearchCollapse: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * 点击查询按钮, 查询前执行的函数, 需要返回Promise
      */
     beforeSearch: {
@@ -565,13 +572,6 @@ export default {
       default() {
         return {}
       }
-    },
-    /**
-     * 是否开启搜索栏折叠功能
-     */
-    canSearchCollapse: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
