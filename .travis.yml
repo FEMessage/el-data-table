@@ -11,7 +11,8 @@ install:
 script:
 - ./build.sh
 after_success:
-- ./notify.sh
+- GREN_GITHUB_TOKEN=$GITHUB_TOKEN yarn release
+- sleep 3 && ./notify.sh
 cache: yarn
 deploy:
 - provider: pages
