@@ -153,13 +153,11 @@
             type="text"
             size="small"
           >{{btn.text}}</self-loading-button>
-          <el-button
+          <text-danger-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
-            type="text"
             size="small"
-            style="color: #E24156"
             @click="onDefaultDelete(scope.row)"
-          >删除</el-button>
+          >删除</text-danger-button>
         </template>
       </el-table-column>
 
@@ -196,6 +194,7 @@
 import _get from 'lodash.get'
 import qs from 'qs'
 import SelfLoadingButton from './self-loading-button.vue'
+import TextDangerButton from './text-danger-button.vue'
 
 // 默认返回的数据格式如下
 //          {
@@ -236,7 +235,8 @@ const queryPattern = new RegExp('q=.*' + paramSeparator)
 export default {
   name: 'ElDataTable',
   components: {
-    SelfLoadingButton
+    SelfLoadingButton,
+    TextDangerButton
   },
   props: {
     /**
