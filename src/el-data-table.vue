@@ -23,7 +23,7 @@
 
     <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
       <el-form-item>
-        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">新增</el-button>
+        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ operNewName }}</el-button>
         <self-loading-button
           v-for="(btn, i) in headerButtons"
           v-if="'show' in btn ? btn.show(selected) : true"
@@ -139,9 +139,9 @@
             type="text"
             size="small"
             @click="onDefaultNew(scope.row)"
-          >新增</el-button>
-          <el-button v-if="hasEdit" type="text" size="small" @click="onDefaultEdit(scope.row)">修改</el-button>
-          <el-button v-if="hasView" type="text" size="small" @click="onDefaultView(scope.row)">查看</el-button>
+          >{{ operNewName }}</el-button>
+          <el-button v-if="hasEdit" type="text" size="small" @click="onDefaultEdit(scope.row)">{{ operEditName }}</el-button>
+          <el-button v-if="hasView" type="text" size="small" @click="onDefaultView(scope.row)">{{ operViewName }}</el-button>
           <self-loading-button
             v-for="(btn, i) in extraButtons"
             v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -383,6 +383,27 @@ export default {
       default: true
     },
     /**
+     * 新增按钮文案
+     */
+    operNewName: {
+      type: String,
+      default: '新增'
+    },
+    /**
+     * 修改按钮文案
+     */
+    operEditName: {
+      type: String,
+      default: '修改'
+    },
+    /**
+     * 查看按钮文案
+     */
+    operViewName: {
+      type: String,
+      default: '查看'
+    },
+    /**
      * 某行数据是否可以删除, 返回true表示可以, 控制的是单选时单行的删除按钮
      */
     canDelete: {
@@ -513,22 +534,34 @@ export default {
       default: true
     },
     /**
-     * 新增弹窗的标题
+     * @deprecated
+     * 新增弹窗的标题（default=operNewName)
      */
     dialogNewTitle: {
       type: String,
-      default: '新增'
+      default() {
+        return this.operNewName
+      }
     },
     /**
-     * 修改弹窗的标题
+     * @deprecated
+     * 修改弹窗的标题（default=operEditName)
      */
     dialogEditTitle: {
       type: String,
-      default: '修改'
+      default() {
+        return this.operEditName
+      }
     },
+    /**
+     * @deprecated
+     * 查看弹窗的标题（default=operViewName)
+     */
     dialogViewTitle: {
       type: String,
-      default: '查看'
+      default() {
+        return this.operViewName
+      }
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
