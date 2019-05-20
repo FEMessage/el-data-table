@@ -445,7 +445,7 @@ export default {
     },
     /**
      * @deprecated
-     * 不分页时的size的大小(建议接口约定page=-1时不分页，故一般不会用到此属性)
+     * 不分页时的size的大小(建议接口约定，不分页时传参page=-1，故一般不会用到此属性)
      */
     noPaginationSize: {
       type: Number,
@@ -693,16 +693,15 @@ export default {
         )
 
       // 根据偏移值计算接口正确的页数
-      const page = this.hasPagination
-        ? this.firstPage - defaultFirstPage + this.page
-        : -1
-      params += `&page=${page}`
+      const pageOffset = this.firstPage - defaultFirstPage
+      let page = this.page + pageOffset
+      if (!this.hasPagination) page = -1
 
       // 请求开始
       this.loading = true
 
       this.$axios
-        .get(url + params)
+        .get(url + params + `&page=${page}`)
         .then(resp => {
           let res = resp.data
           let data = []
