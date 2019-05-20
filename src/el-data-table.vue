@@ -413,7 +413,7 @@ export default {
       type: Function
     },
     /**
-     * 是否分页
+     * 是否分页。如果不分页，则请求传参page=-1
      */
     hasPagination: {
       type: Boolean,
@@ -444,7 +444,8 @@ export default {
       default: 10
     },
     /**
-     * 不分页时的size的大小
+     * @deprecated
+     * 不分页时的size的大小(建议接口约定，不分页时传参page=-1，故一般不会用到此属性)
      */
     noPaginationSize: {
       type: Number,
@@ -694,6 +695,7 @@ export default {
       // 根据偏移值计算接口正确的页数
       let pageOffset = this.firstPage - defaultFirstPage
       let page = this.page + pageOffset
+      if (!this.hasPagination) page = -1
 
       // 请求开始
       this.loading = true
