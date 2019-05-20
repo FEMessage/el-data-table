@@ -1,4 +1,4 @@
-关闭分页。此时上传page=-1
+不分页时，接口传参page=-1
 
 ```vue
 <template>
