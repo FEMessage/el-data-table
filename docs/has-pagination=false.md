@@ -1,4 +1,4 @@
-不分页时，接口传参page=-1
+不分页，设置has-pagination="false"即可，此时接口传参page=-1
 
 ```vue
 <template>
@@ -10,8 +10,6 @@
   </el-data-table>
 </template>
 <script>
-// 显示基本crud
-// post/delete/put 接口会报错, 因为调用的是github的api
 const config = require('./config').default
 
 export default {
