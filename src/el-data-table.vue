@@ -892,6 +892,8 @@ export default {
         rows.forEach(r => delete map[r[this.id]])
       }
       this.selectedMap = map
+      // 更新this.selectedMap会自动更新this.selected, 详见`computed`
+      // 故此函数看起来没有对selected进行操作，却需要对外emit新的值
       this.$emit('selection-change', this.selected)
     },
     // 弹窗相关
