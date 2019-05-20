@@ -11,7 +11,7 @@ export default {
     return {
       firstPage: 0,
       paginationSizes: [2, 4],
-      url: 'https://easy-mock.com/mock/5cd253664b170036725e06b5/datatable/list',
+      url: 'https://easy-mock.com/mock/5c1b3895fe5907404e654045/femessage-mock/el-data-table/persist-selection',
       columns: [
         {type: 'selection'},
         {prop: 'id', label: 'id'},
