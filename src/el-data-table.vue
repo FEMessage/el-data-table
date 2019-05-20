@@ -945,6 +945,7 @@ export default {
     onDefaultDelete(row) {
       this.$confirm('确认删除吗', '提示', {
         type: 'warning',
+        confirmButtonClass: 'el-button--danger',
         beforeClose: (action, instance, done) => {
           if (action == 'confirm') {
             instance.confirmButtonLoading = true
