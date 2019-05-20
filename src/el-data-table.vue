@@ -851,37 +851,45 @@ export default {
      * 当开启跨页保存多选状态，我们只监听确定由用户触发的select和select-all事件里的selection变化
      */
     handleSelectionChange(val) {
-      if (this.persistSelection) return
-
-      this.selected = val
+      if (!this.persistSelection) this.updateSelected(val)
+    },
+    handleSelect(selection, row) {
+      if (this.persistSelection) {
+        const isChosen = !!selection.find(r => r === row)
+        this.select([row], isChosen)
+      }
+    },
+    handleSelectAll(selection) {
+      if (this.persistSelection) {
+        this.select(this.data, !!selection.length)
+      }
+    },
+    /**
+     * 直接覆盖更新多选项
+     *
+     * @param {Array} rows - 此次覆盖更新的多选项
+     */
+    updateSelected(rows) {
+      this.selected = rows
 
       /**
        * 多选启用时生效, 返回(selected)已选中行的数组
        * @event selection-change
        */
-      this.$emit('selection-change', val)
+      this.$emit('selection-change', rows)
     },
-    handleSelect(selection, row) {
-      if (!this.persistSelection) return
-
+    /**
+     * 逐项更新多选项
+     *
+     * @param {Array} rows - 受影响的数据行
+     * @param {boolean} isSelected - 是否被勾选
+     */
+    select(rows, isSelected) {
       const map = Object.assign({}, this.selectedMap)
-      const isChosen = !!selection.find(r => r === row)
-      if (isChosen) {
-        map[row[this.id]] = row
+      if (isSelected) {
+        rows.forEach(r => (map[r[this.id]] = r))
       } else {
-        delete map[row[this.id]]
-      }
-      this.selectedMap = map
-      this.$emit('selection-change', this.selected)
-    },
-    handleSelectAll(selection) {
-      if (!this.persistSelection) return
-
-      const map = Object.assign({}, this.selectedMap)
-      if (selection.length) {
-        this.data.forEach(r => (map[r[this.id]] = r))
-      } else {
-        this.data.forEach(r => delete map[r[this.id]])
+        rows.forEach(r => delete map[r[this.id]])
       }
       this.selectedMap = map
       this.$emit('selection-change', this.selected)
