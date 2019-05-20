@@ -18,7 +18,7 @@ export default {
         {prop: 'name', label: '用户名'}
       ],
       hasNew: false,
-      storeSelection: true,
+      persistSelection: true,
       onDelete: selected => {
         return this.$axios.delete(
           'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',

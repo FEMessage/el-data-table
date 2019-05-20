@@ -309,9 +309,9 @@ export default {
       default: false
     },
     /**
-     * 切换页面是否保存多选项
+     * 切换页面时，已勾选项不会丢失
      */
-    storeSelection: {
+    persistSelection: {
       type: Boolean,
       default: false
     },
@@ -730,7 +730,7 @@ export default {
           this.$emit('update', data, res)
 
           // 开启selectCrossPages时，自动勾选多选状态
-          if (this.storeSelection) {
+          if (this.persistSelection) {
             this.$nextTick(() => {
               this.data
                 .filter(r => r[this.id] in this.selectedMap)
@@ -851,7 +851,7 @@ export default {
      * 当开启跨页保存多选状态，我们只监听确定由用户触发的select和select-all事件里的selection变化
      */
     handleSelectionChange(val) {
-      if (this.storeSelection) return
+      if (this.persistSelection) return
 
       this.selected = val
 
@@ -862,7 +862,7 @@ export default {
       this.$emit('selection-change', val)
     },
     handleSelect(selection, row) {
-      if (!this.storeSelection) return
+      if (!this.persistSelection) return
 
       const map = Object.assign({}, this.selectedMap)
       const isChosen = !!selection.find(r => r === row)
@@ -875,7 +875,7 @@ export default {
       this.$emit('selection-change', this.selected)
     },
     handleSelectAll(selection) {
-      if (!this.storeSelection) return
+      if (!this.persistSelection) return
 
       const map = Object.assign({}, this.selectedMap)
       if (selection.length) {
