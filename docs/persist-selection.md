@@ -6,7 +6,7 @@
 </template>
  <script>
 export default {
-  name: 'store-selection',
+  name: 'persist-selection',
   data() {
     return {
       firstPage: 0,
