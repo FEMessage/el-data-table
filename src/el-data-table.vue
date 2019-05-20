@@ -665,6 +665,7 @@ export default {
 
       let url = this.url
       let params = ''
+      let size = this.hasPagination ? this.size : this.noPaginationSize
 
       if (!url) {
         console.warn('DataTable: url 为空, 不发送请求')
@@ -675,7 +676,6 @@ export default {
       if (url.indexOf('?') > -1) url += '&'
       else url += '?'
 
-      const size = this.hasPagination ? this.size : this.noPaginationSize
       params += `size=${size}`
 
       // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
@@ -693,7 +693,7 @@ export default {
         )
 
       // 根据偏移值计算接口正确的页数
-      const pageOffset = this.firstPage - defaultFirstPage
+      let pageOffset = this.firstPage - defaultFirstPage
       let page = this.page + pageOffset
       if (!this.hasPagination) page = -1
 
