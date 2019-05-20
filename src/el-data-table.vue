@@ -575,8 +575,8 @@ export default {
       // https://github.com/ElemeFE/element/issues/1153
       total: null,
       loading: false,
-      selectedThisPage: [],
-      selectedCrossPages: {},
+      // 多选项的数组
+      selected: [],
 
       //弹窗
       dialogTitle: this.dialogNewTitle,
@@ -595,12 +595,19 @@ export default {
   },
   computed: {
     /**
-     * 已选中的行的数组
+     * selected的map形式，key为id，值为row
+     * 用于多选项跨页保存的情况
      */
-    selected() {
-      return this.storeSelection
-        ? Object.values(this.selectedCrossPages)
-        : this.selectedThisPage
+    selectedMap: {
+      get() {
+        return this.selected.reduce((map, r) => {
+          map[r[this.id]] = r
+          return map
+        }, {})
+      },
+      set(val) {
+        this.selected = Object.values(val)
+      }
     }
   },
   watch: {
@@ -726,7 +733,7 @@ export default {
           if (this.storeSelection) {
             this.$nextTick(() => {
               this.data
-                .filter(r => r[this.id] in this.selectedCrossPages)
+                .filter(r => r[this.id] in this.selectedMap)
                 .forEach(r => this.$refs.table.toggleRowSelection(r, true))
             })
           }
@@ -832,10 +839,21 @@ export default {
       this.page = val
       this.getList(true)
     },
+    /**
+     * 多选事件详解
+     *
+     * 这里监听了el-table的三个选择事件：
+     * @selection-change - 多选项发生改变
+     * @select - 用户点击某行的多选按钮
+     * @select-all - 用户点击标题栏的多选按钮
+     *
+     * 其中selection-change并不一定是由用户触发的，任何table数据更新时，el-table都会重置多选项为空，这时也会触发selection-change
+     * 当开启跨页保存多选状态，我们只监听确定由用户触发的select和select-all事件里的selection变化
+     */
     handleSelectionChange(val) {
       if (this.storeSelection) return
 
-      this.selectedThisPage = val
+      this.selected = val
 
       /**
        * 多选启用时生效, 返回(selected)已选中行的数组
@@ -846,24 +864,26 @@ export default {
     handleSelect(selection, row) {
       if (!this.storeSelection) return
 
+      const map = Object.assign({}, this.selectedMap)
       const isChosen = !!selection.find(r => r === row)
       if (isChosen) {
-        this.selectedCrossPages[row[this.id]] = row
+        map[row[this.id]] = row
       } else {
-        delete this.selectedCrossPages[row[this.id]]
+        delete map[row[this.id]]
       }
-      this.selectedCrossPages = Object.assign({}, this.selectedCrossPages)
+      this.selectedMap = map
       this.$emit('selection-change', this.selected)
     },
     handleSelectAll(selection) {
       if (!this.storeSelection) return
 
+      const map = Object.assign({}, this.selectedMap)
       if (selection.length) {
-        this.data.forEach(r => (this.selectedCrossPages[r[this.id]] = r))
+        this.data.forEach(r => (map[r[this.id]] = r))
       } else {
-        this.data.forEach(r => delete this.selectedCrossPages[r[this.id]])
+        this.data.forEach(r => delete map[r[this.id]])
       }
-      this.selectedCrossPages = Object.assign({}, this.selectedCrossPages)
+      this.selectedMap = map
       this.$emit('selection-change', this.selected)
     },
     // 弹窗相关
@@ -989,7 +1009,7 @@ export default {
                 .then(resp => {
                   this.showMessage(true)
                   done()
-                  this.selectedCrossPages = {}
+                  this.selectedMap = {}
                   this.getList()
                 })
                 .catch(e => {})
@@ -1023,7 +1043,7 @@ export default {
                   instance.confirmButtonLoading = false
                   done()
                   this.showMessage(true)
-                  this.selectedCrossPages = {}
+                  this.selectedMap = {}
                   this.getList()
                 })
                 .catch(er => {
