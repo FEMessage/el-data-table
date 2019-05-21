@@ -61,6 +61,8 @@
       :row-style="showRow"
       v-loading="loading"
       @selection-change="handleSelectionChange"
+      @select="handleSelect"
+      @select-all="handleSelectAll"
     >
       <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
       <template v-if="isTree">
@@ -153,13 +155,11 @@
             type="text"
             size="small"
           >{{btn.text}}</self-loading-button>
-          <el-button
+          <text-danger-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
-            type="text"
             size="small"
-            style="color: #E24156"
             @click="onDefaultDelete(scope.row)"
-          >删除</el-button>
+          >删除</text-danger-button>
         </template>
       </el-table-column>
 
@@ -196,6 +196,7 @@
 import _get from 'lodash.get'
 import qs from 'qs'
 import SelfLoadingButton from './self-loading-button.vue'
+import TextDangerButton from './text-danger-button.vue'
 
 // 默认返回的数据格式如下
 //          {
@@ -236,7 +237,8 @@ const queryPattern = new RegExp('q=.*' + paramSeparator)
 export default {
   name: 'ElDataTable',
   components: {
-    SelfLoadingButton
+    SelfLoadingButton,
+    TextDangerButton
   },
   props: {
     /**
@@ -322,6 +324,13 @@ export default {
      * 单选, 适用场景: 不可以批量删除
      */
     single: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 切换页面时，已勾选项不会丢失
+     */
+    persistSelection: {
       type: Boolean,
       default: false
     },
@@ -413,7 +422,7 @@ export default {
       type: Function
     },
     /**
-     * 是否分页
+     * 是否分页。如果不分页，则请求传参page=-1
      */
     hasPagination: {
       type: Boolean,
@@ -444,7 +453,8 @@ export default {
       default: 10
     },
     /**
-     * 不分页时的size的大小
+     * @deprecated
+     * 不分页时的size的大小(建议接口约定，不分页时传参page=-1，故一般不会用到此属性)
      */
     noPaginationSize: {
       type: Number,
@@ -585,6 +595,7 @@ export default {
       // https://github.com/ElemeFE/element/issues/1153
       total: null,
       loading: false,
+      // 多选项的数组
       selected: [],
 
       //弹窗
@@ -606,6 +617,23 @@ export default {
   computed: {
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
+    }
+  },
+  computed: {
+    /**
+     * selected的map形式，key为id，值为row
+     * 用于多选项跨页保存的情况
+     */
+    selectedMap: {
+      get() {
+        return this.selected.reduce((map, r) => {
+          map[r[this.id]] = r
+          return map
+        }, {})
+      },
+      set(val) {
+        this.selected = Object.values(val)
+      }
     }
   },
   watch: {
@@ -694,6 +722,7 @@ export default {
       // 根据偏移值计算接口正确的页数
       let pageOffset = this.firstPage - defaultFirstPage
       let page = this.page + pageOffset
+      if (!this.hasPagination) page = -1
 
       // 请求开始
       this.loading = true
@@ -726,6 +755,15 @@ export default {
            * @event update
            */
           this.$emit('update', data, res)
+
+          // 开启selectCrossPages时，自动勾选多选状态
+          if (this.persistSelection) {
+            this.$nextTick(() => {
+              this.data
+                .filter(r => r[this.id] in this.selectedMap)
+                .forEach(r => this.$refs.table.toggleRowSelection(r, true))
+            })
+          }
         })
         .catch(err => {
           /**
@@ -828,14 +866,62 @@ export default {
       this.page = val
       this.getList(true)
     },
+    /**
+     * 多选事件详解
+     *
+     * 这里监听了el-table的三个选择事件：
+     * @selection-change - 多选项发生改变
+     * @select - 用户点击某行的多选按钮
+     * @select-all - 用户点击标题栏的多选按钮
+     *
+     * 其中selection-change并不一定是由用户触发的，任何table数据更新时，el-table都会重置多选项为空，这时也会触发selection-change
+     * 当开启跨页保存多选状态，我们只监听确定由用户触发的select和select-all事件里的selection变化
+     */
     handleSelectionChange(val) {
-      this.selected = val
+      if (!this.persistSelection) this.updateSelected(val)
+    },
+    handleSelect(selection, row) {
+      if (this.persistSelection) {
+        const isChosen = !!selection.find(r => r === row)
+        this.select([row], isChosen)
+      }
+    },
+    handleSelectAll(selection) {
+      if (this.persistSelection) {
+        this.select(this.data, !!selection.length)
+      }
+    },
+    /**
+     * 直接覆盖更新多选项
+     *
+     * @param {Array} rows - 此次覆盖更新的多选项
+     */
+    updateSelected(rows) {
+      this.selected = rows
 
       /**
        * 多选启用时生效, 返回(selected)已选中行的数组
        * @event selection-change
        */
-      this.$emit('selection-change', val)
+      this.$emit('selection-change', rows)
+    },
+    /**
+     * 逐项更新多选项
+     *
+     * @param {Array} rows - 受影响的数据行
+     * @param {boolean} isSelected - 是否被勾选
+     */
+    select(rows, isSelected) {
+      const map = Object.assign({}, this.selectedMap)
+      if (isSelected) {
+        rows.forEach(r => (map[r[this.id]] = r))
+      } else {
+        rows.forEach(r => delete map[r[this.id]])
+      }
+      this.selectedMap = map
+      // 更新this.selectedMap会自动更新this.selected, 详见`computed`
+      // 故此函数看起来没有对selected进行操作，却需要对外emit新的值
+      this.$emit('selection-change', this.selected)
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
@@ -945,6 +1031,7 @@ export default {
     onDefaultDelete(row) {
       this.$confirm('确认删除吗', '提示', {
         type: 'warning',
+        confirmButtonClass: 'el-button--danger',
         beforeClose: (action, instance, done) => {
           if (action == 'confirm') {
             instance.confirmButtonLoading = true
@@ -960,6 +1047,7 @@ export default {
                 .then(resp => {
                   this.showMessage(true)
                   done()
+                  this.selectedMap = {}
                   this.getList()
                 })
                 .catch(e => {})
@@ -993,6 +1081,7 @@ export default {
                   instance.confirmButtonLoading = false
                   done()
                   this.showMessage(true)
+                  this.selectedMap = {}
                   this.getList()
                 })
                 .catch(er => {
