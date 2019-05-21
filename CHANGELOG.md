@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/FEMessage/el-data-table/compare/v1.3.0...v1.4.0) (2019-05-21)
+
+
+### Bug Fixes
+
+* 出现多个computed  ([587ff1b](https://github.com/FEMessage/el-data-table/commit/587ff1b))
+
+
+### Features
+
+* 删除弹窗的确认按钮用danger样式 ([5b4b54c](https://github.com/FEMessage/el-data-table/commit/5b4b54c))
+
+
+
 ## [1.3.0](https://github.com/FEMessage/el-data-table/compare/v1.2.3...v1.3.0) (2019-05-20)
 
 
