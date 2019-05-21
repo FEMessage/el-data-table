@@ -617,9 +617,7 @@ export default {
   computed: {
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
-    }
-  },
-  computed: {
+    },
     /**
      * selected的map形式，key为id，值为row
      * 用于多选项跨页保存的情况
