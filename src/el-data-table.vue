@@ -34,7 +34,9 @@
           v-bind="btn"
           :key="i"
           size="small"
-        >{{btn.text}}</self-loading-button>
+        >
+        {{typeof btn.text === 'function' ? btn['text']() : btn.text}}
+        </self-loading-button>
         <el-button
           v-if="hasSelect && hasDelete"
           type="danger"
