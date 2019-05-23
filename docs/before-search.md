@@ -2,13 +2,7 @@
 
 ```vue
 <template>
-  <el-data-table
-    :url="url"
-    :columns="columns"
-    :searchForm="searchForm"
-    :beforeSearch="beforeSearch"
-  >
-  </el-data-table>
+  <el-data-table v-bind="$data" />
 </template>
 <script>
 export default {

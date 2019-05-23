@@ -180,7 +180,7 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
       <!--https://github.com/FEMessage/el-form-renderer-->
       <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
-        <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
+        <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用，参考：https://femessage.github.io/el-form-renderer/#/Demo?id=slot -->
         <slot name="form"></slot>
       </el-form-renderer>
 
@@ -279,7 +279,7 @@ export default {
     },
     /**
      * 列属性设置, 详情见element-ui官网
-     * @link http://element.eleme.io/#/zh-CN/component/table#table-column-attributes
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-column-attributes
      */
     columns: {
       type: Array,
@@ -289,7 +289,7 @@ export default {
     },
     /**
      * 查询字段渲染, 配置参考el-form-renderer
-     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
+     * @link https://femessage.github.io/el-form-renderer/
      */
     searchForm: {
       type: Array,
@@ -430,7 +430,7 @@ export default {
     },
     /**
      * 分页组件的子组件布局，子组件名用逗号分隔，对应element-ui pagination的layout属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     * @link http://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationLayout: {
       type: String,
@@ -438,7 +438,7 @@ export default {
     },
     /**
      * 分页组件的每页显示个数选择器的选项设置，对应element-ui pagination的page-sizes属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     * @link http://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationSizes: {
       type: Array,
@@ -446,7 +446,7 @@ export default {
     },
     /**
      * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     * @link http://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationSize: {
       type: Number,
@@ -498,7 +498,7 @@ export default {
     },
     /**
      * element table 属性设置, 详情配置参考element-ui官网
-     * @link http://element.eleme.io/#/zh-CN/component/table#table-attributes
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-attributes
      */
     tableAttrs: {
       type: Object,
@@ -508,6 +508,7 @@ export default {
     },
     /**
      * 操作列属性
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-column-attributes
      */
     operationAttrs: {
       type: Object,
@@ -542,7 +543,7 @@ export default {
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
-     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
+     * @link https://femessage.github.io/el-form-renderer/
      */
     form: {
       type: Array,
@@ -552,7 +553,7 @@ export default {
     },
     /**
      * 弹窗表单属性设置, 详情配置参考element-ui官网
-     * @link http://element.eleme.io/#/zh-CN/component/form#form-attributes
+     * @link http://element.eleme.cn/2.4/#/zh-CN/component/form#form-attributes
      */
     formAttrs: {
       type: Object,
