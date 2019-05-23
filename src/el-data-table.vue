@@ -430,7 +430,7 @@ export default {
     },
     /**
      * 分页组件的子组件布局，子组件名用逗号分隔，对应element-ui pagination的layout属性
-     * @link http://element.eleme.cn/2.4/#/zh-CN/component/pagination
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationLayout: {
       type: String,
@@ -438,7 +438,7 @@ export default {
     },
     /**
      * 分页组件的每页显示个数选择器的选项设置，对应element-ui pagination的page-sizes属性
-     * @link http://element.eleme.cn/2.4/#/zh-CN/component/pagination
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationSizes: {
       type: Array,
@@ -446,7 +446,7 @@ export default {
     },
     /**
      * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
-     * @link http://element.eleme.cn/2.4/#/zh-CN/component/pagination
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationSize: {
       type: Number,
@@ -553,7 +553,7 @@ export default {
     },
     /**
      * 弹窗表单属性设置, 详情配置参考element-ui官网
-     * @link http://element.eleme.cn/2.4/#/zh-CN/component/form#form-attributes
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/form#form-attributes
      */
     formAttrs: {
       type: Object,
