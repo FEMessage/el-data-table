@@ -13,23 +13,21 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 ![](https://ws1.sinaimg.cn/large/b5e3d01fgy1fxrbi1wsszj218r0l5n2c.jpg)
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-* [el-data-table](#el-data-table)
-  * [Table of Contents](#table-of-contents)
-  * [Introduction](#introduction)
-    * [CRUD](#crud)
-    * [数据驱动](#数据驱动)
-    * [WHY](#why)
-  * [Feature](#feature)
-  * [Demo](#demo)
-  * [Install](#install)
-  * [Quick Start](#quick-start)
-    * [global register component](#global-register-component)
-    * [template](#template)
-  * [Reference](#reference)
-  * [License](#license)
-  * [Contributors](#contributors)
+* [Introduction](#introduction)
+  * [CRUD](#crud)
+  * [数据驱动](#数据驱动)
+  * [Why](#why)
+* [Feature](#feature)
+* [Demo](#demo)
+* [Install](#install)
+* [Quick Start](#quick-start)
+  * [Global Register Component](#global-register-component)
+  * [Template](#template)
+* [Reference](#reference)
+* [License](#license)
+* [Contributors](#contributors)
 
 ## Introduction
 
@@ -158,7 +156,7 @@ export default {
 
 [⬆ Back to Top](#table-of-contents)
 
-### WHY
+### Why
 
 为什么要在 element-ui 的 el-table 的基础上封装一个 el-data-table?
 
@@ -210,7 +208,7 @@ yarn add el-data-table
 
 ## Quick Start
 
-### global register component
+### Global Register Component
 
 this is for minification reason: in this way building your app,
 
@@ -259,7 +257,7 @@ import axios from 'axios'
 Vue.prototype.$axios = axios
 ```
 
-### template
+### Template
 
 ```vue
 <template>
