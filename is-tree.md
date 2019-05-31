@@ -2,15 +2,7 @@
 
 ```vue
 <template>
-  <el-data-table
-      :url="url"
-      :columns="columns"
-      :form="form"
-      :hasPagination="false"
-      :isTree="true"
-      :expandAll="true"
-      >
-      </el-data-table>
+  <el-data-table v-bind="$data" />
 </template>
 <script>
 // 注意看post/put请求, 带上了树形结构相应的 parentId
@@ -44,7 +36,10 @@ export default {
             {required: true, message: '请输入iconfont class', trigger: 'blur'}
           ]
         }
-      ]
+      ],
+      hasPagination: false,
+      isTree: true,
+      expandAll: true,
     }
   }
 }
