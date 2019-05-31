@@ -1,6 +1,6 @@
 # el-data-table
 
-[![Build Status](https://travis-ci.com/FEMessage/el-data-table.svg?branch=master)](https://travis-ci.com/FEMessage/el-data-table)
+[![Build Status](https://travis-ci.com/femessage/el-data-table.svg?branch=master)](https://travis-ci.com/femessage/el-data-table)
 [![NPM Download](https://img.shields.io/npm/dm/el-data-table.svg)](https://www.npmjs.com/package/el-data-table)
 [![NPM Version](https://img.shields.io/npm/v/el-data-table.svg)](https://www.npmjs.com/package/el-data-table)
 [![NPM License](https://img.shields.io/npm/l/el-data-table.svg)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
@@ -13,30 +13,21 @@ auto requesting by `axios`, supports pagination, tree data structure, custom sea
 
 ![](https://ws1.sinaimg.cn/large/b5e3d01fgy1fxrbi1wsszj218r0l5n2c.jpg)
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-* **[Introduction](#introduction)**
-* **[Feature](#feature)**
-* **[Demo](#demo)**
-* **[Install](#install)**
-* **[Quick Start](#quick-start)**
-* **[Example](#example)**
-  * **[basic](#basic)**
-  * **[url and columns](#url-and-columns)**
-  * **[searchForm](#searchForm)**
-  * **[formatter](#formatter)**
-  * **[selection](#selection)**
-  * **[headerButtons](#headerButtons)**
-  * **[extraButtons](#extraButtons)**
-  * **[beforeSearch](#beforeSearch)**
-  * **[beforeConfirm](#beforeConfirm)**
-  * **[customQuery](#customQuery)**
-  * **[extraParams](#extraParams)**
-  * **[onNew](#onNew)**
-  * **[onEdit](#onEdit)**
-  * **[onDelete](#onDelete)**
-* **[Reference](#reference)**
-* **[License](#license)**
+* [Introduction](#introduction)
+  * [CRUD](#crud)
+  * [数据驱动](#数据驱动)
+  * [Why](#why)
+* [Feature](#feature)
+* [Demo](#demo)
+* [Install](#install)
+* [Quick Start](#quick-start)
+  * [Global Register Component](#global-register-component)
+  * [Template](#template)
+* [Reference](#reference)
+* [License](#license)
+* [Contributors](#contributors)
 
 ## Introduction
 
@@ -165,7 +156,7 @@ export default {
 
 [⬆ Back to Top](#table-of-contents)
 
-### WHY
+### Why
 
 为什么要在 element-ui 的 el-table 的基础上封装一个 el-data-table?
 
@@ -217,7 +208,7 @@ yarn add el-data-table
 
 ## Quick Start
 
-### global register component
+### Global Register Component
 
 this is for minification reason: in this way building your app,
 
@@ -266,519 +257,12 @@ import axios from 'axios'
 Vue.prototype.$axios = axios
 ```
 
-### template
+### Template
 
 ```vue
 <template>
   <el-data-table></el-data-table>
 </template>
-```
-
-[⬆ Back to Top](#table-of-contents)
-
-## Example
-
-### basic
-
-suppose the api response looks like this:
-
-```js
-{
-  "code": 0,
-  "msg": "ok",
-  "payload": {
-    "content": [], // the data to render
-    "totalElements": 2 // total count
-  }
-}
-```
-
-we get setting
-
-```vue
-<el-data-table
-  dataPath="payload.content"
-  totalPath="payload.totalElement"
->
-</el-data-table>
-```
-
-that's the default setting, you can get your custom setting according to your api
-
-now I'll show you more code example, here we go🚴
-
-[⬆ Back to Top](#table-of-contents)
-
-### url and columns
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
->
-</el-data-table>
-```
-
-```js
-// script
-export default {
-  data() {
-    return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
-      // full attributes of columns see: http://element.eleme.io/#/zh-CN/component/table#table-column-attributes
-      columns: [
-        {prop: 'code', label: '品牌编号'},
-        {prop: 'name', label: '品牌名称'},
-        {prop: 'alias', label: '品牌别名'},
-        {
-          prop: 'logoUrl',
-          label: '品牌Logo',
-          width: '150px'
-        },
-        {
-          prop: 'status',
-          label: '状态',
-          formatter: row => (row.status === 'normal' ? '启用' : '禁用')
-        }
-      ]
-    }
-  }
-}
-```
-
-![url and columns](assets/image-20181106222453747.png)
-
-> if `url` change, the table will reload
-
-[⬆ Back to Top](#table-of-contents)
-
-### new/edit form
-
-this will show new or edit form, when you click new or edit button
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
-  :form="form"
->
-</el-data-table>
-```
-
-```js
-// script
-form: [
-  {
-    $type: 'select',
-    $id: 'backendFramework',
-    label: '后端框架',
-    rules: [{required: true, message: '请选择后端框架', trigger: 'blur'}],
-    $options: ['DUBBO', 'HSF'].map(f => ({label: f, value: f})),
-    $el: {
-      placeholder: '请选择'
-    }
-  },
-  {
-    $type: 'input',
-    $id: 'name',
-    label: '名称',
-    rules: [
-      {
-        required: true,
-        message: '请输入名称',
-        trigger: 'blur',
-        transform: v => v && v.trim()
-      }
-    ],
-    $el: {placeholder: '请输入'}
-  }
-]
-```
-
-![new/edit form](assets/image-20181106224258372.png)
-
-[⬆ Back to Top](#table-of-contents)
-
-### searchForm
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
-  :form="form"
-  :searchForm="searchForm"
->
-</el-data-table>
-```
-
-```js
-// script
-searchForm: [
-  {
-    $el: {placeholder: '请输入'},
-    label: '用户名',
-    $id: 'username',
-    $type: 'input'
-  },
-  {
-    $el: {placeholder: '请输入'},
-    label: '全名',
-    $id: 'fullname',
-    $type: 'input'
-  },
-  {
-    $el: {placeholder: '请输入'},
-    label: 'email',
-    $id: 'email',
-    $type: 'input'
-  }
-]
-```
-
-![searchForm](assets/image-20181106224933515.png)
-
-[⬆ Back to Top](#table-of-contents)
-
-### formatter
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
->
-```
-
-```js
-// script
-columns: [
-  // formatter: you can return the jsx syntax
-  {
-    prop: 'imageUrl',
-    label: '商品图片',
-    formatter: row => (
-      <div>
-        <img
-          src={row.imageUrl}
-          onClick={this.handlePreviewUrl.bind(this, row.imageUrl)}
-        />
-      </div>
-    )
-  }
-]
-```
-
-![selection](https://i.screenshot.net/wj600hn)
-
-[⬆ Back to Top](#table-of-contents)
-
-### selection
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
->
-</el-data-table>
-```
-
-```js
-// script
-columns: [
-  // type: 'selection' will show checkbox
-  // see http://element.eleme.io/#/zh-CN/component/table#table-column-attributes
-  {type: 'selection', selectable: (row, index) => index > 0},
-  {prop: 'code', label: '品牌编号'},
-  {prop: 'name', label: '品牌名称'},
-  {prop: 'alias', label: '品牌别名'},
-  {
-    prop: 'logoUrl',
-    label: '品牌Logo',
-    width: '150px'
-  },
-  {
-    prop: 'status',
-    label: '状态',
-    formatter: row => (row.status === 'normal' ? '启用' : '禁用')
-  }
-]
-```
-
-![selection](assets/image-20181106225421654.png)
-
-[⬆ Back to Top](#table-of-contents)
-
-### headerButtons
-
-buttons on the top of the table
-
-> attention: click function called `atClick`
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
-  :headerButtons="headerButtons"
->
-</el-data-table>
-```
-
-```js
-// script
-// more attribute see: https://femessage.github.io/el-data-table/
-headerButtons: [
-  {
-    text: '批量导出',
-    disabled: selected => selected.length == 0,
-    // selected 是选中行所组成的数组
-    atClick: selected => {
-      let ids = selected.map(s => s.id)
-      alert(ids)
-    }
-  }
-]
-```
-
-![headerButtons](assets/image-20181106230058138.png)
-
-[⬆ Back to Top](#table-of-contents)
-
-### extraButtons
-
-extra buttons in operation column
-
-> attention: click function called `atClick`
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
-  :extraButtons="extraButtons"
->
-</el-data-table>
-```
-
-```js
-// script
-// more attribute see: https://femessage.github.io/el-data-table/
-extraButtons: [
-  {
-    type: 'primary',
-    text: '跳转',
-    // row 是单行的数据
-    atClick: row => {
-      alert('跳转' + row.code)
-      return Promise.resolve()
-    }
-  }
-]
-```
-
-![image-20181106231010055](assets/image-20181106231010055.png)
-
-[⬆ Back to Top](#table-of-contents)
-
-### beforeSearch
-
-This function will invoke after clicking search button. It should return promise, if it resolve, search will execute;
-if it reject, search won't execute.
-
-```vue
-<!-- template -->
-<el-data-table
-  :url="url"
-  :columns="columns"
-  :searchForm="searchForm"
-  :beforeSearch="beforeSearch"
->
-</el-data-table>
-```
-
-```js
-// script
-return {
-  url: '',
-  columns: [
-    {prop: 'name', label: '用户名'},
-    {prop: 'createdBy', label: '创建人'},
-    {prop: 'userInfo.createTime', label: '创建时间'}
-  ],
-  searchForm: [
-    {
-      $type: 'input',
-      $id: 'name',
-      label: '用户名',
-      $el: {placeholder: '请输入用户名'}
-      //            rules: [{required: true, trigger: 'blur', whitespace: true}]
-    }
-  ],
-  beforeSearch: () => {
-    this.url = 'https://xxx'
-    return Promise.resolve()
-  }
-}
-```
-
-[⬆ Back to Top](#table-of-contents)
-
-### beforeConfirm
-
-在新增/修改弹窗点击确认, 并完成表单 form 表单校验后调用，需要返回 Promise.
-如果 resolve, 则会发送新增/修改请求; 如果 reject, 则不会发送新增/修改请求.
-参数: (data, isNew) data 为表单数据, isNew true 表示是新增弹窗, false 为 编辑弹窗
-
-```vue
-<el-data-table
-  :beforeConfirm="beforeConfirm"
->
-</el-data-table>
-```
-
-```js
-beforeConfirm(data, isNew) {
-  console.log(data, isNew)
-
-  if (isNew) {
-	alert('新增可以发送请求')
-	return Promise.resolve()
-  } else {
-	alert('修改不可以发送请求')
-	return Promise.reject()
-  }
-}
-```
-
-[⬆ Back to Top](#table-of-contents)
-
-### customQuery
-
-查询时，在 url 上添加额外的参数
-
-```js
-customQuery: {
-  type: 1
-}
-```
-
-[⬆ Back to Top](#table-of-contents)
-
-假设`url`参数配置为`/api/v1/users`
-
-则实际查询请求为：`/api/v1/users?type=1`
-
-### extraParams
-
-新增/修改请求时，在 body 里添加额外的参数
-
-```js
-extraParams: {
-  version: 0,
-  isTree: false
-}
-```
-
-[⬆ Back to Top](#table-of-contents)
-
-### onNew
-
-默认情况下, 新增的请求格式是 POST url body
-当默认新增方法不满足需求时可使用 onNew, 需要返回 promise
-参数(data, row) data 是 form 表单的数据, row 是当前行的数据, 只有 isTree 为 true 时, 点击操作列的新增按钮才会有值
-
-```vue
-<el-data-table
-  :onNew="onNew"
->
-</el-data-table>
-```
-
-```js
-import Axios from 'axios'
-
-onNew(data, row) {
-  console.log(data, row)
-  return Axios.post(
-	'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-new',
-	data
-  )
-},
-```
-
-[⬆ Back to Top](#table-of-contents)
-
-### onEdit
-
-默认情况下, 修改的请求格式是 PUT url/id body
-点击修改按钮时的方法, 当默认修改方法不满足需求时可使用 onEdit, 需要返回 promise
-参数(data, row) data 是 form 表单的数据, row 是当前行的数据
-
-```vue
-<el-data-table
-  :onEdit="onEdit"
->
-</el-data-table>
-```
-
-```js
-import Axios from 'axios'
-
-onEdit(data, row) {
-  console.log(data, row)
-  return Axios.put(
-	'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-edit',
-	data
-  )
-}
-```
-
-[⬆ Back to Top](#table-of-contents)
-
-### onDelete
-
-默认情况下:
-
-* 删除单个的请求格式是 DELETE url/id
-* 删除多个的请求格式是 DELETE url/id,id,id
-
-当不满足需求时, 可以使用 onDelete, 自定义删除方法, 返回 promise
-
-```vue
-<el-data-table
-  onDelete="onDelete"
->
-</el-data-table>
-```
-
-```js
-import Axios from 'axios'
-
-// 多选时, 参数为selected, 代表选中的行组成的数组
-onDelete: selected => {
-  return Axios.delete(
-    'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
-    {
-      data: selected.map(v => v.id)
-    }
-  )
-}
-
-// 非多选时参数为row, 代表单行的数据
-onDelete: row => {
-  return Axios.delete(
-    'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
-    {
-      data: {
-        id: row.id
-      }
-    }
-  )
-}
 ```
 
 [⬆ Back to Top](#table-of-contents)
@@ -802,3 +286,16 @@ onDelete: row => {
 [MIT](./LICENSE)
 
 [⬆ Back to Top](#table-of-contents)
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
+<!-- prettier-ignore -->
+<table><tr><td align="center"><a href="http://levy.work"><img src="https://avatars3.githubusercontent.com/u/9384365?v=4" width="100px;" alt="levy"/><br /><sub><b>levy</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=levy9527" title="Code">💻</a> <a href="#review-levy9527" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=levy9527" title="Documentation">📖</a> <a href="#infra-levy9527" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#ideas-levy9527" title="Ideas, Planning, & Feedback">🤔</a></td><td align="center"><a href="https://donaldshen.github.io/portfolio"><img src="https://avatars3.githubusercontent.com/u/19591950?v=4" width="100px;" alt="Donald Shen"/><br /><sub><b>Donald Shen</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=donaldshen" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=donaldshen" title="Documentation">📖</a></td><td align="center"><a href="https://github.com/MiffyCooper"><img src="https://avatars1.githubusercontent.com/u/20179564?v=4" width="100px;" alt="MiffyCooper"/><br /><sub><b>MiffyCooper</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=MiffyCooper" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=MiffyCooper" title="Documentation">📖</a></td><td align="center"><a href="https://github.com/prisbre"><img src="https://avatars1.githubusercontent.com/u/13557397?v=4" width="100px;" alt="Huanfeng Chen"/><br /><sub><b>Huanfeng Chen</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=prisbre" title="Code">💻</a></td><td align="center"><a href="https://evila.me"><img src="https://avatars3.githubusercontent.com/u/19513289?v=4" width="100px;" alt="EVILLT"/><br /><sub><b>EVILLT</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=evillt" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Aevillt" title="Bug reports">🐛</a></td><td align="center"><a href="https://github.com/Alvin-Liu"><img src="https://avatars0.githubusercontent.com/u/11909145?v=4" width="100px;" alt="Alvin"/><br /><sub><b>Alvin</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=Alvin-Liu" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/issues?q=author%3AAlvin-Liu" title="Bug reports">🐛</a></td><td align="center"><a href="https://github.com/lianghx-319"><img src="https://avatars2.githubusercontent.com/u/27187946?v=4" width="100px;" alt="Han"/><br /><sub><b>Han</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=lianghx-319" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Alianghx-319" title="Bug reports">🐛</a></td></tr><tr><td align="center"><a href="https://github.com/kunzhijia"><img src="https://avatars2.githubusercontent.com/u/4848041?v=4" width="100px;" alt="kunzhijia"/><br /><sub><b>kunzhijia</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=kunzhijia" title="Code">💻</a> <a href="#tool-kunzhijia" title="Tools">🔧</a> <a href="#example-kunzhijia" title="Examples">💡</a></td><td align="center"><a href="https://github.com/chenEdgar"><img src="https://avatars3.githubusercontent.com/u/12596622?v=4" width="100px;" alt="Edgar"/><br /><sub><b>Edgar</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=chenEdgar" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/issues?q=author%3AchenEdgar" title="Bug reports">🐛</a></td><td align="center"><a href="https://github.com/Barretem"><img src="https://avatars2.githubusercontent.com/u/47966933?v=4" width="100px;" alt="Barretem"/><br /><sub><b>Barretem</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=Barretem" title="Code">💻</a></td><td align="center"><a href="https://github.com/GaryHjy"><img src="https://avatars1.githubusercontent.com/u/32995274?v=4" width="100px;" alt="阿禹。"/><br /><sub><b>阿禹。</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=GaryHjy" title="Documentation">📖</a></td><td align="center"><a href="https://github.com/lujunwei"><img src="https://avatars0.githubusercontent.com/u/7427200?v=4" width="100px;" alt="lujunwei"/><br /><sub><b>lujunwei</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=lujunwei" title="Code">💻</a></td><td align="center"><a href="http://www.ccc1996.cn"><img src="https://avatars1.githubusercontent.com/u/20502762?v=4" width="100px;" alt="cjf"/><br /><sub><b>cjf</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Acjfff" title="Bug reports">🐛</a></td><td align="center"><a href="https://github.com/Jack-rainbow"><img src="https://avatars1.githubusercontent.com/u/20368037?v=4" width="100px;" alt="Jack-rainbow"/><br /><sub><b>Jack-rainbow</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3AJack-rainbow" title="Bug reports">🐛</a></td></tr></table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
