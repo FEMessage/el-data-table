@@ -4,22 +4,17 @@
     <!-- 阻止表单提交的默认行为 -->
     <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
     <!--搜索字段-->
-    <el-form-renderer
+    <search-form
       v-if="hasSearchForm"
       v-show="!isSearchCollapse"
-      inline
       :content="searchForm"
       ref="searchForm"
-      @submit.native.prevent
+      @search="search"
+      @reset="resetSearch"
     >
       <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
       <slot name="search"></slot>
-      <el-form-item>
-        <!--https://github.com/ElemeFE/element/pull/5920-->
-        <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
-        <el-button @click="resetSearch" size="small">重置</el-button>
-      </el-form-item>
-    </el-form-renderer>
+    </search-form>
 
     <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
       <el-form-item>
@@ -197,6 +192,7 @@ import _get from 'lodash.get'
 import qs from 'qs'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TextDangerButton from './components/text-danger-button.vue'
+import SearchForm from './components/search-form.vue'
 
 // 默认返回的数据格式如下
 //          {
@@ -238,7 +234,8 @@ export default {
   name: 'ElDataTable',
   components: {
     SelfLoadingButton,
-    TextDangerButton
+    TextDangerButton,
+    SearchForm
   },
   props: {
     /**
@@ -811,22 +808,16 @@ export default {
       }
     },
     search() {
-      this.$refs.searchForm.validate(valid => {
-        if (!valid) return
-
-        this.beforeSearch()
-          .then(() => {
-            this.page = defaultFirstPage
-            this.getList(true)
-          })
-          .catch(err => {
-            this.$emit('error', err)
-          })
-      })
+      this.beforeSearch()
+        .then(() => {
+          this.page = defaultFirstPage
+          this.getList(true)
+        })
+        .catch(err => {
+          this.$emit('error', err)
+        })
     },
     resetSearch() {
-      // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
-      this.$refs.searchForm.resetFields()
       this.page = defaultFirstPage
 
       // 重置
