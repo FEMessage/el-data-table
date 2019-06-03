@@ -195,8 +195,8 @@
 <script>
 import _get from 'lodash.get'
 import qs from 'qs'
-import SelfLoadingButton from './self-loading-button.vue'
-import TextDangerButton from './text-danger-button.vue'
+import SelfLoadingButton from './components/self-loading-button.vue'
+import TextDangerButton from './components/text-danger-button.vue'
 
 // 默认返回的数据格式如下
 //          {
