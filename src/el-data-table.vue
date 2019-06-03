@@ -161,6 +161,7 @@
       <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
       <slot></slot>
     </el-table>
+
     <el-pagination
       v-if="hasPagination"
       @size-change="handleSizeChange"
@@ -172,6 +173,7 @@
       style="text-align: right; padding: 10px 0"
       :layout="paginationLayout"
     ></el-pagination>
+
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
       <!--https://github.com/FEMessage/el-form-renderer-->
       <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
@@ -217,8 +219,6 @@ const treeParentKey = 'parentId'
 const treeParentValue = 'id'
 const defaultId = 'id'
 
-const dialogForm = 'dialogForm'
-
 const equal = '='
 const equalPattern = /=/g
 
@@ -229,6 +229,12 @@ const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
 
 const queryFlag = 'q='
 const queryPattern = new RegExp('q=.*' + paramSeparator)
+
+const DialogMode = {
+  New: 'new',
+  Edit: 'edit',
+  View: 'view'
+}
 
 export default {
   name: 'ElDataTable',
@@ -534,6 +540,9 @@ export default {
       type: String,
       default: '修改'
     },
+    /**
+     * 查看弹窗的标题
+     */
     dialogViewTitle: {
       type: String,
       default: '查看'
@@ -597,11 +606,8 @@ export default {
       selected: [],
 
       //弹窗
-      dialogTitle: this.dialogNewTitle,
       dialogVisible: false,
-      isNew: true,
-      isEdit: false,
-      isView: false,
+      dialogMode: DialogMode.New,
       confirmLoading: false,
       // 要修改的那一行
       row: {},
@@ -630,6 +636,19 @@ export default {
       set(val) {
         this.selected = Object.values(val)
       }
+    },
+    dialogTitle() {
+      switch (this.dialogMode) {
+        case DialogMode.Edit:
+          return this.editTitle
+        case DialogMode.View:
+          return this.viewTitle
+        default:
+          return this.newTitle
+      }
+    },
+    isView() {
+      return this.dialogMode === DialogMode.View
     }
   },
   watch: {
@@ -639,12 +658,9 @@ export default {
     },
     dialogVisible: function(val, old) {
       if (!val) {
-        this.isNew = false
-        this.isEdit = false
-        this.isView = false
         this.confirmLoading = false
 
-        this.$refs[dialogForm].resetFields()
+        this.$refs.dialogForm.resetFields()
       }
     }
   },
@@ -917,73 +933,54 @@ export default {
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
       this.row = row
-      this.isNew = true
-      this.isEdit = false
-      this.isView = false
-      this.dialogTitle = this.dialogNewTitle
+      this.dialogMode = DialogMode.New
       this.dialogVisible = true
     },
     onDefaultView(row) {
       this.row = row
-      this.isView = true
-      this.isNew = false
-      this.isEdit = false
-      this.dialogTitle = this.dialogViewTitle
+      this.dialogMode = DialogMode.View
       this.dialogVisible = true
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.$refs[dialogForm].updateForm(row)
+        this.$refs.dialogForm.updateForm(row)
       })
     },
     onDefaultEdit(row) {
       this.row = row
-      this.isEdit = true
-      this.isNew = false
-      this.isView = false
-      this.dialogTitle = this.dialogEditTitle
+      this.dialogMode = DialogMode.Edit
       this.dialogVisible = true
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.$refs[dialogForm].updateForm(row)
+        this.$refs.dialogForm.updateForm(row)
       })
     },
     cancel() {
       this.dialogVisible = false
     },
     confirm() {
-      if (this.isView) {
-        this.cancel()
-        return
-      }
-
-      this.$refs[dialogForm].validate(valid => {
+      this.$refs.dialogForm.validate(valid => {
         if (!valid) return false
 
         let data = Object.assign(
           {},
-          this.$refs[dialogForm].getFormValue(),
+          this.$refs.dialogForm.getFormValue(),
           this.extraParams
         )
 
+        const isNew = this.dialogMode === DialogMode.New
         if (this.isTree) {
-          if (this.isNew)
-            data[this.treeParentKey] = this.row[this.treeParentValue]
-          else data[this.treeParentKey] = this.row[this.treeParentKey]
+          data[this.treeParentKey] = this.row[
+            this[`treeParent${isNew ? 'Value' : 'Key'}`]
+          ]
         }
 
-        this.beforeConfirm(data, this.isNew)
+        this.beforeConfirm(data, isNew)
           .then(resp => {
-            let condiction = 'isNew'
-            let customMethod = 'onNew'
+            const customMethod = isNew ? 'onNew' : 'onEdit'
 
-            if (this.isEdit) {
-              condiction = 'isEdit'
-              customMethod = 'onEdit'
-            }
-
-            if (this[condiction] && this[customMethod]) {
+            if (this[customMethod]) {
               this[customMethod](data, this.row)
                 .then(resp => {
                   this.getList()
@@ -991,29 +988,24 @@ export default {
                   this.cancel()
                 })
                 .catch(e => {})
-              return
+            } else {
+              // 默认新增/修改逻辑
+              const [method, url] = isNew
+                ? ['post', this.url]
+                : ['put', this.url + '/' + this.row[this.id]]
+
+              this.confirmLoading = true
+
+              this.$axios[method](url, data)
+                .then(resp => {
+                  this.getList()
+                  this.showMessage(true)
+                  this.cancel()
+                })
+                .catch(err => {
+                  this.confirmLoading = false
+                })
             }
-
-            // 默认新增/修改逻辑
-            let method = 'post'
-            let url = this.url + ''
-
-            if (this.isEdit) {
-              method = 'put'
-              url += `/${this.row[this.id]}`
-            }
-
-            this.confirmLoading = true
-
-            this.$axios[method](url, data)
-              .then(resp => {
-                this.getList()
-                this.showMessage(true)
-                this.cancel()
-              })
-              .catch(err => {
-                this.confirmLoading = false
-              })
           })
           .catch(e => {})
       })
