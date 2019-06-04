@@ -19,7 +19,6 @@ export default {
           formatter: row => (row.status === 'normal' ? '启用' : '禁用')
         }
       ],
-      hasDialog: false,
       form: [
         {
           $type: 'input',
