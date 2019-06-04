@@ -18,7 +18,7 @@
 
     <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
       <el-form-item>
-        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">新增</el-button>
+        <el-button v-if="hasNew" type="primary" size="small" @click="onOperation('new')">新增</el-button>
         <self-loading-button
           v-for="(btn, i) in headerButtons"
           v-if="'show' in btn ? btn.show(selected) : true"
@@ -43,9 +43,7 @@
           size="small"
           :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
           @click="isSearchCollapse = !isSearchCollapse"
-        >
-          {{ isSearchCollapse ? '展开' : '折叠' }}搜索
-        </el-button>
+        >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
       </el-form-item>
     </el-form>
 
@@ -135,10 +133,20 @@
             v-if="isTree && hasNew"
             type="text"
             size="small"
-            @click="onDefaultNew(scope.row)"
+            @click="onOperation('new', scope.row)"
           >新增</el-button>
-          <el-button v-if="hasEdit" type="text" size="small" @click="onDefaultEdit(scope.row)">修改</el-button>
-          <el-button v-if="hasView" type="text" size="small" @click="onDefaultView(scope.row)">查看</el-button>
+          <el-button
+            v-if="hasEdit"
+            type="text"
+            size="small"
+            @click="onOperation('edit', scope.row)"
+          >修改</el-button>
+          <el-button
+            v-if="hasView"
+            type="text"
+            size="small"
+            @click="onOperation('view', scope.row)"
+          >查看</el-button>
           <self-loading-button
             v-for="(btn, i) in extraButtons"
             v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -174,18 +182,18 @@
       :layout="paginationLayout"
     ></el-pagination>
 
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
-      <!--https://github.com/FEMessage/el-form-renderer-->
-      <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
-        <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用，参考：https://femessage.github.io/el-form-renderer/#/Demo?id=slot -->
-        <slot name="form"></slot>
-      </el-form-renderer>
-
-      <div slot="footer" v-show="!isView">
-        <el-button @click="cancel" size="small">取 消</el-button>
-        <el-button type="primary" @click="confirm" :loading="confirmLoading" size="small">确 定</el-button>
-      </div>
-    </el-dialog>
+    <the-dialog
+      v-if="hasDialog"
+      ref="dialog"
+      :form="form"
+      :formAttrs="formAttrs"
+      :newTitle="dialogNewTitle"
+      :editTitle="dialogEditTitle"
+      :viewTitle="dialogViewTitle"
+      @confirm="confirm"
+    >
+      <slot name="form"/>
+    </the-dialog>
   </div>
 </template>
 
@@ -195,6 +203,7 @@ import qs from 'qs'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TextDangerButton from './components/text-danger-button.vue'
 import SearchForm from './components/search-form.vue'
+import TheDialog from './components/the-dialog.vue'
 
 // 默认返回的数据格式如下
 //          {
@@ -223,8 +232,7 @@ import {
   paramSeparator,
   valueSeparatorPattern,
   queryFlag,
-  queryPattern,
-  DialogMode
+  queryPattern
 } from './utils/const'
 
 export default {
@@ -232,7 +240,8 @@ export default {
   components: {
     SelfLoadingButton,
     TextDangerButton,
-    SearchForm
+    SearchForm,
+    TheDialog
   },
   props: {
     /**
@@ -596,10 +605,6 @@ export default {
       // 多选项的数组
       selected: [],
 
-      //弹窗
-      dialogVisible: false,
-      dialogMode: DialogMode.New,
-      confirmLoading: false,
       // 要修改的那一行
       row: {},
 
@@ -627,32 +632,12 @@ export default {
       set(val) {
         this.selected = Object.values(val)
       }
-    },
-    dialogTitle() {
-      switch (this.dialogMode) {
-        case DialogMode.Edit:
-          return this.editTitle
-        case DialogMode.View:
-          return this.viewTitle
-        default:
-          return this.newTitle
-      }
-    },
-    isView() {
-      return this.dialogMode === DialogMode.View
     }
   },
   watch: {
     url: function(val, old) {
       this.page = defaultFirstPage
       this.getList()
-    },
-    dialogVisible: function(val, old) {
-      if (!val) {
-        this.confirmLoading = false
-
-        this.$refs.dialogForm.resetFields()
-      }
     }
   },
   mounted() {
@@ -922,84 +907,42 @@ export default {
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
-    onDefaultNew(row = {}) {
+    onOperation(mode, row) {
       this.row = row
-      this.dialogMode = DialogMode.New
-      this.dialogVisible = true
+      this.$refs.dialog.show(mode, row)
     },
-    onDefaultView(row) {
-      this.row = row
-      this.dialogMode = DialogMode.View
-      this.dialogVisible = true
+    confirm(isNew, formValue, done) {
+      const data = Object.assign({}, formValue, this.extraParams)
 
-      // 给表单填充值
-      this.$nextTick(() => {
-        this.$refs.dialogForm.updateForm(row)
-      })
-    },
-    onDefaultEdit(row) {
-      this.row = row
-      this.dialogMode = DialogMode.Edit
-      this.dialogVisible = true
+      if (this.isTree) {
+        data[this.treeParentKey] = this.row[
+          this[`treeParent${isNew ? 'Value' : 'Key'}`]
+        ]
+      }
 
-      // 给表单填充值
-      this.$nextTick(() => {
-        this.$refs.dialogForm.updateForm(row)
-      })
-    },
-    cancel() {
-      this.dialogVisible = false
-    },
-    confirm() {
-      this.$refs.dialogForm.validate(valid => {
-        if (!valid) return false
+      this.beforeConfirm(data, isNew)
+        .then(() => {
+          const customMethod = isNew ? 'onNew' : 'onEdit'
 
-        let data = Object.assign(
-          {},
-          this.$refs.dialogForm.getFormValue(),
-          this.extraParams
+          if (this[customMethod]) {
+            return this[customMethod](data, this.row)
+          } else {
+            // 默认新增/修改逻辑
+            const [method, url] = isNew
+              ? ['post', this.url]
+              : ['put', this.url + '/' + this.row[this.id]]
+
+            return this.$axios[method](url, data)
+          }
+        })
+        .then(
+          () => {
+            this.getList()
+            this.showMessage(true)
+            done()
+          },
+          e => done(false)
         )
-
-        const isNew = this.dialogMode === DialogMode.New
-        if (this.isTree) {
-          data[this.treeParentKey] = this.row[
-            this[`treeParent${isNew ? 'Value' : 'Key'}`]
-          ]
-        }
-
-        this.beforeConfirm(data, isNew)
-          .then(resp => {
-            const customMethod = isNew ? 'onNew' : 'onEdit'
-
-            if (this[customMethod]) {
-              this[customMethod](data, this.row)
-                .then(resp => {
-                  this.getList()
-                  this.showMessage(true)
-                  this.cancel()
-                })
-                .catch(e => {})
-            } else {
-              // 默认新增/修改逻辑
-              const [method, url] = isNew
-                ? ['post', this.url]
-                : ['put', this.url + '/' + this.row[this.id]]
-
-              this.confirmLoading = true
-
-              this.$axios[method](url, data)
-                .then(resp => {
-                  this.getList()
-                  this.showMessage(true)
-                  this.cancel()
-                })
-                .catch(err => {
-                  this.confirmLoading = false
-                })
-            }
-          })
-          .catch(e => {})
-      })
     },
     onDefaultDelete(row) {
       this.$confirm('确认删除吗', '提示', {
