@@ -208,33 +208,24 @@ import SearchForm from './components/search-form.vue'
 // 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
 // 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
 
-const defaultFirstPage = 1
-
-const dataPath = 'payload.content'
-const totalPath = 'payload.totalElements'
-const noPaginationDataPath = 'payload'
-
-const treeChildKey = 'children'
-const treeParentKey = 'parentId'
-const treeParentValue = 'id'
-const defaultId = 'id'
-
-const equal = '='
-const equalPattern = /=/g
-
-const valueSeparator = '~'
-const paramSeparator = ','
-
-const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
-
-const queryFlag = 'q='
-const queryPattern = new RegExp('q=.*' + paramSeparator)
-
-const DialogMode = {
-  New: 'new',
-  Edit: 'edit',
-  View: 'view'
-}
+import {
+  defaultFirstPage,
+  dataPath,
+  totalPath,
+  noPaginationDataPath,
+  treeChildKey,
+  treeParentKey,
+  treeParentValue,
+  defaultId,
+  equal,
+  equalPattern,
+  valueSeparator,
+  paramSeparator,
+  valueSeparatorPattern,
+  queryFlag,
+  queryPattern,
+  DialogMode
+} from './utils/const'
 
 export default {
   name: 'ElDataTable',
