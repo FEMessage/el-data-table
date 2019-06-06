@@ -728,17 +728,18 @@ export default {
 
       this.$axios
         .get(url + params + `&page=${page}`)
-        .then(resp => {
-          let res = resp.data
+        .then(({data: resp}) => {
           let data = []
 
           // 不分页
           if (!this.hasPagination) {
             data =
-              _get(res, this.dataPath) || _get(res, noPaginationDataPath) || []
+              _get(resp, this.dataPath) ||
+              _get(resp, noPaginationDataPath) ||
+              []
           } else {
-            data = _get(res, this.dataPath) || []
-            this.total = _get(res, this.totalPath)
+            data = _get(resp, this.dataPath) || []
+            this.total = _get(resp, this.totalPath)
           }
 
           this.data = data
@@ -753,7 +754,7 @@ export default {
            * 请求返回, 数据更新后触发, 返回(data, resp) data是渲染table的数据, resp是请求返回的完整response
            * @event update
            */
-          this.$emit('update', data, res)
+          this.$emit('update', data, resp)
 
           // 开启selectCrossPages时，自动勾选多选状态
           if (this.persistSelection) {
@@ -829,12 +830,11 @@ export default {
       this.$refs.searchForm.resetFields()
       this.page = defaultFirstPage
 
-      // 重置
-      history.replaceState(
-        history.state,
-        '',
-        location.href.replace(queryPattern, '')
-      )
+      // 重置url，移除(?||&)queryPattern
+      if (location.href.search(queryPattern) > -1) {
+        const newUrl = location.href.replace(queryPattern, '').slice(0, -1)
+        history.replaceState(history.state, '', newUrl)
+      }
 
       this.$nextTick(() => {
         this.getList()
