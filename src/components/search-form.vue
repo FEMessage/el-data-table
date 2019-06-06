@@ -43,6 +43,7 @@ export default {
     },
     /**
      * 批量更新表单数据
+     * @public
      * @param {object} value - 要更新的表单数据
      */
     updateForm() {
@@ -50,6 +51,7 @@ export default {
     },
     /**
      * 对外提供获取表单数据的函数
+     * @public
      */
     getFormValue() {
       return this.$refs.form.getFormValue()
