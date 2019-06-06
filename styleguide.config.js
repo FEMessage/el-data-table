@@ -29,7 +29,7 @@ module.exports = {
   sections: [
     {
       name: 'Components',
-      components: 'src/*.vue',
+      components: 'src/el-data-table.vue',
       usageMode: 'expand'
     },
     {
@@ -63,8 +63,6 @@ module.exports = {
         }
       ]
     },
-    plugins: [
-      new VueLoaderPlugin()
-    ]
+    plugins: [new VueLoaderPlugin()]
   }
 }
