@@ -15,7 +15,7 @@ search插槽
 export default {
   data() {
     return {
-      url: 'https:\/\/api.github.com/search/users',
+      url: 'https://api.github.com/search/users',
       dataPath: 'items',
       totalPath: 'total_count',
       columns: [
