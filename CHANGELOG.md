@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/FEMessage/el-data-table/compare/v1.4.1...v1.4.2) (2019-06-10)
+
+
+### Bug Fixes
+
+* 没有sync修饰时，customQuery也被重置的bug   ([3f18917](https://github.com/FEMessage/el-data-table/commit/3f18917)), closes [#105](https://github.com/FEMessage/el-data-table/issues/105)
+
+
+
 ### [1.4.1](https://github.com/FEMessage/el-data-table/compare/v1.4.0...v1.4.1) (2019-05-31)
 
 
