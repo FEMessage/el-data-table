@@ -578,7 +578,8 @@ export default {
       }
     },
     /**
-     * 外部的注入额外的查询参数, 键值对形式
+     * 外部的注入额外的查询参数, 键值对形式。
+     * 可用.sync修饰，此时重置搜索搜索参数也会重置customQuery
      */
     customQuery: {
       type: Object,
@@ -847,10 +848,7 @@ export default {
        */
       this.$emit('reset')
 
-      this.$emit(
-        'update:customQuery',
-        Object.assign(this.customQuery, JSON.parse(this.initCustomQuery))
-      )
+      this.$emit('update:customQuery', JSON.parse(this.initCustomQuery))
     },
     handleSizeChange(val) {
       if (this.size === val) return

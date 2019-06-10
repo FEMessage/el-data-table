@@ -148,6 +148,8 @@ export default {
 
 把 template 的内容移动到 script 中, 意味着 template 可以精简，js 可以抽取出来，方便复用；同时，js 里的数据其实就是一段 json，这也让代码生成工具有了用武之地。
 
+其中表单的渲染使用到了组件[el-form-renderer](https://github.com/FEMessage/el-form-renderer)
+
 ![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc5dawjm4j216r0j5jss.jpg)
 
 ![](https://ws1.sinaimg.cn/large/9f4faba8gy1fyc5b55tzfj216v0g1mye.jpg)
