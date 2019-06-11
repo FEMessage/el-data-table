@@ -9,7 +9,7 @@
     data() {
       return {
         firstPage: 0,
-        url: 'https://easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage',
+        url: 'https:\/\/easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage',
         columns: [
           {prop: 'name', label: '用户名'},
           {prop: 'createdBy', label: '创建人'},

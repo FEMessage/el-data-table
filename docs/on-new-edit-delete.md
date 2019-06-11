@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       url:
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-get',
+        'https:\/\/www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-get',
       columns: [
         {type: 'selection'},
         {prop: 'name', label: '用户名'},
@@ -48,21 +48,21 @@ export default {
     onNew(data, row) {
       console.log('onNew')
       return this.$axios.post(
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-new',
+        'https:\/\/www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-new',
         data
       )
     },
     onEdit(data, row) {
       console.log('onEdit')
       return this.$axios.put(
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-edit',
+        'https:\/\/www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-edit',
         data
       )
     },
     onDelete(selected) {
       console.log('onDelete')
       return this.$axios.delete(
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
+        'https:\/\/www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
         {
           data: {
             rows: selected.id || selected.map(v => v.id)

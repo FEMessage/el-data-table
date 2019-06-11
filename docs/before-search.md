@@ -24,7 +24,7 @@ export default {
         }
       ],
       beforeSearch: () => {
-        this.url = 'https://easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage'
+        this.url = 'https:\/\/easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage'
         return Promise.resolve()
       }
     }

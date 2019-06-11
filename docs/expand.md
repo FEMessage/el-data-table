@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       url:
-        'https://easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/reservation',
+        'https:\/\/easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/reservation',
       columns: [
         {prop: 'memberName', label: '客户姓名'},
         {prop: 'memberAddress', label: '客户所在地'},

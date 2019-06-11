@@ -9,7 +9,7 @@
 export default {
   data: function() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/tree',
+      url: 'https:\/\/easy-mock.com/mock/5b586c9dfce1393a862d034d/example/tree',
       columns: [
         {prop: 'name', label: '分类名称', minWidth: '140px'},
         {prop: 'description', label: '分类说明', minWidth: '140px'},

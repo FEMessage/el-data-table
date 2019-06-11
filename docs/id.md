@@ -11,7 +11,7 @@
 export default {
   data: function() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
+      url: 'https:\/\/easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img',
       // 主键设置为status
       id: 'status',
       columns: [
