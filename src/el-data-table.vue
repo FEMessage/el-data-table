@@ -194,9 +194,9 @@
 
 <script>
 import _get from 'lodash.get'
-import qs from 'qs'
 import SelfLoadingButton from './self-loading-button.vue'
 import TextDangerButton from './text-danger-button.vue'
+import * as searchQuery from './utils/search-query'
 
 // 默认返回的数据格式如下
 //          {
@@ -222,17 +222,6 @@ const treeParentValue = 'id'
 const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
-
-const equal = '='
-const equalPattern = /=/g
-
-const valueSeparator = '~'
-const paramSeparator = ','
-
-const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
-
-const queryFlag = 'q='
-const queryPattern = new RegExp('q=.*' + paramSeparator)
 
 export default {
   name: 'ElDataTable',
@@ -652,29 +641,16 @@ export default {
     }
   },
   mounted() {
-    let searchForm = this.$refs.searchForm
-
-    if (searchForm) {
-      // 恢复查询条件
-      let matches = location.href.match(queryPattern)
-
-      if (matches) {
-        let query = matches[0].substr(2).replace(valueSeparatorPattern, equal)
-        let params = qs.parse(query, {delimiter: paramSeparator})
-
-        // page size 特殊处理
-        this.page = params.page * 1
-        this.size = params.size * 1
-
-        // 对slot=search无效
-        searchForm.updateForm(
-          Object.keys(params).reduce((acc, k) => {
-            if (k !== 'page' && k !== 'size') {
-              acc[k] = params[k]
-            }
-            return acc
-          }, {})
-        )
+    if (this.$refs.searchForm) {
+      // 恢复查询条件，但对slot=search无效
+      const query = searchQuery.retrieve(location.href)
+      if (query) {
+        // page size 转换成 number
+        this.page = +query.page
+        this.size = +query.size
+        delete query.page
+        delete query.size
+        this.$refs.searchForm.updateForm(query)
       }
     }
 
@@ -684,50 +660,42 @@ export default {
   },
   methods: {
     getList(shouldStoreQuery) {
-      let searchForm = this.$refs.searchForm
-      let formQuery = searchForm ? searchForm.getFormValue() : {}
-      // TODO Object.assign IE不支持, 所以后面Object.keys的保守其实是没有必要的。。。
-      let query = Object.assign({}, formQuery, this.customQuery)
-
-      let url = this.url
-      let params = ''
-      let size = this.hasPagination ? this.size : this.noPaginationSize
+      const {url} = this
 
       if (!url) {
         console.warn('DataTable: url 为空, 不发送请求')
         return
       }
 
-      // 构造查询url
-      if (url.indexOf('?') > -1) url += '&'
-      else url += '?'
+      // 构造query对象
+      const query = {}
+      if (this.$refs.searchForm) {
+        Object.assign(query, this.$refs.searchForm.getFormValue())
+      }
+      Object.assign(query, this.customQuery)
 
-      params += `size=${size}`
-
-      // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
-      // TODO Object.values IE11不兼容, 暂时使用Object.keys
-      params += Object.keys(query)
-        .filter(k => {
-          return query[k] !== '' && query[k] !== null && query[k] !== undefined
-        })
-        .reduce(
-          (params, k) =>
-            (params += `&${k}=${encodeURIComponent(
-              query[k].toString().trim()
-            )}`),
-          ''
-        )
+      query.size = this.hasPagination ? this.size : this.noPaginationSize
 
       // 根据偏移值计算接口正确的页数
-      let pageOffset = this.firstPage - defaultFirstPage
+      const pageOffset = this.firstPage - defaultFirstPage
       let page = this.page + pageOffset
       if (!this.hasPagination) page = -1
+      query.page = page
+
+      // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
+      Object.keys(query)
+        .filter(k => !query[k] && query[k] !== 0)
+        .forEach(k => delete query[k])
+
+      // 构造query字符串
+      const queryStr =
+        (url.includes('?') ? '&' : '?') + searchQuery.transformQuery(query)
 
       // 请求开始
       this.loading = true
 
       this.$axios
-        .get(url + params + `&page=${page}`)
+        .get(url + queryStr)
         .then(({data: resp}) => {
           let data = []
 
@@ -776,38 +744,9 @@ export default {
 
       // 存储query记录, 便于后面恢复
       if (this.routerMode && shouldStoreQuery > 0) {
-        let newUrl = ''
-        let searchQuery =
-          queryFlag +
-          (params + `&page=${this.page}`)
-            .replace(/&/g, paramSeparator)
-            .replace(equalPattern, valueSeparator) +
-          paramSeparator
-
-        // 非第一次查询
-        if (location.href.indexOf(queryFlag) > -1) {
-          newUrl = location.href.replace(queryPattern, searchQuery)
-        } else if (this.routerMode == 'hash') {
-          let search =
-            location.hash.indexOf('?') > -1
-              ? `&${searchQuery}`
-              : `?${searchQuery}`
-          newUrl =
-            location.origin +
-            location.pathname +
-            location.search +
-            location.hash +
-            search
-        } else {
-          let search = location.search ? `&${searchQuery}` : `?${searchQuery}`
-          newUrl =
-            location.origin +
-            location.pathname +
-            location.search +
-            search +
-            location.hash
-        }
-
+        // 存储的page是table的页码，无需偏移
+        query.page = this.page
+        const newUrl = searchQuery.store(location.href, query)
         history.pushState(history.state, 'el-data-table search', newUrl)
       }
     },
@@ -830,11 +769,9 @@ export default {
       this.$refs.searchForm.resetFields()
       this.page = defaultFirstPage
 
-      // 重置url，移除(?||&)queryPattern
-      if (location.href.search(queryPattern) > -1) {
-        const newUrl = location.href.replace(queryPattern, '').slice(0, -1)
-        history.replaceState(history.state, '', newUrl)
-      }
+      // 重置url
+      const newUrl = searchQuery.clear(location.href)
+      history.replaceState(history.state, '', newUrl)
 
       this.$nextTick(() => {
         this.getList()

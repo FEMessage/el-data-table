@@ -21,7 +21,11 @@ module.exports = {
   ribbon: {
     url: 'https://github.com/FEMessage/el-data-table'
   },
-  require: ['./styleguide'],
+  require: [
+    './styleguide/element.js',
+    './styleguide/axios.js',
+    './styleguide/el-form-renderer.js'
+  ],
   sections: [
     {
       name: 'Components',
