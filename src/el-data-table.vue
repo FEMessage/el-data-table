@@ -684,6 +684,10 @@ export default {
     })
   },
   methods: {
+    /**
+     * 手动刷新列表数据
+     * @public
+     */
     getList(shouldStoreQuery) {
       let searchForm = this.$refs.searchForm
       let formQuery = searchForm ? searchForm.getFormValue() : {}
