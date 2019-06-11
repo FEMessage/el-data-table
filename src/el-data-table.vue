@@ -678,13 +678,11 @@ export default {
 
       // 根据偏移值计算接口正确的页数
       const pageOffset = this.firstPage - defaultFirstPage
-      let page = this.page + pageOffset
-      if (!this.hasPagination) page = -1
-      query.page = page
+      query.page = this.hasPagination ? this.page + pageOffset : -1
 
-      // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
+      // 无效值过滤
       Object.keys(query)
-        .filter(k => !query[k] && query[k] !== 0)
+        .filter(k => ['', undefined, null].includes(query[k]))
         .forEach(k => delete query[k])
 
       // 构造query字符串
@@ -769,7 +767,7 @@ export default {
       this.$refs.searchForm.resetFields()
       this.page = defaultFirstPage
 
-      // 重置url
+      // 重置
       const newUrl = searchQuery.clear(location.href)
       history.replaceState(history.state, '', newUrl)
 
