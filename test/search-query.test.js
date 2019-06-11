@@ -10,7 +10,7 @@ test('transform query to str', () => {
   expect(transformQuery(query, '~', ',')).toBe(queryStr)
 })
 
-test('store query to url', () => {
+test('store query into url', () => {
   const newUrl = store(url, query)
   expect(newUrl).toBe(`${url}&q=${queryStr},`)
   expect(store(newUrl, query)).toBe(newUrl)
@@ -18,7 +18,7 @@ test('store query to url', () => {
   expect(store(urlHash, query)).toBe(`${urlHash}?q=${queryStr},`)
 })
 
-test('retrieve query to url', () => {
+test('retrieve query from url', () => {
   expect(retrieve(store(url, query))).toEqual(query)
 })
 
