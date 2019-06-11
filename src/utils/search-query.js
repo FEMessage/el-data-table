@@ -30,7 +30,7 @@ export function store(url, query) {
     paramSeparator
 
   if (queryPattern.test(url)) {
-    return url.replace(queryPattern, searchQuery)
+    return url.replace(queryPattern, queryStr)
   } else if (url.includes('#')) {
     const [, hash] = url.split('#')
     return url + (hash.includes('?') ? '&' : '?') + queryStr
