@@ -687,6 +687,7 @@ export default {
     /**
      * 手动刷新列表数据
      * @public
+     * @param {boolean} shouldStoreQuery - 是否保存query到路由上
      */
     getList(shouldStoreQuery) {
       let searchForm = this.$refs.searchForm
