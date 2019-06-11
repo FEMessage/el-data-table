@@ -193,6 +193,7 @@
 </template>
 
 <script>
+import './utils/polyfill'
 import _get from 'lodash.get'
 import SelfLoadingButton from './self-loading-button.vue'
 import TextDangerButton from './text-danger-button.vue'
