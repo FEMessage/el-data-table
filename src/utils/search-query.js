@@ -1,10 +1,11 @@
-const valueSeparator = '~'
-const paramSeparator = ','
-const queryFlag = 'q='
-const queryPattern = new RegExp(queryFlag + '.*' + paramSeparator)
+export const valueSeparator = '~'
+export const paramSeparator = ','
+export const queryFlag = 'q='
+export const queryPattern = new RegExp(queryFlag + '.*' + paramSeparator)
 
 /**
  * 转换query对象成可附在url上的字符串
+ * {a: 'a&b', b: true} => 'a=a%26b&b=true'
  *
  * @param {*} query
  * @param {string} [equal='=']
@@ -40,11 +41,11 @@ export function store(url, query) {
 }
 
 /**
- * 从url中取出search query，如果没有，返回null
- * query的key会经过decodeURIComponent处理，无类型转换
+ * 从url中取出query对象，如果没有，返回null
+ * 基本是store的逆过程
  *
  * @param {string} url
- * @return {object|null} 对象类型的search参数
+ * @return {object|null} 对象类型的query参数
  */
 export function retrieve(url) {
   const found = url.match(queryPattern)
