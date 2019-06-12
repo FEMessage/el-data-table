@@ -48,9 +48,7 @@
           size="small"
           :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
           @click="isSearchCollapse = !isSearchCollapse"
-        >
-          {{ isSearchCollapse ? '展开' : '折叠' }}搜索
-        </el-button>
+        >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
       </el-form-item>
     </el-form>
 
@@ -642,15 +640,15 @@ export default {
     }
   },
   mounted() {
-    if (this.$refs.searchForm) {
-      // 恢复查询条件，但对slot=search无效
-      const query = searchQuery.retrieve(location.href)
-      if (query) {
-        // page size 转换成 number
-        this.page = +query.page
-        this.size = +query.size
-        delete query.page
-        delete query.size
+    // 恢复查询条件，但对slot=search无效
+    const query = searchQuery.retrieve(location.href)
+    if (query) {
+      // page size 转换成 number
+      this.page = +query.page
+      this.size = +query.size
+      delete query.page
+      delete query.size
+      if (this.$refs.searchForm) {
         this.$refs.searchForm.updateForm(query)
       }
     }
