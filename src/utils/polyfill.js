@@ -8,3 +8,8 @@ if (!Array.prototype.includes) {
     return this.indexOf(...arguments) > -1
   }
 }
+if (!Object.entries) {
+  Object.entries = function(obj) {
+    return Object.keys(obj).map(k => [k, obj[k]])
+  }
+}
