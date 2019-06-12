@@ -15,10 +15,13 @@ const urlHash = `${url}#/`
 
 describe('转换 query 对象到 uri string', () => {
   test('默认情况', () => {
-    expect(transformQuery(query)).toBe('a=1&b=b%26c')
+    expect(transformQuery(query)).toBe(queryStr)
   })
   test('自定义 equal & delimiter', () => {
-    expect(transformQuery(query, valueSeparator, paramSeparator)).toBe(queryStr)
+    expect(transformQuery(query, '=', '&')).toBe('a=1&b=b%26c')
+  })
+  test('过程可逆', () => {
+    expect(transformQuery(transformQuery(query))).toEqual(query)
   })
 })
 

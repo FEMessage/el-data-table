@@ -643,9 +643,8 @@ export default {
     // 恢复查询条件，但对slot=search无效
     const query = searchQuery.retrieve(location.href)
     if (query) {
-      // page size 转换成 number
-      this.page = +query.page
-      this.size = +query.size
+      this.page = parseInt(query.page)
+      this.size = parseInt(query.size)
       delete query.page
       delete query.size
       if (this.$refs.searchForm) {
@@ -684,9 +683,15 @@ export default {
         .filter(k => ['', undefined, null].includes(query[k]))
         .forEach(k => delete query[k])
 
+      // trim
+      Object.entries(query)
+        .filter(([, v]) => typeof v === 'string')
+        .forEach(([k, v]) => (query[k] = v.trim()))
+
       // 构造query字符串
       const queryStr =
-        (url.includes('?') ? '&' : '?') + searchQuery.transformQuery(query)
+        (url.includes('?') ? '&' : '?') +
+        searchQuery.transformQuery(query, '=', '&')
 
       // 请求开始
       this.loading = true

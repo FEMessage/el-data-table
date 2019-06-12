@@ -5,16 +5,32 @@ export const queryPattern = new RegExp(queryFlag + '.*' + paramSeparator)
 
 /**
  * 转换query对象成可附在url上的字符串
- * {a: 'a&b', b: true} => 'a=a%26b&b=true'
+ * 如果传入字符串则转换回对象
+ * {a: 'a&b', b: true} <=> 'a~a%26b,b~true'
  *
- * @param {*} query
- * @param {string} [equal='=']
- * @param {string} [delimiter='&']
+ * @param {string|object} query
+ * @param {string} equal - 键和值的分隔符
+ * @param {string} delimiter - 键值对之间的分隔符
+ * @return {object|string}
  */
-export function transformQuery(query, equal = '=', delimiter = '&') {
-  return Object.keys(query)
-    .map(k => `${k}${equal}${encodeURIComponent(('' + query[k]).trim())}`)
-    .join(delimiter)
+export function transformQuery(
+  query,
+  equal = valueSeparator,
+  delimiter = paramSeparator
+) {
+  if (typeof query === 'object') {
+    return Object.entries(query)
+      .map(([k, v]) => `${k}${equal}${encodeURIComponent(v)}`)
+      .join(delimiter)
+  } else {
+    return query
+      .split(delimiter)
+      .map(param => param.split(equal))
+      .reduce((obj, [k, v]) => {
+        obj[k] = decodeURIComponent(v)
+        return obj
+      }, {})
+  }
 }
 
 /**
@@ -25,10 +41,7 @@ export function transformQuery(query, equal = '=', delimiter = '&') {
  * @returns {string} 添加了query的url
  */
 export function store(url, query) {
-  const queryStr =
-    queryFlag +
-    transformQuery(query, valueSeparator, paramSeparator) +
-    paramSeparator
+  const queryStr = queryFlag + transformQuery(query) + paramSeparator
 
   if (queryPattern.test(url)) {
     return url.replace(queryPattern, queryStr)
@@ -50,15 +63,8 @@ export function store(url, query) {
 export function retrieve(url) {
   const found = url.match(queryPattern)
   if (!found) return null
-  return found[0]
-    .replace(queryFlag, '')
-    .slice(0, -1) // 移除末尾的paramSeparator
-    .split(paramSeparator)
-    .map(t => t.split(valueSeparator))
-    .reduce((obj, [k, v]) => {
-      obj[k] = decodeURIComponent(v)
-      return obj
-    }, {})
+  const queryStr = found[0].replace(queryFlag, '').slice(0, -1) // 移除末尾的paramSeparator
+  return transformQuery(queryStr)
 }
 
 /**
