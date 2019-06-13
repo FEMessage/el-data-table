@@ -19,8 +19,8 @@ export function transformQuery(
   delimiter = paramSeparator
 ) {
   if (typeof query === 'object') {
-    return Object.entries(query)
-      .map(([k, v]) => `${k}${equal}${encodeURIComponent(v)}`)
+    return Object.keys(query)
+      .map(k => `${k}${equal}${encodeURIComponent(query[k])}`)
       .join(delimiter)
   } else {
     return query
@@ -45,11 +45,11 @@ export function store(url, query) {
 
   if (queryPattern.test(url)) {
     return url.replace(queryPattern, queryStr)
-  } else if (url.includes('#')) {
+  } else if (url.indexOf('#') > -1) {
     const [, hash] = url.split('#')
-    return url + (hash.includes('?') ? '&' : '?') + queryStr
+    return url + (hash.indexOf('?') > -1 ? '&' : '?') + queryStr
   } else {
-    return url + (url.includes('?') ? '&' : '?') + queryStr
+    return url + (url.indexOf('?') > -1 ? '&' : '?') + queryStr
   }
 }
 

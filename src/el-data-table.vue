@@ -191,7 +191,6 @@
 </template>
 
 <script>
-import './utils/polyfill'
 import _get from 'lodash.get'
 import SelfLoadingButton from './self-loading-button.vue'
 import TextDangerButton from './text-danger-button.vue'
@@ -680,17 +679,17 @@ export default {
 
       // 无效值过滤
       Object.keys(query)
-        .filter(k => ['', undefined, null].includes(query[k]))
+        .filter(k => ['', undefined, null].indexOf(query[k]) > -1)
         .forEach(k => delete query[k])
 
       // trim
-      Object.entries(query)
-        .filter(([, v]) => typeof v === 'string')
-        .forEach(([k, v]) => (query[k] = v.trim()))
+      Object.keys(query)
+        .filter(k => typeof query[k] === 'string')
+        .forEach(k => (query[k] = query[k].trim()))
 
       // 构造query字符串
       const queryStr =
-        (url.includes('?') ? '&' : '?') +
+        (url.indexOf('?') > -1 ? '&' : '?') +
         searchQuery.transformQuery(query, '=', '&')
 
       // 请求开始
