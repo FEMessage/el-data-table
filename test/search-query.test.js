@@ -8,55 +8,87 @@ import {
   clear
 } from '../src/utils/search-query'
 
-const query = {a: '1', b: 'b&c'}
-const queryStr = `a${valueSeparator}1${paramSeparator}b${valueSeparator}b%26c`
-const url = 'https://hello.world/?a=1'
-const urlHash = `${url}#/`
+const query = {
+  obj: {a: '1', b: 'b&c'},
+  str: `a${valueSeparator}1${paramSeparator}b${valueSeparator}b${encodeURIComponent(
+    '&'
+  )}c`
+}
+const location = {
+  origin: 'https://hello.world',
+  search: '?a=1',
+  hash: '#/',
+  get hrefs() {
+    const {origin, search, hash} = this
+    return [
+      origin,
+      `${origin}${hash}`,
+      `${origin}${hash}${search}`,
+      `${origin}${search}`,
+      `${origin}${search}${hash}`,
+      `${origin}${search}${hash}${search}`
+    ]
+  },
+  seps: ['?', '?', '&', '&', '?', '&'],
+  get store() {
+    const {hrefs} = this
+    const {str} = query
+    return this.seps.map(
+      (sep, i) => `${hrefs[i]}${sep}${queryFlag}${str}${paramSeparator}`
+    )
+  }
+}
 
 describe('转换 query 对象到 uri string', () => {
+  const {obj, str} = query
   test('默认情况', () => {
-    expect(transformQuery(query)).toBe(queryStr)
+    expect(transformQuery(obj)).toBe(str)
   })
   test('自定义 equal & delimiter', () => {
-    expect(transformQuery(query, '=', '&')).toBe('a=1&b=b%26c')
+    const equal = '='
+    const delimiter = '&'
+    const str2 = str
+      .replace(RegExp(valueSeparator, 'g'), equal)
+      .replace(RegExp(paramSeparator, 'g'), delimiter)
+    expect(transformQuery(obj, equal, delimiter)).toBe(str2)
   })
   test('过程可逆', () => {
-    expect(transformQuery(transformQuery(query))).toEqual(query)
+    expect(transformQuery(transformQuery(obj))).toEqual(obj)
   })
 })
 
 describe('保存 query 对象到 url', () => {
-  const newUrl = store(url, query)
   test('默认情况', () => {
-    expect(newUrl).toBe(`${url}&${queryFlag}${queryStr},`)
+    location.hrefs.forEach((href, i) => {
+      expect(store(href, query.obj)).toBe(location.store[i])
+    })
   })
   test('多次store仍是幂等操作', () => {
-    expect(store(newUrl, query)).toBe(newUrl)
+    location.hrefs.forEach((href, i) => {
+      const {obj} = query
+      expect(store(store(href, obj), obj)).toBe(location.store[i])
+    })
   })
   test('替换的情况', () => {
-    expect(store(newUrl, {c: 'c'})).toBe(
-      `${url}&${queryFlag}c${valueSeparator}c,`
-    )
-  })
-  test('有hash的url', () => {
-    expect(store(urlHash, query)).toBe(`${urlHash}?${queryFlag}${queryStr},`)
+    location.hrefs.forEach((href, i) => {
+      const hrefStore = store(href, {x: 1})
+      expect(store(hrefStore, query.obj)).toBe(location.store[i])
+    })
   })
 })
 
 describe('从 url 提取 query 对象', () => {
-  test('无hash的url', () => {
-    expect(retrieve(store(url, query))).toEqual(query)
-  })
-  test('有hash的url', () => {
-    expect(retrieve(store(urlHash, query))).toEqual(query)
+  test('默认情况', () => {
+    location.hrefs.forEach(href => {
+      expect(retrieve(store(href, query.obj))).toEqual(query.obj)
+    })
   })
 })
 
 describe('从 url 清除 query参数', () => {
-  test('无hash的url', () => {
-    expect(clear(store(url, query))).toEqual(url)
-  })
-  test('有hash的url', () => {
-    expect(clear(store(urlHash, query))).toEqual(urlHash)
+  test('默认情况', () => {
+    location.hrefs.forEach(href => {
+      expect(clear(store(href, query.obj))).toEqual(href)
+    })
   })
 })
