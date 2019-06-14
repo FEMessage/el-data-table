@@ -1030,14 +1030,6 @@
     postcss-modules-sync "^1.0.0"
     source-map "0.6.*"
 
-"@vue/test-utils@^1.0.0-beta.29":
-  version "1.0.0-beta.29"
-  resolved "https://registry.npm.taobao.org/@vue/test-utils/download/@vue/test-utils-1.0.0-beta.29.tgz#c942cf25e891cf081b6a03332b4ae1ef430726f0"
-  integrity sha1-yULPJeiRzwgbagMzK0rh70MHJvA=
-  dependencies:
-    dom-event-types "^1.0.0"
-    lodash "^4.17.4"
-
 "@vxna/mini-html-webpack-template@^0.1.7":
   version "0.1.7"
   resolved "https://registry.npmjs.org/@vxna/mini-html-webpack-template/-/mini-html-webpack-template-0.1.7.tgz#2a8270e513ee14f395cc17c2ce22ced383c45d22"
@@ -3279,11 +3271,6 @@ doctrine@^3.0.0:
 doctypes@^1.1.0:
   version "1.1.0"
   resolved "http://registry.npm.taobao.org/doctypes/download/doctypes-1.1.0.tgz#ea80b106a87538774e8a3a4a5afe293de489e0a9"
-
-dom-event-types@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npm.taobao.org/dom-event-types/download/dom-event-types-1.0.0.tgz#5830a0a29e1bf837fe50a70cd80a597232813cae"
-  integrity sha1-WDCgop4b+Df+UKcM2ApZcjKBPK4=
 
 domain-browser@^1.1.1:
   version "1.2.0"
