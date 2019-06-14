@@ -23,30 +23,38 @@ const locations = (() => {
   return [
     {
       href: origin + hash,
-      history: origin + `?${q}` + hash,
-      hash: origin + hash + `?${q}`
+      result: {
+        history: origin + `?${q}` + hash,
+        hash: origin + hash + `?${q}`
+      }
     },
     {
       href: origin + hash + search,
-      history: origin + `?${q}` + hash + search,
-      hash: origin + hash + search + `&${q}`
+      result: {
+        history: origin + `?${q}` + hash + search,
+        hash: origin + hash + search + `&${q}`
+      }
     },
     {
       href: origin + search + hash,
-      history: origin + search + `&${q}` + hash,
-      hash: origin + search + hash + `?${q}`
+      result: {
+        history: origin + search + `&${q}` + hash,
+        hash: origin + search + hash + `?${q}`
+      }
     },
     {
       href: origin + search + hash + search,
-      history: origin + search + `&${q}` + hash + search,
-      hash: origin + search + hash + search + `&${q}`
+      result: {
+        history: origin + search + `&${q}` + hash + search,
+        hash: origin + search + hash + search + `&${q}`
+      }
     }
   ]
 })()
 
-describe('转换 query 对象到 uri string', () => {
+describe('测试 transform', () => {
   const {obj, str} = query
-  test('默认情况', () => {
+  test('转换obj到str', () => {
     expect(transform(obj)).toBe(str)
   })
   test('自定义 equal & delimiter', () => {
@@ -57,55 +65,55 @@ describe('转换 query 对象到 uri string', () => {
       .replace(RegExp(paramSeparator, 'g'), delimiter)
     expect(transform(obj, equal, delimiter)).toBe(str2)
   })
-  test('过程可逆', () => {
+  test('obj通过两次transform之后等于自身', () => {
     expect(transform(transform(obj))).toEqual(obj)
   })
 })
 
-describe('保存 query 对象到 url', () => {
+describe('测试 set', () => {
   const {obj} = query
-  test('默认情况', () => {
-    locations.forEach(l => {
-      routerModes.forEach(m => {
-        expect(set(l.href, obj, m)).toBe(l[m])
+  test('通过所有用例', () => {
+    locations.forEach(({href, result}) => {
+      routerModes.forEach(routerMode => {
+        expect(set(href, obj, routerMode)).toBe(result[routerMode])
       })
     })
   })
   test('多次set仍是幂等操作', () => {
-    locations.forEach(l => {
-      routerModes.forEach(m => {
-        const t = set(l.href, obj, m)
-        expect(set(t, obj, m)).toBe(l[m])
+    locations.forEach(({href, result}) => {
+      routerModes.forEach(routerMode => {
+        const t = set(href, obj, routerMode)
+        expect(set(t, obj, routerMode)).toBe(result[routerMode])
       })
     })
   })
-  test('替换的情况', () => {
-    locations.forEach(l => {
-      routerModes.forEach(m => {
-        const t = set(l.href, {x: 1}, m)
-        expect(set(t, obj, m)).toBe(l[m])
-      })
-    })
-  })
-})
-
-describe('从 url 提取 query 对象', () => {
-  const {obj} = query
-  test('默认情况', () => {
-    locations.forEach(l => {
-      routerModes.forEach(m => {
-        expect(get(set(l.href, obj, m))).toEqual(obj)
+  test('url已经有query时会被替换成新的', () => {
+    locations.forEach(({href, result}) => {
+      routerModes.forEach(routerMode => {
+        const t = set(href, {x: 1}, routerMode)
+        expect(set(t, obj, routerMode)).toBe(result[routerMode])
       })
     })
   })
 })
 
-describe('从 url 清除 query参数', () => {
+describe('测试 get', () => {
   const {obj} = query
-  test('默认情况', () => {
-    locations.forEach(l => {
-      routerModes.forEach(m => {
-        expect(clear(set(l.href, obj, m))).toBe(l.href)
+  test('通过所有用例', () => {
+    locations.forEach(({href}) => {
+      routerModes.forEach(routerMode => {
+        expect(get(set(href, obj, routerMode))).toEqual(obj)
+      })
+    })
+  })
+})
+
+describe('测试 clear', () => {
+  const {obj} = query
+  test('通过所有用例', () => {
+    locations.forEach(({href}) => {
+      routerModes.forEach(routerMode => {
+        expect(clear(set(href, obj, routerMode))).toBe(href)
       })
     })
   })
