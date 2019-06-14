@@ -13,7 +13,7 @@ export const queryPattern = new RegExp(queryFlag + '.*' + paramSeparator)
  * @param {string} delimiter - 键值对之间的分隔符
  * @return {object|string}
  */
-export function transformQuery(
+export function transform(
   query,
   equal = valueSeparator,
   delimiter = paramSeparator
@@ -34,37 +34,43 @@ export function transformQuery(
 }
 
 /**
- * 将query对象保存到url上
+ * 将query对象转换成str插入到url上
  *
  * @param {string} url
  * @param {object} query
- * @returns {string} 添加了query的url
+ * @param {'history'|'hash'} routerMode
+ * @returns {string} 插入了query的url
  */
-export function store(url, query) {
-  const queryStr = queryFlag + transformQuery(query) + paramSeparator
+export function set(url, query, routerMode) {
+  const queryStr = queryFlag + transform(query) + paramSeparator
+  const includes = (str, p) => str.indexOf(p) > -1
+  const getSep = str => (includes(str, '?') ? '&' : '?')
 
   if (queryPattern.test(url)) {
     return url.replace(queryPattern, queryStr)
-  } else if (url.indexOf('#') > -1) {
-    const [, hash] = url.split('#')
-    return url + (hash.indexOf('?') > -1 ? '&' : '?') + queryStr
+  } else if (includes(url, '#')) {
+    const [path, hash] = url.split('#')
+    if (routerMode === 'history') {
+      return path + getSep(path) + queryStr + '#' + hash
+    } else {
+      return url + getSep(hash) + queryStr
+    }
   } else {
-    return url + (url.indexOf('?') > -1 ? '&' : '?') + queryStr
+    return url + getSep(url) + queryStr
   }
 }
 
 /**
  * 从url中取出query对象，如果没有，返回null
- * 基本是store的逆过程
  *
  * @param {string} url
  * @return {object|null} 对象类型的query参数
  */
-export function retrieve(url) {
+export function get(url) {
   const found = url.match(queryPattern)
   if (!found) return null
   const queryStr = found[0].replace(queryFlag, '').slice(0, -1) // 移除末尾的paramSeparator
-  return transformQuery(queryStr)
+  return transform(queryStr)
 }
 
 /**
@@ -73,7 +79,8 @@ export function retrieve(url) {
  */
 export function clear(url) {
   if (queryPattern.test(url)) {
-    return url.replace(queryPattern, '').slice(0, -1)
+    const replacePattern = RegExp('[?&]' + queryPattern.source)
+    return url.replace(replacePattern, '')
   } else {
     return url
   }

@@ -194,7 +194,7 @@
 import _get from 'lodash.get'
 import SelfLoadingButton from './self-loading-button.vue'
 import TextDangerButton from './text-danger-button.vue'
-import * as searchQuery from './utils/search-query'
+import * as queryUtil from './utils/query'
 
 // 默认返回的数据格式如下
 //          {
@@ -640,7 +640,7 @@ export default {
   },
   mounted() {
     // 恢复查询条件，但对slot=search无效
-    const query = searchQuery.retrieve(location.href)
+    const query = queryUtil.get(location.href)
     if (query) {
       this.page = parseInt(query.page)
       this.size = parseInt(query.size)
@@ -690,7 +690,7 @@ export default {
       // 构造query字符串
       const queryStr =
         (url.indexOf('?') > -1 ? '&' : '?') +
-        searchQuery.transformQuery(query, '=', '&')
+        queryUtil.transform(query, '=', '&')
 
       // 请求开始
       this.loading = true
@@ -747,7 +747,7 @@ export default {
       if (this.routerMode && shouldStoreQuery > 0) {
         // 存储的page是table的页码，无需偏移
         query.page = this.page
-        const newUrl = searchQuery.store(location.href, query)
+        const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.pushState(history.state, 'el-data-table search', newUrl)
       }
     },
@@ -771,7 +771,7 @@ export default {
       this.page = defaultFirstPage
 
       // 重置
-      const newUrl = searchQuery.clear(location.href)
+      const newUrl = queryUtil.clear(location.href)
       history.replaceState(history.state, '', newUrl)
 
       this.$nextTick(() => {
