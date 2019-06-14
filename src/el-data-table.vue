@@ -579,7 +579,7 @@ export default {
     },
     /**
      * 外部的注入额外的查询参数, 键值对形式。
-     * 可用.sync修饰，此时重置搜索搜索参数也会重置Query
+     * 可用.sync修饰，此时重置搜索搜索参数也会重置customQuery
      */
     customQuery: {
       type: Object,
