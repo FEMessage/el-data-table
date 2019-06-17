@@ -48,9 +48,7 @@
           size="small"
           :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
           @click="isSearchCollapse = !isSearchCollapse"
-        >
-          {{ isSearchCollapse ? '展开' : '折叠' }}搜索
-        </el-button>
+        >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
       </el-form-item>
     </el-form>
 
@@ -194,9 +192,9 @@
 
 <script>
 import _get from 'lodash.get'
-import qs from 'qs'
 import SelfLoadingButton from './self-loading-button.vue'
 import TextDangerButton from './text-danger-button.vue'
+import * as queryUtil from './utils/query'
 
 // 默认返回的数据格式如下
 //          {
@@ -222,17 +220,6 @@ const treeParentValue = 'id'
 const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
-
-const equal = '='
-const equalPattern = /=/g
-
-const valueSeparator = '~'
-const paramSeparator = ','
-
-const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
-
-const queryFlag = 'q='
-const queryPattern = new RegExp('q=.*' + paramSeparator)
 
 export default {
   name: 'ElDataTable',
@@ -653,29 +640,15 @@ export default {
     }
   },
   mounted() {
-    let searchForm = this.$refs.searchForm
-
-    if (searchForm) {
-      // 恢复查询条件
-      let matches = location.href.match(queryPattern)
-
-      if (matches) {
-        let query = matches[0].substr(2).replace(valueSeparatorPattern, equal)
-        let params = qs.parse(query, {delimiter: paramSeparator})
-
-        // page size 特殊处理
-        this.page = params.page * 1
-        this.size = params.size * 1
-
-        // 对slot=search无效
-        searchForm.updateForm(
-          Object.keys(params).reduce((acc, k) => {
-            if (k !== 'page' && k !== 'size') {
-              acc[k] = params[k]
-            }
-            return acc
-          }, {})
-        )
+    // 恢复查询条件，但对slot=search无效
+    const query = queryUtil.get(location.href)
+    if (query) {
+      this.page = parseInt(query.page)
+      this.size = parseInt(query.size)
+      if (this.$refs.searchForm) {
+        delete query.page
+        delete query.size
+        this.$refs.searchForm.updateForm(query)
       }
     }
 
@@ -690,61 +663,55 @@ export default {
      * @param {boolean} shouldStoreQuery - 是否保存query到路由上
      */
     getList(shouldStoreQuery) {
-      let searchForm = this.$refs.searchForm
-      let formQuery = searchForm ? searchForm.getFormValue() : {}
-      // TODO Object.assign IE不支持, 所以后面Object.keys的保守其实是没有必要的。。。
-      let query = Object.assign({}, formQuery, this.customQuery)
-
-      let url = this.url
-      let params = ''
-      let size = this.hasPagination ? this.size : this.noPaginationSize
+      const {url} = this
 
       if (!url) {
         console.warn('DataTable: url 为空, 不发送请求')
         return
       }
 
-      // 构造查询url
-      if (url.indexOf('?') > -1) url += '&'
-      else url += '?'
+      // 构造query对象
+      let query = {}
+      if (this.$refs.searchForm) {
+        Object.assign(query, this.$refs.searchForm.getFormValue())
+      }
+      Object.assign(query, this.customQuery)
 
-      params += `size=${size}`
-
-      // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
-      // TODO Object.values IE11不兼容, 暂时使用Object.keys
-      params += Object.keys(query)
-        .filter(k => {
-          return query[k] !== '' && query[k] !== null && query[k] !== undefined
-        })
-        .reduce(
-          (params, k) =>
-            (params += `&${k}=${encodeURIComponent(
-              query[k].toString().trim()
-            )}`),
-          ''
-        )
+      query.size = this.hasPagination ? this.size : this.noPaginationSize
 
       // 根据偏移值计算接口正确的页数
-      let pageOffset = this.firstPage - defaultFirstPage
-      let page = this.page + pageOffset
-      if (!this.hasPagination) page = -1
+      const pageOffset = this.firstPage - defaultFirstPage
+      query.page = this.hasPagination ? this.page + pageOffset : -1
+
+      // 无效值过滤，注意0是有效值
+      query = Object.keys(query)
+        .filter(k => ['', undefined, null].indexOf(query[k]) === -1)
+        .reduce((obj, k) => {
+          obj[k] = query[k].toString().trim()
+          return obj
+        }, {})
+
+      const queryStr =
+        (url.indexOf('?') > -1 ? '&' : '?') +
+        queryUtil.stringify(query, '=', '&')
 
       // 请求开始
       this.loading = true
 
       this.$axios
-        .get(url + params + `&page=${page}`)
-        .then(resp => {
-          let res = resp.data
+        .get(url + queryStr)
+        .then(({data: resp}) => {
           let data = []
 
           // 不分页
           if (!this.hasPagination) {
             data =
-              _get(res, this.dataPath) || _get(res, noPaginationDataPath) || []
+              _get(resp, this.dataPath) ||
+              _get(resp, noPaginationDataPath) ||
+              []
           } else {
-            data = _get(res, this.dataPath) || []
-            this.total = _get(res, this.totalPath)
+            data = _get(resp, this.dataPath) || []
+            this.total = _get(resp, this.totalPath)
           }
 
           this.data = data
@@ -760,7 +727,7 @@ export default {
            * @property {object} data - table的数据
            * @property {object} resp - 请求返回的完整response
            */
-          this.$emit('update', data, res)
+          this.$emit('update', data, resp)
 
           // 开启selectCrossPages时，自动勾选多选状态
           if (this.persistSelection) {
@@ -782,38 +749,9 @@ export default {
 
       // 存储query记录, 便于后面恢复
       if (this.routerMode && shouldStoreQuery > 0) {
-        let newUrl = ''
-        let searchQuery =
-          queryFlag +
-          (params + `&page=${this.page}`)
-            .replace(/&/g, paramSeparator)
-            .replace(equalPattern, valueSeparator) +
-          paramSeparator
-
-        // 非第一次查询
-        if (location.href.indexOf(queryFlag) > -1) {
-          newUrl = location.href.replace(queryPattern, searchQuery)
-        } else if (this.routerMode == 'hash') {
-          let search =
-            location.hash.indexOf('?') > -1
-              ? `&${searchQuery}`
-              : `?${searchQuery}`
-          newUrl =
-            location.origin +
-            location.pathname +
-            location.search +
-            location.hash +
-            search
-        } else {
-          let search = location.search ? `&${searchQuery}` : `?${searchQuery}`
-          newUrl =
-            location.origin +
-            location.pathname +
-            location.search +
-            search +
-            location.hash
-        }
-
+        // 存储的page是table的页码，无需偏移
+        query.page = this.page
+        const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.pushState(history.state, 'el-data-table search', newUrl)
       }
     },
@@ -837,11 +775,8 @@ export default {
       this.page = defaultFirstPage
 
       // 重置
-      history.replaceState(
-        history.state,
-        '',
-        location.href.replace(queryPattern, '')
-      )
+      const newUrl = queryUtil.clear(location.href)
+      history.replaceState(history.state, '', newUrl)
 
       this.$nextTick(() => {
         this.getList()

@@ -17,6 +17,7 @@
     "./sfc": "src/el-data-table.vue"
   },
   "scripts": {
+    "test": "jest",
     "dev": "vue-styleguidist server",
     "doc": "vue-styleguidist build",
     "build":
@@ -32,8 +33,7 @@
     "release": "gren release --override"
   },
   "dependencies": {
-    "lodash.get": "^4.4.2",
-    "qs": "^6.5.2"
+    "lodash.get": "^4.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
@@ -47,6 +47,7 @@
     "github-release-notes": "^0.17.0",
     "glob": "^7.1.3",
     "husky": "^0.14.3",
+    "jest": "^24.8.0",
     "minimist": "^1.2.0",
     "prettier": "1.12.1",
     "pretty-quick": "^1.4.1",
