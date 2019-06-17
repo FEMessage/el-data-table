@@ -2,7 +2,8 @@ import {
   valueSeparator,
   paramSeparator,
   queryFlag,
-  transform,
+  stringify,
+  parse,
   set,
   get,
   clear
@@ -10,16 +11,16 @@ import {
 
 const query = {
   obj: {a: '1', b: 'b&c'},
-  str: `a${valueSeparator}1${paramSeparator}b${valueSeparator}b${encodeURIComponent(
-    '&'
-  )}c`
+  str(equal = valueSeparator, delimiter = paramSeparator) {
+    return `a${equal}1${delimiter}b${equal}${encodeURIComponent('b&c')}`
+  }
 }
 const routerModes = ['history', 'hash']
 const locations = (() => {
   const origin = 'https://a.b'
   const search = '?c=1'
   const hash = '#d'
-  const q = `${queryFlag}${query.str}${paramSeparator}`
+  const q = `${queryFlag}${query.str()}${paramSeparator}`
   return [
     {
       href: origin + hash,
@@ -52,38 +53,43 @@ const locations = (() => {
   ]
 })()
 
-describe('测试 transform', () => {
-  const {obj, str} = query
-  test('转换obj到str', () => {
-    expect(transform(obj)).toBe(str)
+describe('测试 stringify', () => {
+  test('基本功能', () => {
+    expect(stringify(query.obj)).toBe(query.str())
   })
   test('自定义 equal & delimiter', () => {
     const equal = '='
     const delimiter = '&'
-    const str2 = str
-      .replace(RegExp(valueSeparator, 'g'), equal)
-      .replace(RegExp(paramSeparator, 'g'), delimiter)
-    expect(transform(obj, equal, delimiter)).toBe(str2)
+    const str = query.str(equal, delimiter)
+    expect(stringify(query.obj, equal, delimiter)).toBe(str)
   })
-  test('obj通过两次transform之后等于自身', () => {
-    expect(transform(transform(obj))).toEqual(obj)
+})
+
+describe('测试 parse', () => {
+  test('基本功能', () => {
+    expect(parse(query.str())).toEqual(query.obj)
+  })
+  test('自定义 equal & delimiter', () => {
+    const equal = '='
+    const delimiter = '&'
+    const str = query.str(equal, delimiter)
+    expect(parse(str, equal, delimiter)).toEqual(query.obj)
   })
 })
 
 describe('测试 set', () => {
-  const {obj} = query
   test('通过所有用例', () => {
     locations.forEach(({href, result}) => {
       routerModes.forEach(routerMode => {
-        expect(set(href, obj, routerMode)).toBe(result[routerMode])
+        expect(set(href, query.obj, routerMode)).toBe(result[routerMode])
       })
     })
   })
   test('多次set仍是幂等操作', () => {
     locations.forEach(({href, result}) => {
       routerModes.forEach(routerMode => {
-        const t = set(href, obj, routerMode)
-        expect(set(t, obj, routerMode)).toBe(result[routerMode])
+        const t = set(href, query.obj, routerMode)
+        expect(set(t, query.obj, routerMode)).toBe(result[routerMode])
       })
     })
   })
@@ -91,29 +97,27 @@ describe('测试 set', () => {
     locations.forEach(({href, result}) => {
       routerModes.forEach(routerMode => {
         const t = set(href, {x: 1}, routerMode)
-        expect(set(t, obj, routerMode)).toBe(result[routerMode])
+        expect(set(t, query.obj, routerMode)).toBe(result[routerMode])
       })
     })
   })
 })
 
 describe('测试 get', () => {
-  const {obj} = query
   test('通过所有用例', () => {
     locations.forEach(({href}) => {
       routerModes.forEach(routerMode => {
-        expect(get(set(href, obj, routerMode))).toEqual(obj)
+        expect(get(set(href, query.obj, routerMode))).toEqual(query.obj)
       })
     })
   })
 })
 
 describe('测试 clear', () => {
-  const {obj} = query
   test('通过所有用例', () => {
     locations.forEach(({href}) => {
       routerModes.forEach(routerMode => {
-        expect(clear(set(href, obj, routerMode))).toBe(href)
+        expect(clear(set(href, query.obj, routerMode))).toBe(href)
       })
     })
   })

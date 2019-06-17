@@ -644,9 +644,9 @@ export default {
     if (query) {
       this.page = parseInt(query.page)
       this.size = parseInt(query.size)
-      delete query.page
-      delete query.size
       if (this.$refs.searchForm) {
+        delete query.page
+        delete query.size
         this.$refs.searchForm.updateForm(query)
       }
     }
@@ -690,7 +690,7 @@ export default {
       // 构造query字符串
       const queryStr =
         (url.indexOf('?') > -1 ? '&' : '?') +
-        queryUtil.transform(query, '=', '&')
+        queryUtil.stringify(query, '=', '&')
 
       // 请求开始
       this.loading = true
