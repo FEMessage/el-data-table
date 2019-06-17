@@ -1,4 +1,4 @@
-基本用法，包含crud
+history模式下，query存在hash之前
 
 ```vue
 <template>
