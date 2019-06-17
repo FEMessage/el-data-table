@@ -671,7 +671,7 @@ export default {
       }
 
       // 构造query对象
-      const query = {}
+      let query = {}
       if (this.$refs.searchForm) {
         Object.assign(query, this.$refs.searchForm.getFormValue())
       }
@@ -683,17 +683,14 @@ export default {
       const pageOffset = this.firstPage - defaultFirstPage
       query.page = this.hasPagination ? this.page + pageOffset : -1
 
-      // 无效值过滤
-      Object.keys(query)
-        .filter(k => ['', undefined, null].indexOf(query[k]) > -1)
-        .forEach(k => delete query[k])
+      // 无效值过滤，注意0是有效值
+      query = Object.keys(query)
+        .filter(k => ['', undefined, null].indexOf(query[k]) === -1)
+        .reduce((obj, k) => {
+          obj[k] = query[k].toString().trim()
+          return obj
+        }, {})
 
-      // trim
-      Object.keys(query)
-        .filter(k => typeof query[k] === 'string')
-        .forEach(k => (query[k] = query[k].trim()))
-
-      // 构造query字符串
       const queryStr =
         (url.indexOf('?') > -1 ? '&' : '?') +
         queryUtil.stringify(query, '=', '&')
