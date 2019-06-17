@@ -1,9 +1,10 @@
-search插槽
+customQuery用sync修饰时，点击重置按钮也会重置customQuery
 
 ```vue
 <template>
   <el-data-table
     v-bind="$data"
+    :custom-query.sync="customQuery"
   >
     <template slot="search">
       <el-tag>slot=search</el-tag>

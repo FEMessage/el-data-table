@@ -40,7 +40,7 @@
     "@babel/plugin-transform-runtime": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "@femessage/el-form-renderer": "^1.5.4",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "babel-loader": "^8.0.5",
     "element-ui": "^2.4.11",
     "file-loader": "^3.0.1",
@@ -65,7 +65,7 @@
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.29.6"
   },
-  "vue-sfc-cli": "1.6.0",
+  "vue-sfc-cli": "1.10.0",
   "engines": {
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"

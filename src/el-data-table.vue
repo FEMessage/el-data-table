@@ -565,7 +565,8 @@ export default {
       }
     },
     /**
-     * 外部的注入额外的查询参数, 键值对形式
+     * 外部的注入额外的查询参数, 键值对形式。
+     * 可用.sync修饰，此时重置搜索搜索参数也会重置customQuery
      */
     customQuery: {
       type: Object,
@@ -656,6 +657,11 @@ export default {
     })
   },
   methods: {
+    /**
+     * 手动刷新列表数据
+     * @public
+     * @param {boolean} shouldStoreQuery - 是否保存query到路由上
+     */
     getList(shouldStoreQuery) {
       const {url} = this
 
@@ -720,8 +726,9 @@ export default {
 
           this.loading = false
           /**
-           * 请求返回, 数据更新后触发, 返回(data, resp) data是渲染table的数据, resp是请求返回的完整response
-           * @event update
+           * 请求返回, 数据更新后触发
+           * @property {object} data - table的数据
+           * @property {object} resp - 请求返回的完整response
            */
           this.$emit('update', data, resp)
 
@@ -779,16 +786,11 @@ export default {
       })
 
       /**
-       * 按下重置按钮后触发,
-       * 另外, 当customQuery.sync时, 会重置customQuery
-       * @event reset
+       * 按下重置按钮后触发
        */
       this.$emit('reset')
 
-      this.$emit(
-        'update:customQuery',
-        Object.assign(this.customQuery, JSON.parse(this.initCustomQuery))
-      )
+      this.$emit('update:customQuery', JSON.parse(this.initCustomQuery))
     },
     handleSizeChange(val) {
       if (this.size === val) return
@@ -835,11 +837,6 @@ export default {
      */
     updateSelected(rows) {
       this.selected = rows
-
-      /**
-       * 多选启用时生效, 返回(selected)已选中行的数组
-       * @event selection-change
-       */
       this.$emit('selection-change', rows)
     },
     /**
@@ -855,9 +852,14 @@ export default {
       } else {
         rows.forEach(r => delete map[r[this.id]])
       }
-      this.selectedMap = map
       // 更新this.selectedMap会自动更新this.selected, 详见`computed`
       // 故此函数看起来没有对selected进行操作，却需要对外emit新的值
+      this.selectedMap = map
+
+      /**
+       * 多选项发生变化
+       * @property {array} rows - 已选中的行数据的数组
+       */
       this.$emit('selection-change', this.selected)
     },
     // 弹窗相关
