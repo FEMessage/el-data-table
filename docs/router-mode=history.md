@@ -1,4 +1,4 @@
-history模式下，query存在hash之前
+此时查询参数保存到location.search中
 
 ```vue
 <template>
