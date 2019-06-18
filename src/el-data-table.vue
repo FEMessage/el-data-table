@@ -553,7 +553,10 @@ export default {
      * @deprecated
      */
     extraParams: {
-      type: Object
+      type: Object,
+      default() {
+        return undefined
+      }
     },
     /**
      * 新增/修改提交时注入额外的参数
@@ -561,7 +564,7 @@ export default {
     extraBody: {
       type: Object,
       default() {
-        return this.extraParams
+        return undefined
       }
     },
     /**
@@ -581,7 +584,7 @@ export default {
     customQuery: {
       type: Object,
       default() {
-        return {}
+        return undefined
       }
     },
     /**
@@ -591,7 +594,7 @@ export default {
     extraQuery: {
       type: Object,
       default() {
-        return this.customQuery
+        return undefined
       }
     }
   },
@@ -619,7 +622,7 @@ export default {
 
       // 初始的extraQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
-      initExtraQuery: JSON.stringify(this.extraQuery),
+      initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false
     }
   },
@@ -641,6 +644,12 @@ export default {
       set(val) {
         this.selected = Object.values(val)
       }
+    },
+    _extraBody() {
+      return this.extraBody || this.extraParams || {}
+    },
+    _extraQuery() {
+      return this.extraQuery || this.customQuery || {}
     }
   },
   watch: {
@@ -657,10 +666,6 @@ export default {
 
         this.$refs[dialogForm].resetFields()
       }
-    },
-    customQuery(val) {
-      // HACK: 为了兼容customQuery，这里直接修改了prop，开发时会报错。
-      this.extraQuery = val
     }
   },
   mounted() {
@@ -699,7 +704,7 @@ export default {
       if (this.$refs.searchForm) {
         Object.assign(query, this.$refs.searchForm.getFormValue())
       }
-      Object.assign(query, this.extraQuery)
+      Object.assign(query, this._extraQuery)
 
       query.size = this.hasPagination ? this.size : this.noPaginationSize
 
@@ -935,7 +940,7 @@ export default {
         let data = Object.assign(
           {},
           this.$refs[dialogForm].getFormValue(),
-          this.extraBody
+          this._extraBody
         )
 
         if (this.isTree) {

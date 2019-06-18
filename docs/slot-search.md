@@ -2,9 +2,7 @@ search插槽
 
 ```vue
 <template>
-  <el-data-table
-    v-bind="$data"
-  >
+  <el-data-table v-bind="$data">
     <template slot="search">
       <el-tag>slot=search</el-tag>
       <el-rate v-model="extraQuery.rate" style="display: inline-block"></el-rate>

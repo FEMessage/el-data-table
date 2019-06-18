@@ -2,10 +2,7 @@
 
 ```vue
 <template>
-  <el-data-table
-    v-bind="$data"
-  >
-  </el-data-table>
+  <el-data-table v-bind="$data" />
 </template>
 <script>
 export default {
