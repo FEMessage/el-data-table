@@ -1,5 +1,6 @@
 <template>
   <el-button
+    :type="$attrs.type || 'primary'"
     v-bind="$attrs"
     v-on="$listeners"
     plain

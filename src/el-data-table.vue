@@ -136,17 +136,14 @@
         <template slot-scope="scope">
           <text-button
             v-if="isTree && hasNew"
-            type="primary"
             @click="onDefaultNew(scope.row)"
           >新增</text-button>
           <text-button
             v-if="hasEdit"
-            type="primary"
             @click="onDefaultEdit(scope.row)"
           >修改</text-button>
           <text-button
             v-if="hasView"
-            type="primary"
             @click="onDefaultView(scope.row)"
           >查看</text-button>
           <self-loading-button
@@ -157,7 +154,6 @@
             :params="scope.row"
             :callback="getList"
             :key="i"
-            type="primary"
           >{{btn.text}}</self-loading-button>
           <text-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
