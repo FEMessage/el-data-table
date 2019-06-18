@@ -3,7 +3,14 @@ extraQuery用sync修饰时，点击重置按钮也会重置extraQuery
 ```vue
 <template>
   <el-data-table
-    v-bind="$data"
+    :url="url"
+    :dataPath="dataPath"
+    :totalPath="totalPath"
+    :columns="columns"
+    :searchForm="searchForm"
+    :hasEdit="false"
+    :hasNew="false"
+    :hasDelete="false"
     :extra-query.sync="extraQuery"
   >
     <template slot="search">
