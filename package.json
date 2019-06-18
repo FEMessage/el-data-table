@@ -42,7 +42,7 @@
     "@femessage/el-form-renderer": "^1.5.4",
     "axios": "^0.19.0",
     "babel-loader": "^8.0.5",
-    "element-ui": "^2.4.11",
+    "element-ui": "2.4.11",
     "file-loader": "^3.0.1",
     "github-release-notes": "^0.17.0",
     "glob": "^7.1.3",

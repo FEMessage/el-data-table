@@ -134,14 +134,21 @@
       <!--默认操作列-->
       <el-table-column label="操作" v-if="hasOperation" v-bind="operationAttrs">
         <template slot-scope="scope">
-          <el-button
+          <text-button
             v-if="isTree && hasNew"
-            type="text"
-            size="small"
+            type="primary"
             @click="onDefaultNew(scope.row)"
-          >新增</el-button>
-          <el-button v-if="hasEdit" type="text" size="small" @click="onDefaultEdit(scope.row)">修改</el-button>
-          <el-button v-if="hasView" type="text" size="small" @click="onDefaultView(scope.row)">查看</el-button>
+          >新增</text-button>
+          <text-button
+            v-if="hasEdit"
+            type="primary"
+            @click="onDefaultEdit(scope.row)"
+          >修改</text-button>
+          <text-button
+            v-if="hasView"
+            type="primary"
+            @click="onDefaultView(scope.row)"
+          >查看</text-button>
           <self-loading-button
             v-for="(btn, i) in extraButtons"
             v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -150,14 +157,13 @@
             :params="scope.row"
             :callback="getList"
             :key="i"
-            type="text"
-            size="small"
+            type="primary"
           >{{btn.text}}</self-loading-button>
-          <text-danger-button
+          <text-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
-            size="small"
+            type="danger"
             @click="onDefaultDelete(scope.row)"
-          >删除</text-danger-button>
+          >删除</text-button>
         </template>
       </el-table-column>
 
@@ -193,7 +199,7 @@
 <script>
 import _get from 'lodash.get'
 import SelfLoadingButton from './self-loading-button.vue'
-import TextDangerButton from './text-danger-button.vue'
+import TextButton from './text-button.vue'
 import * as queryUtil from './utils/query'
 
 // 默认返回的数据格式如下
@@ -225,7 +231,7 @@ export default {
   name: 'ElDataTable',
   components: {
     SelfLoadingButton,
-    TextDangerButton
+    TextButton
   },
   props: {
     /**
