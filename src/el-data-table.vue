@@ -573,6 +573,10 @@ export default {
       default() {
         return {}
       }
+    },
+    saveQuery: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -640,15 +644,17 @@ export default {
     }
   },
   mounted() {
-    // 恢复查询条件，但对slot=search无效
-    const query = queryUtil.get(location.href)
-    if (query) {
-      this.page = parseInt(query.page)
-      this.size = parseInt(query.size)
-      if (this.$refs.searchForm) {
-        delete query.page
-        delete query.size
-        this.$refs.searchForm.updateForm(query)
+    if (this.saveQuery) {
+      const query = queryUtil.get(location.href)
+      if (query) {
+        this.page = parseInt(query.page)
+        this.size = parseInt(query.size)
+        // 恢复查询条件，但对slot=search无效
+        if (this.$refs.searchForm) {
+          delete query.page
+          delete query.size
+          this.$refs.searchForm.updateForm(query)
+        }
       }
     }
 
@@ -660,9 +666,9 @@ export default {
     /**
      * 手动刷新列表数据
      * @public
-     * @param {boolean} shouldStoreQuery - 是否保存query到路由上
+     * @param {boolean} saveQuery - 是否保存query到路由上
      */
-    getList(shouldStoreQuery) {
+    getList(saveQuery) {
       const {url} = this
 
       if (!url) {
@@ -748,7 +754,7 @@ export default {
         })
 
       // 存储query记录, 便于后面恢复
-      if (this.routerMode && shouldStoreQuery > 0) {
+      if (this.routerMode && saveQuery) {
         // 存储的page是table的页码，无需偏移
         query.page = this.page
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
@@ -762,7 +768,7 @@ export default {
         this.beforeSearch()
           .then(() => {
             this.page = defaultFirstPage
-            this.getList(true)
+            this.getList(this.saveQuery)
           })
           .catch(err => {
             this.$emit('error', err)
@@ -775,8 +781,10 @@ export default {
       this.page = defaultFirstPage
 
       // 重置
-      const newUrl = queryUtil.clear(location.href)
-      history.replaceState(history.state, '', newUrl)
+      if (this.saveQuery) {
+        const newUrl = queryUtil.clear(location.href)
+        history.replaceState(history.state, '', newUrl)
+      }
 
       this.$nextTick(() => {
         this.getList()
@@ -794,13 +802,13 @@ export default {
 
       this.page = defaultFirstPage
       this.size = val
-      this.getList(true)
+      this.getList(this.saveQuery)
     },
     handleCurrentChange(val) {
       if (this.page === val) return
 
       this.page = val
-      this.getList(true)
+      this.getList(this.saveQuery)
     },
     /**
      * 多选事件详解
