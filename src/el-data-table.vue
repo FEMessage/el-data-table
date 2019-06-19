@@ -574,6 +574,9 @@ export default {
         return {}
       }
     },
+    /**
+     * 是否开启使用url保存query参数的功能
+     */
     saveQuery: {
       type: Boolean,
       default: true
