@@ -2,7 +2,9 @@
 
 ```vue
 <template>
-  <el-data-table v-bind="$data">
+  <el-data-table
+    v-bind="$data"
+  >
     <el-table-column type="expand" fixed="left">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
