@@ -1,4 +1,4 @@
-基本用法，包含crud
+通过saveQuery控制页面中只有一个table使用url来保存query参数。saveQuery默认为true
 
 ```vue
 <template>
