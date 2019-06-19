@@ -1,16 +1,20 @@
 <template>
-  <el-button v-bind="$attrs"
-             v-on="$listeners"
-             :loading="loading"
-             :type="type"
-             @click="handleClick">
+  <text-button
+    v-bind="$attrs"
+    v-on="$listeners"
+    :loading="loading"
+    :type="type"
+    @click="handleClick"
+  >
     <slot></slot>
-  </el-button>
+  </text-button>
 </template>
 
 <script>
+import TextButton from './text-button.vue'
+
 export default {
-  name: 'ElLoadingButton',
+  components: {TextButton},
   props: {
     /**
      * 如果没有这个props，则通过attrs传`type`时，会导致el-button的`native-type`也被改变
