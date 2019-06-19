@@ -2,17 +2,12 @@ const {VueLoaderPlugin} = require('vue-loader')
 const path = require('path')
 const glob = require('glob')
 
-const demos = ['docs/basic.md', ...glob.sync('docs/!(basic).md')].map(
+const demos = ['docs/basic.md', ...glob.sync('docs/!(basic|faq).md')].map(
   filePath => ({
     name: path.basename(filePath, '.md'),
     content: filePath
   })
 )
-
-const faqs = glob.sync('docs/faq/*.md').map(filePath => ({
-  name: path.basename(filePath, '.md'),
-  content: filePath
-}))
 
 module.exports = {
   styleguideDir: 'docs',
@@ -37,7 +32,7 @@ module.exports = {
     },
     {
       name: 'FAQ',
-      sections: faqs
+      content: 'docs/faq.md'
     }
   ],
   webpackConfig: {
