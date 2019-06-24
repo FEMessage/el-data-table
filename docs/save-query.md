@@ -1,4 +1,5 @@
-通过saveQuery控制页面中只有一个table使用url来保存query参数。saveQuery默认为true
+通过saveQuery控制页面中只有一个table使用url来保存query参数。saveQuery默认为true。
+以下示例中，第一个table会saveQuery为true, 第二个saveQuery为false
 
 ```vue
 <template>
