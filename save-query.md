@@ -1,14 +1,18 @@
-基本用法，包含crud
+通过saveQuery控制页面中只有一个table使用url来保存query参数。saveQuery默认为true。
+以下示例中，第一个table会saveQuery为true, 第二个saveQuery为false
 
 ```vue
 <template>
-  <el-data-table v-bind="$data" />
+  <div>
+    <el-data-table v-bind="$data" />
+    <el-data-table v-bind="$data" :save-query="false" />
+  </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=1',
+      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=13',
       columns: [
         {prop: 'code', label: '品牌编号'},
         {prop: 'name', label: '品牌名称'},

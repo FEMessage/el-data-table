@@ -7,7 +7,7 @@ search插槽
   >
     <template slot="search">
       <el-tag>slot=search</el-tag>
-      <el-rate v-model="customQuery.rate" style="display: inline-block"></el-rate>
+      <el-rate v-model="extraQuery.rate" style="display: inline-block"></el-rate>
     </template>
   </el-data-table>
 </template>
@@ -24,7 +24,7 @@ export default {
         {prop: 'type', label: '账户类型'},
         {prop: 'html_url', label: '主页地址'}
       ],
-      customQuery: {rate: 0},
+      extraQuery: {rate: 0},
       searchForm: [
         {
           $type: 'input',

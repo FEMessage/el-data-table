@@ -21,8 +21,8 @@ export default {
       ],
       extraButtons: [
         {
-          type: 'text',
-          text: 'hello',
+          type: 'success',
+          text: '点我',
           atClick(row) {
             alert(row.name)
           }
