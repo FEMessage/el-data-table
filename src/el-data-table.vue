@@ -301,7 +301,8 @@ export default {
       }
     },
     /**
-     * 路由模式, hash | history || '', 决定了查询参数存放的形式, 设置为空则不存储查询参数
+     * 可选值：'hash' | 'history', 当开启 saveQuery 时，决定了查询参数存放的形式
+     * @deprecated
      */
     routerMode: {
       type: String,
@@ -647,7 +648,7 @@ export default {
     }
   },
   mounted() {
-    if (this.saveQuery) {
+    if (this.routerMode && this.saveQuery) {
       const query = queryUtil.get(location.href)
       if (query) {
         this.page = parseInt(query.page)
@@ -784,7 +785,7 @@ export default {
       this.page = defaultFirstPage
 
       // 重置
-      if (this.saveQuery) {
+      if (this.routerMode && this.saveQuery) {
         const newUrl = queryUtil.clear(location.href)
         history.replaceState(history.state, '', newUrl)
       }
