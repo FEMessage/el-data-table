@@ -35,7 +35,7 @@ export default {
           $el: {placeholder: '请输入品牌名称'}
         },
       ],
-      extraParams: {hello: 'world'}
+      extraBody: {hello: 'world'}
     }
   }
 }

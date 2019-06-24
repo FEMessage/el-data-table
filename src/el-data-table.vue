@@ -551,10 +551,23 @@ export default {
       }
     },
     /**
-     * 新增/修改提交时注入额外的参数
+     * 同extraBody
+     * @deprecated
      */
     extraParams: {
-      type: Object
+      type: Object,
+      default() {
+        return undefined
+      }
+    },
+    /**
+     * 新增/修改提交时，请求体带上额外的参数。
+     */
+    extraBody: {
+      type: Object,
+      default() {
+        return undefined
+      }
     },
     /**
      * 在新增/修改弹窗 点击确认时调用，返回Promise, 如果reject, 则不会发送新增/修改请求
@@ -567,13 +580,23 @@ export default {
       }
     },
     /**
-     * 外部的注入额外的查询参数, 键值对形式。
-     * 可用.sync修饰，此时重置搜索搜索参数也会重置customQuery
+     * 同extraQuery
+     * @deprecated
      */
     customQuery: {
       type: Object,
       default() {
-        return {}
+        return undefined
+      }
+    },
+    /**
+     * 向请求url添加的额外参数。
+     * 可用.sync修饰，此时点击重置按钮后该参数也会被重置
+     */
+    extraQuery: {
+      type: Object,
+      default() {
+        return undefined
       }
     }
   },
@@ -599,9 +622,9 @@ export default {
       // 要修改的那一行
       row: {},
 
-      // 初始的customQuery值, 重置查询时, 会用到
+      // 初始的extraQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
-      initCustomQuery: JSON.stringify(this.customQuery),
+      initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false
     }
   },
@@ -623,6 +646,12 @@ export default {
       set(val) {
         this.selected = Object.values(val)
       }
+    },
+    _extraBody() {
+      return this.extraBody || this.extraParams || {}
+    },
+    _extraQuery() {
+      return this.extraQuery || this.customQuery || {}
     }
   },
   watch: {
@@ -677,7 +706,7 @@ export default {
       if (this.$refs.searchForm) {
         Object.assign(query, this.$refs.searchForm.getFormValue())
       }
-      Object.assign(query, this.customQuery)
+      Object.assign(query, this._extraQuery)
 
       query.size = this.hasPagination ? this.size : this.noPaginationSize
 
@@ -789,7 +818,8 @@ export default {
        */
       this.$emit('reset')
 
-      this.$emit('update:customQuery', JSON.parse(this.initCustomQuery))
+      this.$emit('update:customQuery', JSON.parse(this.initExtraQuery))
+      this.$emit('update:extraQuery', JSON.parse(this.initExtraQuery))
     },
     handleSizeChange(val) {
       if (this.size === val) return
@@ -912,7 +942,7 @@ export default {
         let data = Object.assign(
           {},
           this.$refs[dialogForm].getFormValue(),
-          this.extraParams
+          this._extraBody
         )
 
         if (this.isTree) {
