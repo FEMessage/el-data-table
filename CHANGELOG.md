@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/FEMessage/el-data-table/compare/v1.4.2...v1.5.0) (2019-06-24)
+
+
+### Features
+
+* 增加属性saveQuery控制开启query保存功能  ([e4c95ad](https://github.com/FEMessage/el-data-table/commit/e4c95ad)), closes [#126](https://github.com/FEMessage/el-data-table/issues/126)
+
+
+
 ### [1.4.2](https://github.com/FEMessage/el-data-table/compare/v1.4.1...v1.4.2) (2019-06-10)
 
 
