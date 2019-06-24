@@ -1,4 +1,4 @@
-提交前的操作
+自定义新增、修改请求前的操作
 
 ```vue
 <template>
@@ -36,7 +36,6 @@ export default {
           }
         }
       ],
-      formAttrs: {labelWidth: '80px'},
       url: 'https://api.github.com/search/users?q=FEMessage',
       dataPath: 'items',
       totalPath: 'total_count',
@@ -44,7 +43,6 @@ export default {
         {prop: 'id', label: 'id'},
         {prop: 'login', label: '名称'},
         {prop: 'type', label: '账户类型'},
-        {prop: 'html_url', label: '主页地址'}
       ],
       beforeConfirm(data, isNew) {
         if (isNew) {
@@ -54,7 +52,8 @@ export default {
           alert('修改不可以发送请求')
           return Promise.reject()
         }
-      }
+      },
+      hasDelete: false
     }
   },
 }
