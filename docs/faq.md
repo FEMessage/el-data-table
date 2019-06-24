@@ -1,21 +1,35 @@
-## searchForm的注意事项
-填写选项后，点击搜索，然后刷新页面。第一个选择框出现错误。所以$options的value都应该是string类型
+## 获取组件内的el-table实例
 
-```vue
-<template>
-  <el-data-table v-bind="$data" />
-</template>
-<script>
-export default {
-  data() {
-    return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=11',
-      columns: [
-        {prop: 'code', label: '品牌编号'},
-        {prop: 'name', label: '品牌名称'},
-        {prop: 'alias', label: '品牌别名'},
-      ],
-      searchForm: [
+```html
+<el-data-table
+        ref="dataTable"
+        v-bind="tableConfig"
+    ></el-data-table>
+```
+
+```javascript
+this.$refs.dataTable.$refs.table
+```
+
+
+## 手动调用el-data-table刷新
+
+```javascript
+this.$refs.dataTable.getList()
+```
+
+## 查询后刷新
+
+### 场景
+![](https://cdn.nlark.com/yuque/0/2018/png/160590/1543571549979-6e8e9121-538d-47f6-a319-3f3941d2f3e0.png#align=left&display=inline&height=406&originHeight=406&originWidth=1344&status=done&width=747)<br />![](https://cdn.nlark.com/yuque/0/2018/png/160590/1543571651982-1aaffcbf-ad2e-471f-948b-d18de3c5c73c.png#align=left&display=inline&height=432&originHeight=432&originWidth=1298&status=done&width=747)
+
+### 解决方案
+把select option的value变成字符串类型
+
+### 原有代码
+
+```javascript
+searchForm: [
         {
           $el: {placeholder: '请选择'},
           label: '状态',
@@ -27,7 +41,15 @@ export default {
               label: '待处理'
             },
           ]
-        },
+        }
+      ],
+```
+
+
+### 改动后代码
+
+```javascript
+searchForm: [
         {
           $el: {placeholder: '请选择'},
           label: '状态',
@@ -35,141 +57,28 @@ export default {
           $type: 'select',
           $options: [
             {
-              value: '1',
+              value: '1', // 修改了这一行
               label: '待处理'
             },
           ]
-        },
-      ],
-      hasNew: false,
-      hasOperation: false,
-      hasPagination: false
-    }
-  }
-}
-</script>
-```
-
-## 主动刷新el-data-table
-通过getList方法主动刷新el-data-table。
-
-```vue
-<template>
-<div>
-  <el-data-table v-bind="$data" ref="dataTable" />
-  <el-button @click="getList">调用el-table的toggleAllSelection方法</el-button>
-</div>
-</template>
-<script>
-export default {
-  data() {
-    return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=1',
-      columns: [
-        {type: 'selection'},
-        {prop: 'code', label: '品牌编号'},
-        {prop: 'name', label: '品牌名称'},
-        {prop: 'alias', label: '品牌别名'},
-        {
-          prop: 'status',
-          label: '状态',
-          formatter: row => (row.status === 'normal' ? '启用' : '禁用')
         }
       ],
-      hasOperation: false,
-      hasNew: false,
-      hasDelete: false
-    }
-  },
-  methods: {
-    getList() {
-      this.$refs.dataTable.getList()
-    }
-  },
-}
-</script>
 ```
 
 ## 弹窗关闭时清空选中状态
-el-dialog中的slot不会每次都重新生成。如果你想在dialog关闭时清除多选状态，你需要监听dialog的close事件手动处理。
 
-```vue
-<template>
-  <div>
-    <el-button type="text" @click="dialogTableVisible = true">打开嵌套表格的 Dialog</el-button>
 
-    <el-dialog :visible.sync="dialogTableVisible" @close="onCloseDialog">
-      <el-data-table v-bind="$data" ref="dataTable" />
-    </el-dialog>
-  </div>
-</template>
-<script>
-export default {
-  data() {
-    return {
-      dialogTableVisible: false,
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=12',
-      columns: [
-        {type: 'selection'},
-        {prop: 'code', label: '品牌编号'},
-        {prop: 'name', label: '品牌名称'},
-        {prop: 'alias', label: '品牌别名'},
-        {
-          prop: 'status',
-          label: '状态',
-          formatter: row => (row.status === 'normal' ? '启用' : '禁用')
-        }
-      ],
-    }
-  },
-  methods: {
-    onCloseDialog() {
-      this.$refs.dataTable.$refs.table.clearSelection()
-    }
-  }
-}
-</script>
-```
+### 场景
+el-data-table 在 el-dialog 中展示，在 el-dialog 关闭后，清空 el-data-table 的选中状态。
 
-## 获取组件内el-table实例
-获取el-table实例后即可监听其组件事件和调用组件方法。
 
-```vue
-<template>
-<div>
-  <el-data-table v-bind="$data" ref="dataTable" />
-  <el-button @click="toggleAllSelection">调用el-table的toggleAllSelection方法</el-button>
-</div>
-</template>
-<script>
-export default {
-  data() {
-    return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=1',
-      columns: [
-        {type: 'selection'},
-        {prop: 'code', label: '品牌编号'},
-        {prop: 'name', label: '品牌名称'},
-        {prop: 'alias', label: '品牌别名'},
-        {
-          prop: 'status',
-          label: '状态',
-          formatter: row => (row.status === 'normal' ? '启用' : '禁用')
-        }
-      ],
-      hasOperation: false,
-      hasNew: false,
-      hasDelete: false
+### 解决方案
+![](https://cdn.nlark.com/yuque/0/2018/png/160590/1544089655978-f73452e4-8da6-476e-8dbd-22a975e9a89c.png#align=left&display=inline&height=632&originHeight=632&originWidth=1700&status=done&width=827)
+
+```javascript
+cancelRelation() {
+      this.showRelationDialog = false
+      this.selected = []
+      this.$refs.outsideModuleTable.$refs.table.clearSelection()
     }
-  },
-  methods: {
-    toggleAllSelection() {
-      this.$refs.dataTable.$refs.table.toggleAllSelection()
-    }
-  },
-  mounted() {
-    this.$refs.dataTable.$refs.table.$on('selection-change', console.log)
-  }
-}
-</script>
 ```
