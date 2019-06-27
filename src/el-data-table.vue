@@ -154,6 +154,7 @@
             :params="scope.row"
             :callback="getList"
             :key="i"
+            is-text
           >{{btn.text}}</self-loading-button>
           <text-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
