@@ -6,12 +6,11 @@ Auto requesting by `axios`, supports pagination, tree data structure, custom se
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026827-d2ba00dd-0e93-4e4f-a7da-247fbcd67333.jpeg#align=left&display=inline&height=761&originHeight=761&originWidth=1611&size=0&status=done&width=1611)
 
-<a name="W2pT5"></a>
 ## Table of Contents
 
 - [Introduction](#introduction)
   - [CRUD](#crud)
-  - [Data driven](#%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8)
+  - [Data Driven](#data-driven)
   - [Why](#why)
 - [Feature](#feature)
 - [Demo](#demo)
@@ -23,33 +22,31 @@ Auto requesting by `axios`, supports pagination, tree data structure, custom se
 - [License](#license)
 - [Contributors](#contributors)
 
-<a name="kiA6T"></a>
-## Introductio
+## Introduction
 
-<a name="I6SsE"></a>
 ### CRUD
 
-El-data-table is created to solve business problems, so CRUD logic is packaged inside.<br />In the user interface example, set its relative path:
+el-data-table is created to solve business problems, so CRUD logic is set inside.<br /> For example, to develop `user` api, suppose its relative path like this:
 
 ```javascript
 /api/v1/users
 ```
 
-The rest CRUD interface is as follows:
+The restful CRUD api should be:
 
-- Query
+- Retrieve
 
 ```javascript
 GET /api/v1/users?page=1&size=10
 ```
 
-- Add
+- Create
 
 ```javascript
 POST /api/v1/users
 ```
 
-- Modify (edit)
+- Update
 
 ```javascript
 PUT /api/v1/users/:id
@@ -61,7 +58,7 @@ PUT /api/v1/users/:id
 DELETE /api/v1/users/:id
 ```
 
-You only need to use the following code to complete the CRUD function
+Then only need to use the following code to complete the CRUD function
 
 ```html
 <template>
@@ -116,43 +113,46 @@ export default {
 </script>
 ```
 
-The effect is as follows:
+The results are as follows:
 
-- Query<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026830-1aa50e0b-8ae2-46b3-8722-816f19e62498.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026867-b3ecaa0b-043e-48e7-aacd-590ec99ebeb4.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
+- Retrieve <br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026830-1aa50e0b-8ae2-46b3-8722-816f19e62498.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026867-b3ecaa0b-043e-48e7-aacd-590ec99ebeb4.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
 
-- Add<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026834-0b8f4bf4-0b60-48e2-8602-0184d42d2b73.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
+- Create <br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026834-0b8f4bf4-0b60-48e2-8602-0184d42d2b73.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
 
-- Modify<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026856-1e2c48bc-b934-46bb-88ec-90a2e7887be0.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
+- Update< br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026856-1e2c48bc-b934-46bb-88ec-90a2e7887be0.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
 
-- Delete<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)<br />[⬆Back to Top](#table-of-contents)
+- Delete <br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)<br />[⬆Back to Top](#table-of-contents)
 
-<a name="WVlyq"></a>
 ### Data driven
 
-Moving the content of the template to the script means that the template can be streamlined and js can be extracted to facilitate reuse. at the same time, the data in js is actually a piece of json, this also makes the code generation tool useful.
+Moving the content of the template to the script means that the template can be reduced and js can be extracted to another file to reuse. 
+At the same time, the data in js is actually a piece of json, this means code generation tool can help.
 
-Where the rendering of the form uses the component [@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer)
+Beside, herer uses the component [@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer) to render form.
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026838-0fb2ab84-2934-4c6b-91d9-e3d706520f38.jpeg#align=left&display=inline&height=689&originHeight=689&originWidth=1539&size=0&status=done&width=1539)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026890-51418c24-b277-42dd-a6a8-c98a5291e922.jpeg#align=left&display=inline&height=577&originHeight=577&originWidth=1543&size=0&status=done&width=1543)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026831-0d1a339b-dbde-4eeb-9d68-89850b9449fb.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=1515&size=0&status=done&width=1515)<br />[⬆Back to Top](#table-of-contents)
 
-<a name="vxUGZ"></a>
 ### Why
-Why do you want to encapsulate an el-data-table based on the el-table of element-ui?
+Why do you create el-data-table based on el-table of element-ui?
 
 I often hear the following sounds:
 
-1. El-table can cover most scenarios without extended requirements
-1. Encapsulating so many things, the coupling is too serious
-1. Involving too many business logic, a bit rigid, business operations are still handed over to developers to deal
+1. el-table can cover most scenarios without extended requirements
+1. wrap up so many things, it's heavy and high coupling
+1. bound with too many business logic, it's not flexible; business logic should handle by developers 
 
-First of all, el-table is really flexible, but when implementing paging requests, only el-table is not enough, and the el-pagination component needs to be combined to implement it. Most of the content of paging processing is repeated. if it is not packaged, only redundant code will be generated.<br />
-In the background, too many are CRUD operations. combined with the Christmas API, it is possible to use only one url to make the component CRUD.<br />
-Secondly, many experienced "veterans" feel that the more flexible the components are, the better.<br />
-However, for the "newcomers" who are still experienced, they are not familiar with common business scenarios. for some basic operations, if form verification, space filtering, adding loading, exception handling, they will only leak, and this is the source of the bug.<br />
-For front-line business developers, in the face of endless business, in fact, they don't want to deal with repeated business logic. they just want to free their hands and get off work early.<br />
-It is in this context that el-data-table is generated.<br />[⬆Back to Top](#table-of-contents)
+First of all, I have to say, el-table is really flexible, but when implementing paging requests, only el-table is not enough, and the el-pagination component needs to be combined. Most of the content of paging processing is repeated. Without a high level business component, we get duplicate code everywhere.
 
-<a name="aPYyn"></a>
+In fact, in the admin or dashboard web app, there are many CRUD operations, using restful API. It is possible to use only one url to make a component to implement CRUD functions.
+
+Secondly, many experienced developers think that components are the more flexible the better.
+
+However, for the "newbees" who lack of experience, they are not familiar with common business scenarios. Some basic operations, like form validation, space filtering, adding loading, exception handling, they may forget, which result in bugs.
+
+For front-line business developers, in the face of endless developing task, in fact, they don't want to deal with repeated business logic. they just want to free their hands and get off work early.
+
+In such situation, el-data-table was born.<br />[⬆Back to Top](#table-of-contents)
+
 ## Feature
 
 - Only json configuration is needed to realize the docking of the four interfaces of the Christmas-style CRUD
@@ -161,12 +161,11 @@ It is in this context that el-data-table is generated.<br />[⬆Back to Top](#ta
 - Scalable custom column buttons, and custom operation functions
 - After supporting paging query, click on the details and return to restore the last query status<br />[⬆Back to Top](#table-of-contents)
 
-<a name="ghfMB"></a>
+
 ## Demo
 
 - [Doc and online demo](https://femessage.github.io/el-data-table/)<br />[⬆Back to Top](#table-of-contents)
 
-<a name="oT4HF"></a>
 ## Install
 
 Encourage using [Yarn](https://yarnpkg.com/en/docs/install#mac-stable) To install
