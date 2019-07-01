@@ -236,7 +236,7 @@ Vue.prototype.$axios = axios
 - [history_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
 - [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
 - [regExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
-- [two implementations of front-end routing from vue-router](https://zhuanlan.zhihu.com/p/27588422)
+- [routing implementations details in vue-router](https://zhuanlan.zhihu.com/p/27588422)
 - [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)<br />[⬆Back to Top](#table-of-contents)
 
 ## License
