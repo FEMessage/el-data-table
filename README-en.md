@@ -58,7 +58,7 @@ PUT /api/v1/users/:id
 DELETE /api/v1/users/:id
 ```
 
-Then only need to use the following code to complete the CRUD function
+Then only need to use the following code to complete CRUD functions
 
 ```html
 <template>
@@ -143,7 +143,7 @@ I often hear the following sounds:
 
 First of all, I have to say, el-table is really flexible, but when implementing paging requests, only el-table is not enough, and the el-pagination component needs to be combined. Most of the content of paging processing is repeated. Without a high level business component, we get duplicate code everywhere.
 
-In fact, in the admin or dashboard web app, there are many CRUD operations, using restful API. It is possible to use only one url to make a component to implement CRUD functions.
+In fact, in the admin or dashboard web app, there are many CRUD operations, using restful API. It is possible to use only one url to make a component to complete CRUD functions.
 
 Secondly, many experienced developers think that components are the more flexible the better.
 
@@ -155,12 +155,11 @@ In such situation, el-data-table was born.<br />[⬆Back to Top](#table-of-conte
 
 ## Feature
 
-- Only json configuration is needed to realize the docking of the four interfaces of the Christmas-style CRUD
-- Support table display tree structure data (this function element-ui official is not supported)
-- Bring your own paging logic
-- Scalable custom column buttons, and custom operation functions
-- After supporting paging query, click on the details and return to restore the last query status<br />[⬆Back to Top](#table-of-contents)
-
+- Use configuration to call restful api to complete CRUD functions
+- Support table display tree structure data 
+- Bound with pagination logic
+- Support custom column buttons, and custom operation functions
+- Support saving query on url, which can resotre search status after history.go(-1) or location.reload() <br />[⬆Back to Top](#table-of-contents)
 
 ## Demo
 
@@ -168,7 +167,7 @@ In such situation, el-data-table was born.<br />[⬆Back to Top](#table-of-conte
 
 ## Install
 
-Encourage using [Yarn](https://yarnpkg.com/en/docs/install#mac-stable) To install
+Encourage using [Yarn](https://yarnpkg.com/en/docs/install#mac-stable) to install
 
 ```sh
 yarn add el-data-table
@@ -176,13 +175,11 @@ yarn add el-data-table
 
 [⬆Back to Top](#table-of-contents)
 
-<a name="NT80B"></a>
 ## Quick Start
 
-<a name="Ngird"></a>
 ### Global Register Component
 
-This is for minification reason: in this way building your app, webpack or other bundler just bundle the dependencies into one vendor for all pages which using this component, Instead of one vendor for one page
+This is for minification reason: in this way building your app, webpack or other bundler just bundle the dependencies into one vendor for all pages which using this component, instead of one vendor for one page
 
 ```javascript
 import Vue from 'vue'
@@ -220,7 +217,6 @@ import axios from 'axios'
 Vue.prototype.$axios = axios
 ```
 
-<a name="lIk6A"></a>
 ### Template
 
 ```vue
@@ -231,25 +227,22 @@ Vue.prototype.$axios = axios
 
 [⬆Back to Top](#table-of-contents)
 
-<a name="o9QRa"></a>
 ## Reference
 
-- [Form rules detail see asynchronc-veriator](https://github.com/yiminghe/async-validator)
-- [El-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
-- [Html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
-- [What_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
-- [History_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
-- [EncodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
-- [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
-- [Two implementations of front-end routing from vue-router](https://zhuanlan.zhihu.com/p/27588422)
-- [Peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)<br />[⬆Back to Top](#table-of-contents)
+- [form rules detail see asynchronc-veriator](https://github.com/yiminghe/async-validator)
+- [ll-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
+- [html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
+- [what_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
+- [history_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+- [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
+- [regExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+- [two implementations of front-end routing from vue-router](https://zhuanlan.zhihu.com/p/27588422)
+- [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)<br />[⬆Back to Top](#table-of-contents)
 
-<a name="JLIDq"></a>
 ## License
 
 [MIT](https://www.yuque.com/deepexi-serverless/onx52o/LICENSE)<br />[⬆Back to Top](#table-of-contents)
 
-<a name="6vyad"></a>
 ## Contributors
 
 Thanks goes to these wonderful people ( [Emoji key](https://allcontributors.org/docs/en/emoji-key) ):<br />
