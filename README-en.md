@@ -9,19 +9,19 @@ Auto requesting by `axios`, supports pagination, tree data structure, custom se
 <a name="W2pT5"></a>
 ## Table of Contents
 
-- [Introduction](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#introduction)
-  - [CRUD](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#crud)
-  - [Data driven](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8)
-  - [Why](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#why)
-- [Feature](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#feature)
-- [Demo](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#demo)
-- [Install](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#install)
-- [Quick Start](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#quick-start)
-  - [Global Register Component](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#global-register-component)
-  - [Template](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#template)
-- [Reference](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#reference)
-- [License](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#license)
-- [Contributors](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#contributors)
+- [Introduction](#introduction)
+  - [CRUD](#crud)
+  - [Data driven](#%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8)
+  - [Why](#why)
+- [Feature](#feature)
+- [Demo](#demo)
+- [Install](#install)
+- [Quick Start](#quick-start)
+  - [Global Register Component](#global-register-component)
+  - [Template](#template)
+- [Reference](#reference)
+- [License](#license)
+- [Contributors](#contributors)
 
 <a name="kiA6T"></a>
 ## Introductio
@@ -124,7 +124,7 @@ The effect is as follows:
 
 - Modify<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026856-1e2c48bc-b934-46bb-88ec-90a2e7887be0.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
 
-- Delete<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)<br />[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+- Delete<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)<br />[⬆Back to Top](#table-of-contents)
 
 <a name="WVlyq"></a>
 ### Data driven
@@ -133,7 +133,7 @@ Moving the content of the template to the script means that the template can be 
 
 Where the rendering of the form uses the component [@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer)
 
-![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026838-0fb2ab84-2934-4c6b-91d9-e3d706520f38.jpeg#align=left&display=inline&height=689&originHeight=689&originWidth=1539&size=0&status=done&width=1539)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026890-51418c24-b277-42dd-a6a8-c98a5291e922.jpeg#align=left&display=inline&height=577&originHeight=577&originWidth=1543&size=0&status=done&width=1543)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026831-0d1a339b-dbde-4eeb-9d68-89850b9449fb.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=1515&size=0&status=done&width=1515)<br />[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026838-0fb2ab84-2934-4c6b-91d9-e3d706520f38.jpeg#align=left&display=inline&height=689&originHeight=689&originWidth=1539&size=0&status=done&width=1539)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026890-51418c24-b277-42dd-a6a8-c98a5291e922.jpeg#align=left&display=inline&height=577&originHeight=577&originWidth=1543&size=0&status=done&width=1543)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026831-0d1a339b-dbde-4eeb-9d68-89850b9449fb.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=1515&size=0&status=done&width=1515)<br />[⬆Back to Top](#table-of-contents)
 
 <a name="vxUGZ"></a>
 ### Why
@@ -150,7 +150,7 @@ In the background, too many are CRUD operations. combined with the Christmas API
 Secondly, many experienced "veterans" feel that the more flexible the components are, the better.<br />
 However, for the "newcomers" who are still experienced, they are not familiar with common business scenarios. for some basic operations, if form verification, space filtering, adding loading, exception handling, they will only leak, and this is the source of the bug.<br />
 For front-line business developers, in the face of endless business, in fact, they don't want to deal with repeated business logic. they just want to free their hands and get off work early.<br />
-It is in this context that el-data-table is generated.<br />[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+It is in this context that el-data-table is generated.<br />[⬆Back to Top](#table-of-contents)
 
 <a name="aPYyn"></a>
 ## Feature
@@ -159,12 +159,12 @@ It is in this context that el-data-table is generated.<br />[⬆Back to Top](htt
 - Support table display tree structure data (this function element-ui official is not supported)
 - Bring your own paging logic
 - Scalable custom column buttons, and custom operation functions
-- After supporting paging query, click on the details and return to restore the last query status<br />[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+- After supporting paging query, click on the details and return to restore the last query status<br />[⬆Back to Top](#table-of-contents)
 
 <a name="ghfMB"></a>
 ## Demo
 
-- [Doc and online demo](https://femessage.github.io/el-data-table/)<br />[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+- [Doc and online demo](https://femessage.github.io/el-data-table/)<br />[⬆Back to Top](#table-of-contents)
 
 <a name="oT4HF"></a>
 ## Install
@@ -175,7 +175,7 @@ Encourage using [Yarn](https://yarnpkg.com/en/docs/install#mac-stable) To inst
 yarn add el-data-table
 ```
 
-[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+[⬆Back to Top](#table-of-contents)
 
 <a name="NT80B"></a>
 ## Quick Start
@@ -230,7 +230,7 @@ Vue.prototype.$axios = axios
 </template>
 ```
 
-[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+[⬆Back to Top](#table-of-contents)
 
 <a name="o9QRa"></a>
 ## Reference
@@ -243,12 +243,12 @@ Vue.prototype.$axios = axios
 - [EncodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
 - [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
 - [Two implementations of front-end routing from vue-router](https://zhuanlan.zhihu.com/p/27588422)
-- [Peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)<br />[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+- [Peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)<br />[⬆Back to Top](#table-of-contents)
 
 <a name="JLIDq"></a>
 ## License
 
-[MIT](https://www.yuque.com/deepexi-serverless/onx52o/LICENSE)<br />[⬆Back to Top](https://www.yuque.com/deepexi-serverless/onx52o/ecbgv0?translate=en#table-of-contents)
+[MIT](https://www.yuque.com/deepexi-serverless/onx52o/LICENSE)<br />[⬆Back to Top](#table-of-contents)
 
 <a name="6vyad"></a>
 ## Contributors
