@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/FEMessage/el-data-table/compare/v1.5.0...v1.5.1) (2019-07-01)
+
+
+### Bug Fixes
+
+* self-loading-button在header处应该是el-button   ([96bb0e1](https://github.com/FEMessage/el-data-table/commit/96bb0e1))
+
+
+
 ## [1.5.0](https://github.com/FEMessage/el-data-table/compare/v1.4.2...v1.5.0) (2019-06-24)
 
 
