@@ -9,9 +9,9 @@
 
 使用`axios`自动发送请求，支持树形结构，支持分页，支持自定义查询, 自定义操作列, 让 RESTful 风格的 CRUD 更简单 👏
 
-auto requesting by `axios`, supports pagination, tree data structure, custom search, custom operation column, makes rest api easily 👏
-
 ![](https://ws1.sinaimg.cn/large/b5e3d01fgy1fxrbi1wsszj218r0l5n2c.jpg)
+
+[English](./README-en.md)
 
 ## Table of Contents <!-- omit in toc -->
 
