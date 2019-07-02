@@ -643,10 +643,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@femessage/el-form-renderer@^1.5.4":
-  version "1.5.6"
-  resolved "https://registry.npm.taobao.org/@femessage/el-form-renderer/download/@femessage/el-form-renderer-1.5.6.tgz#48e5c86a4fbcae7a12d931fe9bfbee593a90e85a"
-  integrity sha1-SOXIak+8rnoS2TH+m/vuWTqQ6Fo=
+"@femessage/el-form-renderer@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.npm.taobao.org/@femessage/el-form-renderer/download/@femessage/el-form-renderer-1.6.0.tgz#43bbd94d3a21efe6b16564fdf6db7cfc2e646b11"
+  integrity sha1-Q7vZTToh7+axZWT99tt8/C5kaxE=
   dependencies:
     lodash.get "^4.4.2"
     lodash.set "^4.3.2"

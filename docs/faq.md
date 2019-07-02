@@ -31,11 +31,11 @@ this.$refs.dataTable.getList()
 ```javascript
 searchForm: [
         {
-          $el: {placeholder: '请选择'},
+          el: {placeholder: '请选择'},
           label: '状态',
-          $id: 'status',
-          $type: 'select',
-          $options: [
+          id: 'status',
+          type: 'select',
+          options: [
             {
               value: 1,
               label: '待处理'
@@ -51,11 +51,11 @@ searchForm: [
 ```javascript
 searchForm: [
         {
-          $el: {placeholder: '请选择'},
+          el: {placeholder: '请选择'},
           label: '状态',
-          $id: 'status',
-          $type: 'select',
-          $options: [
+          id: 'status',
+          type: 'select',
+          options: [
             {
               value: '1', // 修改了这一行
               label: '待处理'

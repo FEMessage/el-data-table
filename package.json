@@ -45,7 +45,7 @@
     "@babel/core": "^7.4.3",
     "@babel/plugin-transform-runtime": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
-    "@femessage/el-form-renderer": "^1.5.4",
+    "@femessage/el-form-renderer": "^1.6.0",
     "axios": "^0.19.0",
     "babel-loader": "^8.0.5",
     "element-ui": "2.4.11",

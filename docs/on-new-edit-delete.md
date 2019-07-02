@@ -35,10 +35,10 @@ export default {
       ],
       form: [
         {
-          $type: 'input',
-          $id: 'name',
+          type: 'input',
+          id: 'name',
           label: '用户名',
-          $el: {placeholder: '请输入用户名'},
+          el: {placeholder: '请输入用户名'},
           rules: [{required: true, trigger: 'blur', whitespace: true}]
         }
       ]

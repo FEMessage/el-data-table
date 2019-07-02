@@ -12,8 +12,8 @@ export default {
     return {
       form: [
         {
-          $type: 'input',
-          $id: 'login',
+          type: 'input',
+          id: 'login',
           label: '用户名',
           rules: [
             {
@@ -23,15 +23,15 @@ export default {
               transform: v => v && v.trim()
             }
           ],
-          $el: {placeholder: '请输入用户名'}
+          el: {placeholder: '请输入用户名'}
         },
         {
-          $type: 'select',
-          $id: 'type',
+          type: 'select',
+          id: 'type',
           label: '账户类型',
           rules: [{required: true, message: '请选择账户类型', trigger: 'blur'}],
-          $options: ['Organization', 'User'].map(f => ({label: f, value: f})),
-          $el: {
+          options: ['Organization', 'User'].map(f => ({label: f, value: f})),
+          el: {
             placeholder: '请选择'
           }
         }
