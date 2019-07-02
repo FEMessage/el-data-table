@@ -58,9 +58,9 @@
       :data="data"
       :row-style="showRow"
       v-loading="loading"
-      @selection-change="handleSelectionChange"
-      @select="handleSelect"
-      @select-all="handleSelectAll"
+      @selection-change="selectStrategy.onSelectionChange"
+      @select="selectStrategy.onSelect"
+      @select-all="selectStrategy.onSelectAll"
     >
       <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
       <template v-if="isTree">
@@ -197,6 +197,7 @@ import _get from 'lodash.get'
 import SelfLoadingButton from './self-loading-button.vue'
 import TextButton from './text-button.vue'
 import * as queryUtil from './utils/query'
+import getSelectStrategies from './utils/select-strategies'
 
 // 默认返回的数据格式如下
 //          {
@@ -633,33 +634,24 @@ export default {
       // 初始的extraQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
-      isSearchCollapse: false
+      isSearchCollapse: false,
+      selectStrategies: getSelectStrategies(this)
     }
   },
   computed: {
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
     },
-    /**
-     * selected的map形式，key为id，值为row
-     * 用于多选项跨页保存的情况
-     */
-    selectedMap: {
-      get() {
-        return this.selected.reduce((map, r) => {
-          map[r[this.id]] = r
-          return map
-        }, {})
-      },
-      set(val) {
-        this.selected = Object.values(val)
-      }
-    },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
     },
     _extraQuery() {
       return this.extraQuery || this.customQuery || {}
+    },
+    selectStrategy() {
+      return this.persistSelection
+        ? this.selectStrategies.persistSelection
+        : this.selectStrategies.normal
     }
   },
   watch: {
@@ -676,6 +668,13 @@ export default {
 
         this.$refs[dialogForm].resetFields()
       }
+    },
+    selected(val) {
+      /**
+       * 多选项发生变化
+       * @property {array} rows - 已选中的行数据的数组
+       */
+      this.$emit('selection-change', val)
     }
   },
   mounted() {
@@ -770,14 +769,10 @@ export default {
            */
           this.$emit('update', data, resp)
 
-          // 开启selectCrossPages时，自动勾选多选状态
-          if (this.persistSelection) {
-            this.$nextTick(() => {
-              this.data
-                .filter(r => r[this.id] in this.selectedMap)
-                .forEach(r => this.$refs.table.toggleRowSelection(r, true))
-            })
-          }
+          // 开启persistSelection时，需要同步selected状态到el-table中
+          this.$nextTick(() => {
+            this.selectStrategy.updateElTableSelection()
+          })
         })
         .catch(err => {
           /**
@@ -847,61 +842,22 @@ export default {
       this.getList(this.saveQuery)
     },
     /**
-     * 多选事件详解
+     * 切换某一行的选中状态，如果使用了第二个参数，则是设置这一行选中与否
      *
-     * 这里监听了el-table的三个选择事件：
-     * @selection-change - 多选项发生改变
-     * @select - 用户点击某行的多选按钮
-     * @select-all - 用户点击标题栏的多选按钮
-     *
-     * 其中selection-change并不一定是由用户触发的，任何table数据更新时，el-table都会重置多选项为空，这时也会触发selection-change
-     * 当开启跨页保存多选状态，我们只监听确定由用户触发的select和select-all事件里的selection变化
-     */
-    handleSelectionChange(val) {
-      if (!this.persistSelection) this.updateSelected(val)
-    },
-    handleSelect(selection, row) {
-      if (this.persistSelection) {
-        const isChosen = !!selection.find(r => r === row)
-        this.select([row], isChosen)
-      }
-    },
-    handleSelectAll(selection) {
-      if (this.persistSelection) {
-        this.select(this.data, !!selection.length)
-      }
-    },
-    /**
-     * 直接覆盖更新多选项
-     *
-     * @param {Array} rows - 此次覆盖更新的多选项
-     */
-    updateSelected(rows) {
-      this.selected = rows
-      this.$emit('selection-change', rows)
-    },
-    /**
-     * 逐项更新多选项
-     *
-     * @param {Array} rows - 受影响的数据行
+     * @public
+     * @param {object} row - 要更新的数据行
      * @param {boolean} isSelected - 是否被勾选
      */
-    select(rows, isSelected) {
-      const map = Object.assign({}, this.selectedMap)
-      if (isSelected) {
-        rows.forEach(r => (map[r[this.id]] = r))
-      } else {
-        rows.forEach(r => delete map[r[this.id]])
-      }
-      // 更新this.selectedMap会自动更新this.selected, 详见`computed`
-      // 故此函数看起来没有对selected进行操作，却需要对外emit新的值
-      this.selectedMap = map
-
-      /**
-       * 多选项发生变化
-       * @property {array} rows - 已选中的行数据的数组
-       */
-      this.$emit('selection-change', this.selected)
+    toggleRowSelection(row, isSelected) {
+      return this.selectStrategy.toggleRowSelection(row, isSelected)
+    },
+    /**
+     * 清空多选项
+     *
+     * @public
+     */
+    clearSelection() {
+      return this.selectStrategy.clearSelection()
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
@@ -1027,7 +983,7 @@ export default {
                 .then(resp => {
                   this.showMessage(true)
                   done()
-                  this.selectedMap = {}
+                  this.clearSelection()
                   this.getList()
                 })
                 .catch(e => {})
@@ -1061,7 +1017,7 @@ export default {
                   instance.confirmButtonLoading = false
                   done()
                   this.showMessage(true)
-                  this.selectedMap = {}
+                  this.clearSelection()
                   this.getList()
                 })
                 .catch(er => {
