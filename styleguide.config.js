@@ -2,17 +2,11 @@ const {VueLoaderPlugin} = require('vue-loader')
 const path = require('path')
 const glob = require('glob')
 
-const demos = glob.sync('docs/!(basic).md')
-const demoSections = [
-  {
-    name: 'basic',
-    content: 'docs/basic.md'
-  }
-].concat(
-  demos.map(filePath => ({
+const demos = ['docs/basic.md', ...glob.sync('docs/!(basic|faq).md')].map(
+  filePath => ({
     name: path.basename(filePath, '.md'),
     content: filePath
-  }))
+  })
 )
 
 module.exports = {
@@ -29,12 +23,16 @@ module.exports = {
   sections: [
     {
       name: 'Components',
-      components: 'src/*.vue',
+      components: 'src/el-data-table.vue',
       usageMode: 'expand'
     },
     {
       name: 'Demo',
-      sections: demoSections
+      sections: demos
+    },
+    {
+      name: 'FAQ',
+      content: 'docs/faq.md'
     }
   ],
   webpackConfig: {
@@ -63,8 +61,6 @@ module.exports = {
         }
       ]
     },
-    plugins: [
-      new VueLoaderPlugin()
-    ]
+    plugins: [new VueLoaderPlugin()]
   }
 }

@@ -34,9 +34,7 @@
           v-bind="btn"
           :key="i"
           size="small"
-        >
-        {{btn.text}}
-        </self-loading-button>
+        >{{btn.text}}</self-loading-button>
         <el-button
           v-if="hasSelect && hasDelete"
           type="danger"
@@ -50,9 +48,7 @@
           size="small"
           :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
           @click="isSearchCollapse = !isSearchCollapse"
-        >
-          {{ isSearchCollapse ? '展开' : '折叠' }}搜索
-        </el-button>
+        >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
       </el-form-item>
     </el-form>
 
@@ -138,14 +134,18 @@
       <!--默认操作列-->
       <el-table-column label="操作" v-if="hasOperation" v-bind="operationAttrs">
         <template slot-scope="scope">
-          <el-button
+          <text-button
             v-if="isTree && hasNew"
-            type="text"
-            size="small"
             @click="onDefaultNew(scope.row)"
-          >新增</el-button>
-          <el-button v-if="hasEdit" type="text" size="small" @click="onDefaultEdit(scope.row)">修改</el-button>
-          <el-button v-if="hasView" type="text" size="small" @click="onDefaultView(scope.row)">查看</el-button>
+          >新增</text-button>
+          <text-button
+            v-if="hasEdit"
+            @click="onDefaultEdit(scope.row)"
+          >修改</text-button>
+          <text-button
+            v-if="hasView"
+            @click="onDefaultView(scope.row)"
+          >查看</text-button>
           <self-loading-button
             v-for="(btn, i) in extraButtons"
             v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -154,16 +154,13 @@
             :params="scope.row"
             :callback="getList"
             :key="i"
-            type="text"
-            size="small"
-          >
-            {{typeof btn.text === 'function' ? btn['text'](scope.row) : btn.text}}
-          </self-loading-button>
-          <text-danger-button
+            is-text
+          >{{btn.text}}</self-loading-button>
+          <text-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
-            size="small"
+            type="danger"
             @click="onDefaultDelete(scope.row)"
-          >删除</text-danger-button>
+          >删除</text-button>
         </template>
       </el-table-column>
 
@@ -184,7 +181,7 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
       <!--https://github.com/FEMessage/el-form-renderer-->
       <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
-        <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用 -->
+        <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用，参考：https://femessage.github.io/el-form-renderer/#/Demo?id=slot -->
         <slot name="form"></slot>
       </el-form-renderer>
 
@@ -198,9 +195,9 @@
 
 <script>
 import _get from 'lodash.get'
-import qs from 'qs'
 import SelfLoadingButton from './self-loading-button.vue'
-import TextDangerButton from './text-danger-button.vue'
+import TextButton from './text-button.vue'
+import * as queryUtil from './utils/query'
 
 // 默认返回的数据格式如下
 //          {
@@ -227,22 +224,11 @@ const defaultId = 'id'
 
 const dialogForm = 'dialogForm'
 
-const equal = '='
-const equalPattern = /=/g
-
-const valueSeparator = '~'
-const paramSeparator = ','
-
-const valueSeparatorPattern = new RegExp(valueSeparator, 'g')
-
-const queryFlag = 'q='
-const queryPattern = new RegExp('q=.*' + paramSeparator)
-
 export default {
   name: 'ElDataTable',
   components: {
     SelfLoadingButton,
-    TextDangerButton
+    TextButton
   },
   props: {
     /**
@@ -283,7 +269,7 @@ export default {
     },
     /**
      * 列属性设置, 详情见element-ui官网
-     * @link http://element.eleme.io/#/zh-CN/component/table#table-column-attributes
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-column-attributes
      */
     columns: {
       type: Array,
@@ -293,7 +279,7 @@ export default {
     },
     /**
      * 查询字段渲染, 配置参考el-form-renderer
-     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
+     * @link https://femessage.github.io/el-form-renderer/
      */
     searchForm: {
       type: Array,
@@ -318,7 +304,8 @@ export default {
       }
     },
     /**
-     * 路由模式, hash | history || '', 决定了查询参数存放的形式, 设置为空则不存储查询参数
+     * 可选值：'hash' | 'history', 当开启 saveQuery 时，决定了查询参数存放的形式
+     * @deprecated
      */
     routerMode: {
       type: String,
@@ -434,7 +421,7 @@ export default {
     },
     /**
      * 分页组件的子组件布局，子组件名用逗号分隔，对应element-ui pagination的layout属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationLayout: {
       type: String,
@@ -442,7 +429,7 @@ export default {
     },
     /**
      * 分页组件的每页显示个数选择器的选项设置，对应element-ui pagination的page-sizes属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationSizes: {
       type: Array,
@@ -450,7 +437,7 @@ export default {
     },
     /**
      * 分页组件的每页显示个数选择器默认选项，对应element-ui pagination的page-size属性
-     * @link http://element.eleme.io/#/zh-CN/component/pagination
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/pagination
      */
     paginationSize: {
       type: Number,
@@ -502,7 +489,7 @@ export default {
     },
     /**
      * element table 属性设置, 详情配置参考element-ui官网
-     * @link http://element.eleme.io/#/zh-CN/component/table#table-attributes
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-attributes
      */
     tableAttrs: {
       type: Object,
@@ -512,6 +499,7 @@ export default {
     },
     /**
      * 操作列属性
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-column-attributes
      */
     operationAttrs: {
       type: Object,
@@ -546,7 +534,7 @@ export default {
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
-     * @link https://github.com/FEMessage/el-form-renderer/blob/master/README.md
+     * @link https://femessage.github.io/el-form-renderer/
      */
     form: {
       type: Array,
@@ -556,7 +544,7 @@ export default {
     },
     /**
      * 弹窗表单属性设置, 详情配置参考element-ui官网
-     * @link http://element.eleme.io/#/zh-CN/component/form#form-attributes
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/form#form-attributes
      */
     formAttrs: {
       type: Object,
@@ -565,10 +553,23 @@ export default {
       }
     },
     /**
-     * 新增/修改提交时注入额外的参数
+     * 同extraBody
+     * @deprecated
      */
     extraParams: {
-      type: Object
+      type: Object,
+      default() {
+        return undefined
+      }
+    },
+    /**
+     * 新增/修改提交时，请求体带上额外的参数。
+     */
+    extraBody: {
+      type: Object,
+      default() {
+        return undefined
+      }
     },
     /**
      * 在新增/修改弹窗 点击确认时调用，返回Promise, 如果reject, 则不会发送新增/修改请求
@@ -581,13 +582,31 @@ export default {
       }
     },
     /**
-     * 外部的注入额外的查询参数, 键值对形式
+     * 同extraQuery
+     * @deprecated
      */
     customQuery: {
       type: Object,
       default() {
-        return {}
+        return undefined
       }
+    },
+    /**
+     * 向请求url添加的额外参数。
+     * 可用.sync修饰，此时点击重置按钮后该参数也会被重置
+     */
+    extraQuery: {
+      type: Object,
+      default() {
+        return undefined
+      }
+    },
+    /**
+     * 是否开启使用url保存query参数的功能
+     */
+    saveQuery: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -612,9 +631,9 @@ export default {
       // 要修改的那一行
       row: {},
 
-      // 初始的customQuery值, 重置查询时, 会用到
+      // 初始的extraQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
-      initCustomQuery: JSON.stringify(this.customQuery),
+      initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false
     }
   },
@@ -636,6 +655,12 @@ export default {
       set(val) {
         this.selected = Object.values(val)
       }
+    },
+    _extraBody() {
+      return this.extraBody || this.extraParams || {}
+    },
+    _extraQuery() {
+      return this.extraQuery || this.customQuery || {}
     }
   },
   watch: {
@@ -655,29 +680,17 @@ export default {
     }
   },
   mounted() {
-    let searchForm = this.$refs.searchForm
-
-    if (searchForm) {
-      // 恢复查询条件
-      let matches = location.href.match(queryPattern)
-
-      if (matches) {
-        let query = matches[0].substr(2).replace(valueSeparatorPattern, equal)
-        let params = qs.parse(query, {delimiter: paramSeparator})
-
-        // page size 特殊处理
-        this.page = params.page * 1
-        this.size = params.size * 1
-
-        // 对slot=search无效
-        searchForm.updateForm(
-          Object.keys(params).reduce((acc, k) => {
-            if (k !== 'page' && k !== 'size') {
-              acc[k] = params[k]
-            }
-            return acc
-          }, {})
-        )
+    if (this.routerMode && this.saveQuery) {
+      const query = queryUtil.get(location.href)
+      if (query) {
+        this.page = parseInt(query.page)
+        this.size = parseInt(query.size)
+        // 恢复查询条件，但对slot=search无效
+        if (this.$refs.searchForm) {
+          delete query.page
+          delete query.size
+          this.$refs.searchForm.updateForm(query)
+        }
       }
     }
 
@@ -686,62 +699,61 @@ export default {
     })
   },
   methods: {
-    getList(shouldStoreQuery) {
-      let searchForm = this.$refs.searchForm
-      let formQuery = searchForm ? searchForm.getFormValue() : {}
-      // TODO Object.assign IE不支持, 所以后面Object.keys的保守其实是没有必要的。。。
-      let query = Object.assign({}, formQuery, this.customQuery)
-
-      let url = this.url
-      let params = ''
-      let size = this.hasPagination ? this.size : this.noPaginationSize
+    /**
+     * 手动刷新列表数据
+     * @public
+     * @param {boolean} saveQuery - 是否保存query到路由上
+     */
+    getList(saveQuery) {
+      const {url} = this
 
       if (!url) {
         console.warn('DataTable: url 为空, 不发送请求')
         return
       }
 
-      // 构造查询url
-      if (url.indexOf('?') > -1) url += '&'
-      else url += '?'
+      // 构造query对象
+      let query = {}
+      if (this.$refs.searchForm) {
+        Object.assign(query, this.$refs.searchForm.getFormValue())
+      }
+      Object.assign(query, this._extraQuery)
 
-      params += `size=${size}`
-
-      // 无效值过滤. query 有可能值为 0, 所以只能这样过滤
-      // TODO Object.values IE11不兼容, 暂时使用Object.keys
-      params += Object.keys(query)
-        .filter(k => {
-          return query[k] !== '' && query[k] !== null && query[k] !== undefined
-        })
-        .reduce(
-          (params, k) =>
-            (params += `&${k}=${encodeURIComponent(
-              query[k].toString().trim()
-            )}`),
-          ''
-        )
+      query.size = this.hasPagination ? this.size : this.noPaginationSize
 
       // 根据偏移值计算接口正确的页数
-      let pageOffset = this.firstPage - defaultFirstPage
-      let page = this.page + pageOffset
-      if (!this.hasPagination) page = -1
+      const pageOffset = this.firstPage - defaultFirstPage
+      query.page = this.hasPagination ? this.page + pageOffset : -1
+
+      // 无效值过滤，注意0是有效值
+      query = Object.keys(query)
+        .filter(k => ['', undefined, null].indexOf(query[k]) === -1)
+        .reduce((obj, k) => {
+          obj[k] = query[k].toString().trim()
+          return obj
+        }, {})
+
+      const queryStr =
+        (url.indexOf('?') > -1 ? '&' : '?') +
+        queryUtil.stringify(query, '=', '&')
 
       // 请求开始
       this.loading = true
 
       this.$axios
-        .get(url + params + `&page=${page}`)
-        .then(resp => {
-          let res = resp.data
+        .get(url + queryStr)
+        .then(({data: resp}) => {
           let data = []
 
           // 不分页
           if (!this.hasPagination) {
             data =
-              _get(res, this.dataPath) || _get(res, noPaginationDataPath) || []
+              _get(resp, this.dataPath) ||
+              _get(resp, noPaginationDataPath) ||
+              []
           } else {
-            data = _get(res, this.dataPath) || []
-            this.total = _get(res, this.totalPath)
+            data = _get(resp, this.dataPath) || []
+            this.total = _get(resp, this.totalPath)
           }
 
           this.data = data
@@ -753,10 +765,11 @@ export default {
 
           this.loading = false
           /**
-           * 请求返回, 数据更新后触发, 返回(data, resp) data是渲染table的数据, resp是请求返回的完整response
-           * @event update
+           * 请求返回, 数据更新后触发
+           * @property {object} data - table的数据
+           * @property {object} resp - 请求返回的完整response
            */
-          this.$emit('update', data, res)
+          this.$emit('update', data, resp)
 
           // 开启selectCrossPages时，自动勾选多选状态
           if (this.persistSelection) {
@@ -777,39 +790,10 @@ export default {
         })
 
       // 存储query记录, 便于后面恢复
-      if (this.routerMode && shouldStoreQuery > 0) {
-        let newUrl = ''
-        let searchQuery =
-          queryFlag +
-          (params + `&page=${this.page}`)
-            .replace(/&/g, paramSeparator)
-            .replace(equalPattern, valueSeparator) +
-          paramSeparator
-
-        // 非第一次查询
-        if (location.href.indexOf(queryFlag) > -1) {
-          newUrl = location.href.replace(queryPattern, searchQuery)
-        } else if (this.routerMode == 'hash') {
-          let search =
-            location.hash.indexOf('?') > -1
-              ? `&${searchQuery}`
-              : `?${searchQuery}`
-          newUrl =
-            location.origin +
-            location.pathname +
-            location.search +
-            location.hash +
-            search
-        } else {
-          let search = location.search ? `&${searchQuery}` : `?${searchQuery}`
-          newUrl =
-            location.origin +
-            location.pathname +
-            location.search +
-            search +
-            location.hash
-        }
-
+      if (this.routerMode && saveQuery) {
+        // 存储的page是table的页码，无需偏移
+        query.page = this.page
+        const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.pushState(history.state, 'el-data-table search', newUrl)
       }
     },
@@ -820,7 +804,7 @@ export default {
         this.beforeSearch()
           .then(() => {
             this.page = defaultFirstPage
-            this.getList(true)
+            this.getList(this.saveQuery)
           })
           .catch(err => {
             this.$emit('error', err)
@@ -833,40 +817,35 @@ export default {
       this.page = defaultFirstPage
 
       // 重置
-      history.replaceState(
-        history.state,
-        '',
-        location.href.replace(queryPattern, '')
-      )
+      if (this.routerMode && this.saveQuery) {
+        const newUrl = queryUtil.clear(location.href)
+        history.replaceState(history.state, '', newUrl)
+      }
 
       this.$nextTick(() => {
         this.getList()
       })
 
       /**
-       * 按下重置按钮后触发,
-       * 另外, 当customQuery.sync时, 会重置customQuery
-       * @event reset
+       * 按下重置按钮后触发
        */
       this.$emit('reset')
 
-      this.$emit(
-        'update:customQuery',
-        Object.assign(this.customQuery, JSON.parse(this.initCustomQuery))
-      )
+      this.$emit('update:customQuery', JSON.parse(this.initExtraQuery))
+      this.$emit('update:extraQuery', JSON.parse(this.initExtraQuery))
     },
     handleSizeChange(val) {
       if (this.size === val) return
 
       this.page = defaultFirstPage
       this.size = val
-      this.getList(true)
+      this.getList(this.saveQuery)
     },
     handleCurrentChange(val) {
       if (this.page === val) return
 
       this.page = val
-      this.getList(true)
+      this.getList(this.saveQuery)
     },
     /**
      * 多选事件详解
@@ -900,11 +879,6 @@ export default {
      */
     updateSelected(rows) {
       this.selected = rows
-
-      /**
-       * 多选启用时生效, 返回(selected)已选中行的数组
-       * @event selection-change
-       */
       this.$emit('selection-change', rows)
     },
     /**
@@ -920,9 +894,14 @@ export default {
       } else {
         rows.forEach(r => delete map[r[this.id]])
       }
-      this.selectedMap = map
       // 更新this.selectedMap会自动更新this.selected, 详见`computed`
       // 故此函数看起来没有对selected进行操作，却需要对外emit新的值
+      this.selectedMap = map
+
+      /**
+       * 多选项发生变化
+       * @property {array} rows - 已选中的行数据的数组
+       */
       this.$emit('selection-change', this.selected)
     },
     // 弹窗相关
@@ -976,7 +955,7 @@ export default {
         let data = Object.assign(
           {},
           this.$refs[dialogForm].getFormValue(),
-          this.extraParams
+          this._extraBody
         )
 
         if (this.isTree) {
