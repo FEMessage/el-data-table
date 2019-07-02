@@ -27,11 +27,11 @@ export default {
       extraQuery: {rate: 0},
       searchForm: [
         {
-          $type: 'input',
-          $id: 'q',
+          type: 'input',
+          id: 'q',
           label: 'github用户名',
           width: '200px',
-          $el: {placeholder: '1分钟只能调用10次'},
+          el: {placeholder: '1分钟只能调用10次'},
           rules: [{required: true, trigger: 'blur', len: 3}]
         }
       ],

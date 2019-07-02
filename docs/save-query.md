@@ -25,8 +25,8 @@ export default {
       ],
       form: [
         {
-          $type: 'input',
-          $id: 'name',
+          type: 'input',
+          id: 'name',
           label: '品牌名称',
           rules: [
             {
@@ -36,15 +36,15 @@ export default {
               transform: v => v && v.trim()
             }
           ],
-          $el: {placeholder: '请输入品牌名称'}
+          el: {placeholder: '请输入品牌名称'}
         },
       ],
       searchForm: [
         {
-          $el: {placeholder: '请输入'},
+          el: {placeholder: '请输入'},
           label: '品牌名称',
-          $id: 'name',
-          $type: 'input'
+          id: 'name',
+          type: 'input'
         }
       ]
     }
