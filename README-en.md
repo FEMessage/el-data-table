@@ -115,13 +115,19 @@ export default {
 
 The results are as follows:
 
-* Retrieve <br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026830-1aa50e0b-8ae2-46b3-8722-816f19e62498.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026867-b3ecaa0b-043e-48e7-aacd-590ec99ebeb4.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
+* Retrieve
+  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026830-1aa50e0b-8ae2-46b3-8722-816f19e62498.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026867-b3ecaa0b-043e-48e7-aacd-590ec99ebeb4.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
 
-* Create <br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026834-0b8f4bf4-0b60-48e2-8602-0184d42d2b73.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
+* Create
+  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026834-0b8f4bf4-0b60-48e2-8602-0184d42d2b73.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
 
-* Update< br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026856-1e2c48bc-b934-46bb-88ec-90a2e7887be0.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
+* Update
+  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026856-1e2c48bc-b934-46bb-88ec-90a2e7887be0.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
 
-* Delete <br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)<br />[⬆Back to Top](#table-of-contents)
+* Delete
+  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)
+
+[⬆Back to Top](#table-of-contents)
 
 ### Data driven
 
@@ -130,7 +136,9 @@ At the same time, the data in js is actually a piece of json, this means code ge
 
 Beside, herer uses the component [@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer) to render form.
 
-![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026838-0fb2ab84-2934-4c6b-91d9-e3d706520f38.jpeg#align=left&display=inline&height=689&originHeight=689&originWidth=1539&size=0&status=done&width=1539)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026890-51418c24-b277-42dd-a6a8-c98a5291e922.jpeg#align=left&display=inline&height=577&originHeight=577&originWidth=1543&size=0&status=done&width=1543)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026831-0d1a339b-dbde-4eeb-9d68-89850b9449fb.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=1515&size=0&status=done&width=1515)<br />[⬆Back to Top](#table-of-contents)
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026838-0fb2ab84-2934-4c6b-91d9-e3d706520f38.jpeg#align=left&display=inline&height=689&originHeight=689&originWidth=1539&size=0&status=done&width=1539)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026890-51418c24-b277-42dd-a6a8-c98a5291e922.jpeg#align=left&display=inline&height=577&originHeight=577&originWidth=1543&size=0&status=done&width=1543)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026831-0d1a339b-dbde-4eeb-9d68-89850b9449fb.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=1515&size=0&status=done&width=1515)
+
+[⬆Back to Top](#table-of-contents)
 
 ### Why
 
@@ -152,7 +160,9 @@ However, for the "newbees" who lack of experience, they are not familiar with co
 
 For front-line business developers, in the face of endless developing task, in fact, they don't want to deal with repeated business logic. they just want to free their hands and get off work early.
 
-In such situation, el-data-table was born.<br />[⬆Back to Top](#table-of-contents)
+In such situation, el-data-table was born.
+
+[⬆Back to Top](#table-of-contents)
 
 ## Feature
 
@@ -160,11 +170,15 @@ In such situation, el-data-table was born.<br />[⬆Back to Top](#table-of-conte
 * Support table display tree structure data
 * Bound with pagination logic
 * Support custom column buttons, and custom operation functions
-* Support saving query on url, which can resotre search status after history.go(-1) or location.reload() <br />[⬆Back to Top](#table-of-contents)
+* Support saving query on url, which can resotre search status after history.go(-1) or location.reload()
+
+[⬆Back to Top](#table-of-contents)
 
 ## Demo
 
-* [Doc and online demo](https://femessage.github.io/el-data-table/)<br />[⬆Back to Top](#table-of-contents)
+* [Doc and online demo](https://femessage.github.io/el-data-table/)
+
+[⬆Back to Top](#table-of-contents)
 
 ## Install
 
@@ -238,11 +252,15 @@ Vue.prototype.$axios = axios
 * [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
 * [regExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
 * [routing implementations details in vue-router](https://zhuanlan.zhihu.com/p/27588422)
-* [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)<br />[⬆Back to Top](#table-of-contents)
+* [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
+
+[⬆Back to Top](#table-of-contents)
 
 ## License
 
-[MIT](https://www.yuque.com/deepexi-serverless/onx52o/LICENSE)<br />[⬆Back to Top](#table-of-contents)
+[MIT](https://www.yuque.com/deepexi-serverless/onx52o/LICENSE)
+
+[⬆Back to Top](#table-of-contents)
 
 ## Contributors
 
