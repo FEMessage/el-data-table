@@ -8,19 +8,19 @@ Auto requesting by `axios`, supports pagination, tree data structure, custom se
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-  - [CRUD](#crud)
-  - [Data Driven](#data-driven)
-  - [Why](#why)
-- [Feature](#feature)
-- [Demo](#demo)
-- [Install](#install)
-- [Quick Start](#quick-start)
-  - [Global Register Component](#global-register-component)
-  - [Template](#template)
-- [Reference](#reference)
-- [License](#license)
-- [Contributors](#contributors)
+* [Introduction](#introduction)
+  * [CRUD](#crud)
+  * [Data Driven](#data-driven)
+  * [Why](#why)
+* [Feature](#feature)
+* [Demo](#demo)
+* [Install](#install)
+* [Quick Start](#quick-start)
+  * [Global Register Component](#global-register-component)
+  * [Template](#template)
+* [Reference](#reference)
+* [License](#license)
+* [Contributors](#contributors)
 
 ## Introduction
 
@@ -34,25 +34,25 @@ el-data-table is created to solve business problems, so CRUD logic is set inside
 
 The restful CRUD api should be:
 
-- Retrieve
+* Retrieve
 
 ```javascript
 GET /api/v1/users?page=1&size=10
 ```
 
-- Create
+* Create
 
 ```javascript
-POST /api/v1/users
+POST / api / v1 / users
 ```
 
-- Update
+* Update
 
 ```javascript
 PUT /api/v1/users/:id
 ```
 
-- Delete
+* Delete
 
 ```javascript
 DELETE /api/v1/users/:id
@@ -81,20 +81,20 @@ export default {
         ],
         searchForm: [
           {
-            $type: 'input',
-            $id: 'name',
+            type: 'input',
+            id: 'name',
             label: '用户名',
-            $el: {
+            el: {
               placeholder: '请输入'
             }
           }
         ],
         form: [
           {
-            $type: 'input',
-            $id: 'name',
+            type: 'input',
+            id: 'name',
             label: '用户名',
-            $el: {
+            el: {
               placeholder: '请输入'
             },
             rules: [
@@ -115,23 +115,23 @@ export default {
 
 The results are as follows:
 
-- Retrieve 
-![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026830-1aa50e0b-8ae2-46b3-8722-816f19e62498.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026867-b3ecaa0b-043e-48e7-aacd-590ec99ebeb4.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
+* Retrieve
+  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026830-1aa50e0b-8ae2-46b3-8722-816f19e62498.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026867-b3ecaa0b-043e-48e7-aacd-590ec99ebeb4.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
 
-- Create 
-![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026834-0b8f4bf4-0b60-48e2-8602-0184d42d2b73.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
+* Create
+  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026834-0b8f4bf4-0b60-48e2-8602-0184d42d2b73.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
 
-- Update
-![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026856-1e2c48bc-b934-46bb-88ec-90a2e7887be0.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
+* Update
+  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026856-1e2c48bc-b934-46bb-88ec-90a2e7887be0.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
 
-- Delete 
-![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)
+* Delete
+  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)
 
 [⬆Back to Top](#table-of-contents)
 
 ### Data driven
 
-Moving the content of the template to the script means that the template can be reduced and js can be extracted to another file to reuse. 
+Moving the content of the template to the script means that the template can be reduced and js can be extracted to another file to reuse.
 At the same time, the data in js is actually a piece of json, this means code generation tool can help.
 
 Beside, herer uses the component [@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer) to render form.
@@ -141,13 +141,14 @@ Beside, herer uses the component [@femessage/el-form-renderer](https://github.c
 [⬆Back to Top](#table-of-contents)
 
 ### Why
+
 Why do you create el-data-table based on el-table of element-ui?
 
 I often hear the following sounds:
 
-1. el-table can cover most scenarios without extended requirements
-1. wrap up so many things, it's heavy and high coupling
-1. bound with too many business logic, it's not flexible; business logic should handle by developers 
+1.  el-table can cover most scenarios without extended requirements
+1.  wrap up so many things, it's heavy and high coupling
+1.  bound with too many business logic, it's not flexible; business logic should handle by developers
 
 First of all, I have to say, el-table is really flexible, but when implementing paging requests, only el-table is not enough, and the el-pagination component needs to be combined. Most of the content of paging processing is repeated. Without a high level business component, we get duplicate code everywhere.
 
@@ -165,17 +166,17 @@ In such situation, el-data-table was born.
 
 ## Feature
 
-- Use configuration to call restful api to complete CRUD functions
-- Support table display tree structure data 
-- Bound with pagination logic
-- Support custom column buttons, and custom operation functions
-- Support saving query on url, which can resotre search status after history.go(-1) or location.reload() 
+* Use configuration to call restful api to complete CRUD functions
+* Support table display tree structure data
+* Bound with pagination logic
+* Support custom column buttons, and custom operation functions
+* Support saving query on url, which can resotre search status after history.go(-1) or location.reload()
 
 [⬆Back to Top](#table-of-contents)
 
 ## Demo
 
-- [Doc and online demo](https://femessage.github.io/el-data-table/)
+* [Doc and online demo](https://femessage.github.io/el-data-table/)
 
 [⬆Back to Top](#table-of-contents)
 
@@ -243,15 +244,15 @@ Vue.prototype.$axios = axios
 
 ## Reference
 
-- [form rules detail see asynchronc-veriator](https://github.com/yiminghe/async-validator)
-- [ll-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
-- [html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
-- [what_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
-- [history_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
-- [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
-- [regExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
-- [routing implementations details in vue-router](https://zhuanlan.zhihu.com/p/27588422)
-- [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
+* [form rules detail see asynchronc-veriator](https://github.com/yiminghe/async-validator)
+* [ll-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
+* [html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
+* [what_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
+* [history_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+* [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
+* [regExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+* [routing implementations details in vue-router](https://zhuanlan.zhihu.com/p/27588422)
+* [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
 
 [⬆Back to Top](#table-of-contents)
 
@@ -265,15 +266,6 @@ Vue.prototype.$axios = axios
 
 Thanks goes to these wonderful people ( [Emoji key](https://allcontributors.org/docs/en/emoji-key) ):<br />
 
-
-| [![](https://avatars3.githubusercontent.com/u/9384365?v=4#alt=levy&width=100)<br />**levy**](http://levy.work)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=levy9527) [👀](#review-levy9527) [📖](https://github.com/FEMessage/el-data-table/commits?author=levy9527) [🚇](#infra-levy9527) [🤔](#ideas-levy9527) | [![](https://avatars3.githubusercontent.com/u/19591950?v=4#alt=Donald%20Shen&width=100)<br />**Donald Shen**](https://donaldshen.github.io/portfolio)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=donaldshen) [📖](https://github.com/FEMessage/el-data-table/commits?author=donaldshen) | [![](https://avatars1.githubusercontent.com/u/20179564?v=4#alt=MiffyCooper&width=100)<br />**MiffyCooper**](https://github.com/MiffyCooper)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=MiffyCooper) [📖](https://github.com/FEMessage/el-data-table/commits?author=MiffyCooper) | [![](https://avatars1.githubusercontent.com/u/13557397?v=4#alt=Huanfeng%20Chen&width=100)<br />**Huanfeng Chen**](https://github.com/prisbre)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=prisbre) | [![](https://avatars3.githubusercontent.com/u/19513289?v=4#alt=EVILLT&width=100)<br />**EVILLT**](https://evila.me)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=evillt) [🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3Aevillt) | [![](https://avatars0.githubusercontent.com/u/11909145?v=4#alt=Alvin&width=100)<br />**Alvin**](https://github.com/Alvin-Liu)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=Alvin-Liu) [🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3AAlvin-Liu) | [![](https://avatars2.githubusercontent.com/u/27187946?v=4#alt=Han&width=100)<br />**Han**](https://github.com/lianghx-319)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=lianghx-319) [🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3Alianghx-319) |
-| --- | --- | --- | --- | --- | --- | --- |
-| [![](https://avatars2.githubusercontent.com/u/4848041?v=4#alt=kunzhijia&width=100)<br />**kunzhijia**](https://github.com/kunzhijia)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=kunzhijia) [🔧](#tool-kunzhijia) [💡](#example-kunzhijia) | [![](https://avatars3.githubusercontent.com/u/12596622?v=4#alt=Edgar&width=100)<br />**Edgar**](https://github.com/chenEdgar)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=chenEdgar) [🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3AchenEdgar) | [![](https://avatars2.githubusercontent.com/u/47966933?v=4#alt=Barretem&width=100)<br />**Barretem**](https://github.com/Barretem)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=Barretem) | [![](https://avatars1.githubusercontent.com/u/32995274?v=4#alt=%E9%98%BF%E7%A6%B9%E3%80%82&width=100)<br />**阿禹。**](https://github.com/GaryHjy)<br />[📖](https://github.com/FEMessage/el-data-table/commits?author=GaryHjy) | [![](https://avatars0.githubusercontent.com/u/7427200?v=4#alt=lujunwei&width=100)<br />**lujunwei**](https://github.com/lujunwei)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=lujunwei) | [![](https://avatars1.githubusercontent.com/u/20502762?v=4#alt=cjf&width=100)<br />**cjf**](http://www.ccc1996.cn)<br />[🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3Acjfff) | [![](https://avatars1.githubusercontent.com/u/20368037?v=4#alt=Jack-rainbow&width=100)<br />**Jack-rainbow**](https://github.com/Jack-rainbow)<br />[🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3AJack-rainbow) |
-
-
-
-
-
-
-
-
+| [![](https://avatars3.githubusercontent.com/u/9384365?v=4#alt=levy&width=100)<br />**levy**](http://levy.work)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=levy9527) [👀](#review-levy9527) [📖](https://github.com/FEMessage/el-data-table/commits?author=levy9527) [🚇](#infra-levy9527) [🤔](#ideas-levy9527) | [![](https://avatars3.githubusercontent.com/u/19591950?v=4#alt=Donald%20Shen&width=100)<br />**Donald Shen**](https://donaldshen.github.io/portfolio)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=donaldshen) [📖](https://github.com/FEMessage/el-data-table/commits?author=donaldshen) | [![](https://avatars1.githubusercontent.com/u/20179564?v=4#alt=MiffyCooper&width=100)<br />**MiffyCooper**](https://github.com/MiffyCooper)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=MiffyCooper) [📖](https://github.com/FEMessage/el-data-table/commits?author=MiffyCooper) | [![](https://avatars1.githubusercontent.com/u/13557397?v=4#alt=Huanfeng%20Chen&width=100)<br />**Huanfeng Chen**](https://github.com/prisbre)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=prisbre)      | [![](https://avatars3.githubusercontent.com/u/19513289?v=4#alt=EVILLT&width=100)<br />**EVILLT**](https://evila.me)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=evillt) [🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3Aevillt) | [![](https://avatars0.githubusercontent.com/u/11909145?v=4#alt=Alvin&width=100)<br />**Alvin**](https://github.com/Alvin-Liu)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=Alvin-Liu) [🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3AAlvin-Liu) | [![](https://avatars2.githubusercontent.com/u/27187946?v=4#alt=Han&width=100)<br />**Han**](https://github.com/lianghx-319)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=lianghx-319) [🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3Alianghx-319) |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![](https://avatars2.githubusercontent.com/u/4848041?v=4#alt=kunzhijia&width=100)<br />**kunzhijia**](https://github.com/kunzhijia)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=kunzhijia) [🔧](#tool-kunzhijia) [💡](#example-kunzhijia)                                                                       | [![](https://avatars3.githubusercontent.com/u/12596622?v=4#alt=Edgar&width=100)<br />**Edgar**](https://github.com/chenEdgar)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=chenEdgar) [🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3AchenEdgar)                        | [![](https://avatars2.githubusercontent.com/u/47966933?v=4#alt=Barretem&width=100)<br />**Barretem**](https://github.com/Barretem)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=Barretem)                                                                                         | [![](https://avatars1.githubusercontent.com/u/32995274?v=4#alt=%E9%98%BF%E7%A6%B9%E3%80%82&width=100)<br />**阿禹。**](https://github.com/GaryHjy)<br />[📖](https://github.com/FEMessage/el-data-table/commits?author=GaryHjy) | [![](https://avatars0.githubusercontent.com/u/7427200?v=4#alt=lujunwei&width=100)<br />**lujunwei**](https://github.com/lujunwei)<br />[💻](https://github.com/FEMessage/el-data-table/commits?author=lujunwei)                                                           | [![](https://avatars1.githubusercontent.com/u/20502762?v=4#alt=cjf&width=100)<br />**cjf**](http://www.ccc1996.cn)<br />[🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3Acjfff)                                                                                          | [![](https://avatars1.githubusercontent.com/u/20368037?v=4#alt=Jack-rainbow&width=100)<br />**Jack-rainbow**](https://github.com/Jack-rainbow)<br />[🐛](https://github.com/FEMessage/el-data-table/issues?q=author%3AJack-rainbow)                                                         |

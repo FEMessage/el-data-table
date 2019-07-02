@@ -17,20 +17,20 @@ export default {
       ],
       form: [
         {
-          $type: 'input',
-          $id: 'name',
+          type: 'input',
+          id: 'name',
           label: '分类名称',
           rules: [{required: true, message: '请输入分类名称', trigger: 'blur'}]
         },
         {
-          $type: 'input',
-          $id: 'description',
+          type: 'input',
+          id: 'description',
           label: '分类说明',
           rules: [{required: true, message: '请输入名称说明', trigger: 'blur'}]
         },
         {
-          $type: 'input',
-          $id: 'icon',
+          type: 'input',
+          id: 'icon',
           label: '图标',
           rules: [
             {required: true, message: '请输入iconfont class', trigger: 'blur'}

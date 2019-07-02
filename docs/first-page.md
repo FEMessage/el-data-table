@@ -17,8 +17,8 @@
         ],
         form: [
           {
-            $type: 'input',
-            $id: 'name',
+            type: 'input',
+            id: 'name',
             label: '用户名',
             rules: [{required: true, message: '请输入用户名', trigger: 'blur'}]
           }
