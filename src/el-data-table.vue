@@ -634,8 +634,7 @@ export default {
       // 初始的extraQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
-      isSearchCollapse: false,
-      selectStrategies: getSelectStrategies(this)
+      isSearchCollapse: false
     }
   },
   computed: {
@@ -649,9 +648,10 @@ export default {
       return this.extraQuery || this.customQuery || {}
     },
     selectStrategy() {
+      const strategies = getSelectStrategies(this)
       return this.persistSelection
-        ? this.selectStrategies.persistSelection
-        : this.selectStrategies.normal
+        ? strategies.persistSelection
+        : strategies.normal
     }
   },
   watch: {
