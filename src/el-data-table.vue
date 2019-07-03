@@ -35,7 +35,7 @@
           :key="i"
           size="small"
         >
-          {{typeof btn.text === 'function' ? btn['text'](selected) : btn.text}}
+          {{typeof btn.text === 'function' ? btn.text(selected) : btn.text}}
         </self-loading-button>
         <el-button
           v-if="hasSelect && hasDelete"
@@ -158,7 +158,7 @@
             :key="i"
             is-text
           >
-            {{typeof btn.text === 'function' ? btn['text'](scope.row) : btn.text}}
+            {{typeof btn.text === 'function' ? btn.text(scope.row) : btn.text}}
           </self-loading-button>
           <text-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
