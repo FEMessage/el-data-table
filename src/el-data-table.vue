@@ -308,14 +308,6 @@ export default {
       }
     },
     /**
-     * 可选值：'hash' | 'history', 当开启 saveQuery 时，决定了查询参数存放的形式
-     * @deprecated
-     */
-    routerMode: {
-      type: String,
-      default: 'hash'
-    },
-    /**
      * 单选, 适用场景: 不可以批量删除
      */
     single: {
@@ -642,6 +634,9 @@ export default {
     }
   },
   computed: {
+    routerMode() {
+      return this.$router ? this.$router.mode : 'hash'
+    },
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
     },
