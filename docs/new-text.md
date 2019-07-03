@@ -37,9 +37,9 @@ export default {
       ],
       hasView: true,
       hasDelete: false,
-      operNewName: '创建',
-      operEditName: '编辑',
-      operViewName: '详情',
+      newText: '创建',
+      editText: '编辑',
+      viewText: '详情',
     }
   }
 }
