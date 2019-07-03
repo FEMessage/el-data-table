@@ -1,4 +1,4 @@
-import getSelectStrategies from '../src/utils/select-strategies'
+import getSelectStrategy from '../src/utils/select-strategies'
 
 const elDataTableMock = {
   persistSelection: true,
@@ -15,13 +15,8 @@ const elDataTableMock = {
       }
     }
   },
-  get selectStrategies() {
-    return getSelectStrategies(this)
-  },
   get selectStrategy() {
-    return this.persistSelection
-      ? this.selectStrategies.persistSelection
-      : this.selectStrategies.normal
+    return getSelectStrategy(this)
   },
   toggleRowSelection() {
     return this.selectStrategy.toggleRowSelection(...arguments)
@@ -81,10 +76,13 @@ describe('测试 persistSelection 模式', () => {
   test('toggleRowSelection', () => {
     const row = elDataTableMock.data[0]
     // 切换
-    const before = elDataTableMock.selected.includes(row)
+    const init = elDataTableMock.selected.includes(row)
     elDataTableMock.toggleRowSelection(row)
-    const after = elDataTableMock.selected.includes(row)
-    expect(before).not.toBe(after)
+    const toggle = elDataTableMock.selected.includes(row)
+    expect(init).not.toBe(toggle)
+    elDataTableMock.toggleRowSelection(row)
+    const toggleAgain = elDataTableMock.selected.includes(row)
+    expect(init).toBe(toggleAgain)
     // 选中
     elDataTableMock.toggleRowSelection(row, true)
     expect(elDataTableMock.selected).toContain(row)

@@ -197,7 +197,7 @@ import _get from 'lodash.get'
 import SelfLoadingButton from './self-loading-button.vue'
 import TextButton from './text-button.vue'
 import * as queryUtil from './utils/query'
-import getSelectStrategies from './utils/select-strategies'
+import getSelectStrategy from './utils/select-strategies'
 
 // 默认返回的数据格式如下
 //          {
@@ -648,10 +648,7 @@ export default {
       return this.extraQuery || this.customQuery || {}
     },
     selectStrategy() {
-      const strategies = getSelectStrategies(this)
-      return this.persistSelection
-        ? strategies.persistSelection
-        : strategies.normal
+      return getSelectStrategy(this)
     }
   },
   watch: {
