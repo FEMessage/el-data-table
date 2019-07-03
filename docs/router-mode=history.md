@@ -24,10 +24,10 @@ export default {
       hasDelete: false,
       searchForm: [
         {
-          $el: {placeholder: '请输入'},
+          el: {placeholder: '请输入'},
           label: '品牌名称',
-          $id: 'name',
-          $type: 'input'
+          id: 'name',
+          type: 'input'
         }
       ],
       routerMode: 'history'
