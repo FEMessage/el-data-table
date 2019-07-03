@@ -5,7 +5,7 @@
 /**
  * 多选策略接口
  */
-class StrategyCommon {
+class StrategyAbstract {
   constructor(elDataTable) {
     this.elDataTable = elDataTable
     // 绑定this后可直接在template中使用
@@ -27,7 +27,7 @@ class StrategyCommon {
 /**
  * 普通策略。由el-table维护selected
  */
-class StrategyNormal extends StrategyCommon {
+class StrategyNormal extends StrategyAbstract {
   /**
    * normal模式下只需要监听selection-change事件
    */
@@ -37,8 +37,8 @@ class StrategyNormal extends StrategyCommon {
   /**
    * toggleRowSelection和clearSelection的表现与el-table一致
    */
-  toggleRowSelection() {
-    return this.elTable.toggleRowSelection(...arguments)
+  toggleRowSelection(...args) {
+    return this.elTable.toggleRowSelection(...args)
   }
   clearSelection() {
     return this.elTable.clearSelection()
@@ -48,7 +48,7 @@ class StrategyNormal extends StrategyCommon {
 /**
  * 跨页保存多选策略。手动维护selected数组
  */
-class StrategyPersistSelection extends StrategyCommon {
+class StrategyPersistSelection extends StrategyAbstract {
   /**
    * el-table的selection-change事件不适用于开启跨页保存的情况。
    * 比如，当开启persistSelection时，发生以下两个场景：

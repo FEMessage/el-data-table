@@ -1,4 +1,4 @@
-import getSelectStrategy from '../src/utils/select-strategies'
+import getSelectStrategy from '../src/utils/select-strategy'
 
 const elDataTableMock = {
   persistSelection: true,
@@ -18,8 +18,8 @@ const elDataTableMock = {
   get selectStrategy() {
     return getSelectStrategy(this)
   },
-  toggleRowSelection() {
-    return this.selectStrategy.toggleRowSelection(...arguments)
+  toggleRowSelection(...args) {
+    return this.selectStrategy.toggleRowSelection(...args)
   },
   clearSelection() {
     return this.selectStrategy.clearSelection()

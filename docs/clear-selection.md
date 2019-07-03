@@ -1,4 +1,4 @@
-使用clearSelection清空多选项
+使用clearSelection清空多选项；使用toggleRowSelection切换、设置行是否选中
 
  ```vue
 <template>
