@@ -1,4 +1,4 @@
-基本用法，包含crud
+不分页，设置has-pagination="false"即可，此时接口传参page=-1
 
 ```vue
 <template>
@@ -8,7 +8,7 @@
 export default {
   data() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=1',
+      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=4',
       columns: [
         {prop: 'code', label: '品牌编号'},
         {prop: 'name', label: '品牌名称'},
@@ -35,14 +35,7 @@ export default {
           el: {placeholder: '请输入品牌名称'}
         },
       ],
-      searchForm: [
-        {
-          el: {placeholder: '请输入'},
-          label: '品牌名称',
-          id: 'name',
-          type: 'input'
-        }
-      ]
+      hasPagination: false
     }
   }
 }

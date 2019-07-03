@@ -2,13 +2,7 @@
 
 ```vue
 <template>
-  <el-data-table
-    :url="url"
-    :columns="columns"
-    :searchForm="searchForm"
-    :beforeSearch="beforeSearch"
-  >
-  </el-data-table>
+  <el-data-table v-bind="$data" />
 </template>
 <script>
 export default {
@@ -22,15 +16,14 @@ export default {
       ],
       searchForm: [
         {
-          $type: 'input',
-          $id: 'name',
+          type: 'input',
+          id: 'name',
           label: '用户名',
-          $el: {placeholder: '请输入用户名'}
-          //            rules: [{required: true, trigger: 'blur', whitespace: true}]
+          el: {placeholder: '请输入用户名'}
         }
       ],
       beforeSearch: () => {
-        this.url = 'https:\/\/easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage'
+        this.url = 'https://easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/customFirstPage'
         return Promise.resolve()
       }
     }
