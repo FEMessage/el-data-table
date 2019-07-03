@@ -536,34 +536,25 @@ export default {
       default: true
     },
     /**
-     * @deprecated
-     * 新增弹窗的标题（default=operNewName)
+     * 新增弹窗的标题
      */
     dialogNewTitle: {
       type: String,
-      default() {
-        return this.operNewName
-      }
+      default: '新增'
     },
     /**
-     * @deprecated
-     * 修改弹窗的标题（default=operEditName)
+     * 修改弹窗的标题
      */
     dialogEditTitle: {
       type: String,
-      default() {
-        return this.operEditName
-      }
+      default: '修改'
     },
     /**
-     * @deprecated
-     * 查看弹窗的标题（default=operViewName)
+     * 查看弹窗的标题
      */
     dialogViewTitle: {
       type: String,
-      default() {
-        return this.operViewName
-      }
+      default: '查看'
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
