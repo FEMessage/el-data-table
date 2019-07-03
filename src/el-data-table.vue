@@ -23,7 +23,7 @@
 
     <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
       <el-form-item>
-        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">新增</el-button>
+        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
         <self-loading-button
           v-for="(btn, i) in headerButtons"
           v-if="'show' in btn ? btn.show(selected) : true"
@@ -139,15 +139,15 @@
           <text-button
             v-if="isTree && hasNew"
             @click="onDefaultNew(scope.row)"
-          >新增</text-button>
+          >{{ newText }}</text-button>
           <text-button
             v-if="hasEdit"
             @click="onDefaultEdit(scope.row)"
-          >修改</text-button>
+          >{{ editText }}</text-button>
           <text-button
             v-if="hasView"
             @click="onDefaultView(scope.row)"
-          >查看</text-button>
+          >{{ viewText }}</text-button>
           <self-loading-button
             v-for="(btn, i) in extraButtons"
             v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -387,6 +387,27 @@ export default {
       default: true
     },
     /**
+     * 新增按钮文案
+     */
+    newText: {
+      type: String,
+      default: '新增'
+    },
+    /**
+     * 修改按钮文案
+     */
+    editText: {
+      type: String,
+      default: '修改'
+    },
+    /**
+     * 查看按钮文案
+     */
+    viewText: {
+      type: String,
+      default: '查看'
+    },
+    /**
      * 某行数据是否可以删除, 返回true表示可以, 控制的是单选时单行的删除按钮
      */
     canDelete: {
@@ -519,22 +540,31 @@ export default {
       default: true
     },
     /**
-     * 新增弹窗的标题
+     * 新增弹窗的标题，默认为newText的值
      */
     dialogNewTitle: {
       type: String,
-      default: '新增'
+      default() {
+        return this.newText
+      }
     },
     /**
-     * 修改弹窗的标题
+     * 修改弹窗的标题，默认为editText的值
      */
     dialogEditTitle: {
       type: String,
-      default: '修改'
+      default() {
+        return this.editText
+      }
     },
+    /**
+     * 查看弹窗的标题，默认为viewText的值
+     */
     dialogViewTitle: {
       type: String,
-      default: '查看'
+      default() {
+        return this.viewText
+      }
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
