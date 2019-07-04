@@ -80,7 +80,7 @@ cancelRelation() {
 }
 ```
 
-## searchForm 部分输入不能重置
+## searchForm 部分内容重置失效
 ### 场景
 两个 data-table 在同一个页面使用时，搜索栏的重置按钮不起作用
 ```html
