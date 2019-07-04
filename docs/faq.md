@@ -1,18 +1,19 @@
 ## 获取组件内的el-table实例
 
 ```html
-<el-data-table
-        ref="dataTable"
-        v-bind="tableConfig"
-    ></el-data-table>
+<template>
+  <el-data-table ref="dataTable" />
+</template>
+<script>
+export default {
+  mounted() {
+    this.$refs.dataTable.$refs.table
+  }
+}
+</script>
 ```
 
-```javascript
-this.$refs.dataTable.$refs.table
-```
-
-
-## 手动调用el-data-table刷新
+## 手动刷新el-data-table
 
 ```javascript
 this.$refs.dataTable.getList()
@@ -30,55 +31,54 @@ this.$refs.dataTable.getList()
 
 ```javascript
 searchForm: [
-        {
-          el: {placeholder: '请选择'},
-          label: '状态',
-          id: 'status',
-          type: 'select',
-          options: [
-            {
-              value: 1,
-              label: '待处理'
-            },
-          ]
-        }
-      ],
+  {
+    el: {placeholder: '请选择'},
+    label: '状态',
+    id: 'status',
+    type: 'select',
+    options: [
+      {
+        value: 1,
+        label: '待处理'
+      },
+    ]
+  }
+],
 ```
-
 
 ### 改动后代码
 
 ```javascript
 searchForm: [
-        {
-          el: {placeholder: '请选择'},
-          label: '状态',
-          id: 'status',
-          type: 'select',
-          options: [
-            {
-              value: '1', // 修改了这一行
-              label: '待处理'
-            },
-          ]
-        }
-      ],
+  {
+    el: {placeholder: '请选择'},
+    label: '状态',
+    id: 'status',
+    type: 'select',
+    options: [
+      {
+        value: '1', // 修改了这一行
+        label: '待处理'
+      },
+    ]
+  }
+],
 ```
 
 ## 弹窗关闭时清空选中状态
 
-
 ### 场景
 el-data-table 在 el-dialog 中展示，在 el-dialog 关闭后，清空 el-data-table 的选中状态。
-
 
 ### 解决方案
 ![](https://cdn.nlark.com/yuque/0/2018/png/160590/1544089655978-f73452e4-8da6-476e-8dbd-22a975e9a89c.png#align=left&display=inline&height=632&originHeight=632&originWidth=1700&status=done&width=827)
 
 ```javascript
 cancelRelation() {
-      this.showRelationDialog = false
-      this.selected = []
-      this.$refs.outsideModuleTable.$refs.table.clearSelection()
-    }
+  this.showRelationDialog = false
+  this.$refs.outsideModuleTable.clearSelection()
+}
 ```
+
+## 两个 data-table 在同一个页面使用时，searchForm 部分输入不能重置
+[解决方案](https://github.com/FEMessage/el-data-table/issues/119)，使用key属性规避问题。
