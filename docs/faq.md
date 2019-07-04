@@ -1,18 +1,19 @@
 ## 获取组件内的el-table实例
 
 ```html
-<el-data-table
-        ref="dataTable"
-        v-bind="tableConfig"
-    ></el-data-table>
+<template>
+  <el-data-table ref="dataTable" />
+</template>
+<script>
+export default {
+  mounted() {
+    this.$refs.dataTable.$refs.table
+  }
+}
+</script>
 ```
 
-```javascript
-this.$refs.dataTable.$refs.table
-```
-
-
-## 手动调用el-data-table刷新
+## 手动刷新el-data-table
 
 ```javascript
 this.$refs.dataTable.getList()
@@ -30,55 +31,67 @@ this.$refs.dataTable.getList()
 
 ```javascript
 searchForm: [
-        {
-          el: {placeholder: '请选择'},
-          label: '状态',
-          id: 'status',
-          type: 'select',
-          options: [
-            {
-              value: 1,
-              label: '待处理'
-            },
-          ]
-        }
-      ],
+  {
+    el: {placeholder: '请选择'},
+    label: '状态',
+    id: 'status',
+    type: 'select',
+    options: [
+      {
+        value: 1,
+        label: '待处理'
+      },
+    ]
+  }
+],
 ```
-
 
 ### 改动后代码
 
 ```javascript
 searchForm: [
-        {
-          el: {placeholder: '请选择'},
-          label: '状态',
-          id: 'status',
-          type: 'select',
-          options: [
-            {
-              value: '1', // 修改了这一行
-              label: '待处理'
-            },
-          ]
-        }
-      ],
+  {
+    el: {placeholder: '请选择'},
+    label: '状态',
+    id: 'status',
+    type: 'select',
+    options: [
+      {
+        value: '1', // 修改了这一行
+        label: '待处理'
+      },
+    ]
+  }
+],
 ```
 
 ## 弹窗关闭时清空选中状态
 
-
 ### 场景
 el-data-table 在 el-dialog 中展示，在 el-dialog 关闭后，清空 el-data-table 的选中状态。
-
 
 ### 解决方案
 ![](https://cdn.nlark.com/yuque/0/2018/png/160590/1544089655978-f73452e4-8da6-476e-8dbd-22a975e9a89c.png#align=left&display=inline&height=632&originHeight=632&originWidth=1700&status=done&width=827)
 
 ```javascript
 cancelRelation() {
-      this.showRelationDialog = false
-      this.selected = []
-      this.$refs.outsideModuleTable.$refs.table.clearSelection()
-    }
+  this.showRelationDialog = false
+  this.$refs.outsideModuleTable.clearSelection()
+}
 ```
+
+## searchForm 部分内容重置失效
+### 场景
+两个 data-table 在同一个页面使用时，搜索栏的重置按钮不起作用
+```html
+<el-data-table v-if="flag" />
+<el-data-table v-else />
+```
+### 解决方案
+在el-data-table上使用key属性规避此问题。
+```html
+<el-data-table v-if="flag" key="1" />
+<el-data-table v-else key="2" />
+```
+### 原始issue
+[https://github.com/FEMessage/el-data-table/issues/119](https://github.com/FEMessage/el-data-table/issues/119)
