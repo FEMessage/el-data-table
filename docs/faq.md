@@ -80,13 +80,18 @@ cancelRelation() {
 }
 ```
 
-## 两个 data-table 在同一个页面使用时，searchForm 部分输入不能重置
+## searchForm 部分输入不能重置
+### 场景
+两个 data-table 在同一个页面使用时，搜索栏的重置按钮不起作用
+```html
+<el-data-table v-if="flag" />
+<el-data-table v-else />
+```
+### 解决方案
 在el-data-table上使用key属性规避此问题。
-### before
-![](https://user-images.githubusercontent.com/27187946/59015253-22eab580-8871-11e9-970b-61cf5530ba37.png)
-![](https://user-images.githubusercontent.com/27187946/59015265-27af6980-8871-11e9-95bc-0046bfe9dd9d.gif)
-### after
-![](https://user-images.githubusercontent.com/27187946/59015310-46156500-8871-11e9-88d9-8448b26c7b69.png)
-![](https://user-images.githubusercontent.com/27187946/59015350-5b8a8f00-8871-11e9-9fd1-da17d4ab9128.gif)
+```html
+<el-data-table v-if="flag" key="1" />
+<el-data-table v-else key="2" />
+```
 ### 原始issue
 https://github.com/FEMessage/el-data-table/issues/119
