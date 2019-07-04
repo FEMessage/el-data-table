@@ -679,7 +679,7 @@ export default {
     }
   },
   mounted() {
-    if (this.routerMode && this.saveQuery) {
+    if (this.saveQuery) {
       const query = queryUtil.get(location.href)
       if (query) {
         this.page = parseInt(query.page)
@@ -789,7 +789,7 @@ export default {
         })
 
       // 存储query记录, 便于后面恢复
-      if (this.routerMode && saveQuery) {
+      if (saveQuery) {
         // 存储的page是table的页码，无需偏移
         query.page = this.page
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
@@ -816,7 +816,7 @@ export default {
       this.page = defaultFirstPage
 
       // 重置
-      if (this.routerMode && this.saveQuery) {
+      if (this.saveQuery) {
         const newUrl = queryUtil.clear(location.href)
         history.replaceState(history.state, '', newUrl)
       }
