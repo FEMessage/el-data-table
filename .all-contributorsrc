@@ -30,6 +30,7 @@
       "profile": "https://donaldshen.github.io/portfolio",
       "contributions": [
         "code",
+        "test",
         "doc"
       ]
     },
@@ -146,6 +147,15 @@
       "profile": "https://github.com/Jack-rainbow",
       "contributions": [
         "bug"
+      ]
+    },
+    {
+      "login": "colmugx",
+      "name": "ColMugX",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/21327913?v=4",
+      "profile": "https://colmugx.github.io",
+      "contributions": [
+        "code"
       ]
     }
   ],

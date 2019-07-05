@@ -23,7 +23,7 @@
 
     <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
       <el-form-item>
-        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">新增</el-button>
+        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
         <self-loading-button
           v-for="(btn, i) in headerButtons"
           v-if="'show' in btn ? btn.show(selected) : true"
@@ -34,7 +34,9 @@
           v-bind="btn"
           :key="i"
           size="small"
-        >{{btn.text}}</self-loading-button>
+        >
+          {{typeof btn.text === 'function' ? btn.text(selected) : btn.text}}
+        </self-loading-button>
         <el-button
           v-if="hasSelect && hasDelete"
           type="danger"
@@ -58,9 +60,9 @@
       :data="data"
       :row-style="showRow"
       v-loading="loading"
-      @selection-change="handleSelectionChange"
-      @select="handleSelect"
-      @select-all="handleSelectAll"
+      @selection-change="selectStrategy.onSelectionChange"
+      @select="selectStrategy.onSelect"
+      @select-all="selectStrategy.onSelectAll"
     >
       <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
       <template v-if="isTree">
@@ -137,15 +139,15 @@
           <text-button
             v-if="isTree && hasNew"
             @click="onDefaultNew(scope.row)"
-          >新增</text-button>
+          >{{ newText }}</text-button>
           <text-button
             v-if="hasEdit"
             @click="onDefaultEdit(scope.row)"
-          >修改</text-button>
+          >{{ editText }}</text-button>
           <text-button
             v-if="hasView"
             @click="onDefaultView(scope.row)"
-          >查看</text-button>
+          >{{ viewText }}</text-button>
           <self-loading-button
             v-for="(btn, i) in extraButtons"
             v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -155,7 +157,9 @@
             :callback="getList"
             :key="i"
             is-text
-          >{{btn.text}}</self-loading-button>
+          >
+            {{typeof btn.text === 'function' ? btn.text(scope.row) : btn.text}}
+          </self-loading-button>
           <text-button
             v-if="!hasSelect && hasDelete && canDelete(scope.row)"
             type="danger"
@@ -198,6 +202,7 @@ import _get from 'lodash.get'
 import SelfLoadingButton from './self-loading-button.vue'
 import TextButton from './text-button.vue'
 import * as queryUtil from './utils/query'
+import getSelectStrategy from './utils/select-strategy'
 
 // 默认返回的数据格式如下
 //          {
@@ -304,14 +309,6 @@ export default {
       }
     },
     /**
-     * 可选值：'hash' | 'history', 当开启 saveQuery 时，决定了查询参数存放的形式
-     * @deprecated
-     */
-    routerMode: {
-      type: String,
-      default: 'hash'
-    },
-    /**
      * 单选, 适用场景: 不可以批量删除
      */
     single: {
@@ -381,6 +378,27 @@ export default {
     hasDelete: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 新增按钮文案
+     */
+    newText: {
+      type: String,
+      default: '新增'
+    },
+    /**
+     * 修改按钮文案
+     */
+    editText: {
+      type: String,
+      default: '修改'
+    },
+    /**
+     * 查看按钮文案
+     */
+    viewText: {
+      type: String,
+      default: '查看'
     },
     /**
      * 某行数据是否可以删除, 返回true表示可以, 控制的是单选时单行的删除按钮
@@ -515,22 +533,31 @@ export default {
       default: true
     },
     /**
-     * 新增弹窗的标题
+     * 新增弹窗的标题，默认为newText的值
      */
     dialogNewTitle: {
       type: String,
-      default: '新增'
+      default() {
+        return this.newText
+      }
     },
     /**
-     * 修改弹窗的标题
+     * 修改弹窗的标题，默认为editText的值
      */
     dialogEditTitle: {
       type: String,
-      default: '修改'
+      default() {
+        return this.editText
+      }
     },
+    /**
+     * 查看弹窗的标题，默认为viewText的值
+     */
     dialogViewTitle: {
       type: String,
-      default: '查看'
+      default() {
+        return this.viewText
+      }
     },
     /**
      * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
@@ -638,29 +665,20 @@ export default {
     }
   },
   computed: {
+    routerMode() {
+      return this.$router ? this.$router.mode : 'hash'
+    },
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
-    },
-    /**
-     * selected的map形式，key为id，值为row
-     * 用于多选项跨页保存的情况
-     */
-    selectedMap: {
-      get() {
-        return this.selected.reduce((map, r) => {
-          map[r[this.id]] = r
-          return map
-        }, {})
-      },
-      set(val) {
-        this.selected = Object.values(val)
-      }
     },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
     },
     _extraQuery() {
       return this.extraQuery || this.customQuery || {}
+    },
+    selectStrategy() {
+      return getSelectStrategy(this)
     }
   },
   watch: {
@@ -677,10 +695,17 @@ export default {
 
         this.$refs[dialogForm].resetFields()
       }
+    },
+    selected(val) {
+      /**
+       * 多选项发生变化
+       * @property {array} rows - 已选中的行数据的数组
+       */
+      this.$emit('selection-change', val)
     }
   },
   mounted() {
-    if (this.routerMode && this.saveQuery) {
+    if (this.saveQuery) {
       const query = queryUtil.get(location.href)
       if (query) {
         this.page = parseInt(query.page)
@@ -771,14 +796,10 @@ export default {
            */
           this.$emit('update', data, resp)
 
-          // 开启selectCrossPages时，自动勾选多选状态
-          if (this.persistSelection) {
-            this.$nextTick(() => {
-              this.data
-                .filter(r => r[this.id] in this.selectedMap)
-                .forEach(r => this.$refs.table.toggleRowSelection(r, true))
-            })
-          }
+          // 开启persistSelection时，需要同步selected状态到el-table中
+          this.$nextTick(() => {
+            this.selectStrategy.updateElTableSelection()
+          })
         })
         .catch(err => {
           /**
@@ -790,7 +811,7 @@ export default {
         })
 
       // 存储query记录, 便于后面恢复
-      if (this.routerMode && saveQuery) {
+      if (saveQuery) {
         // 存储的page是table的页码，无需偏移
         query.page = this.page
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
@@ -817,7 +838,7 @@ export default {
       this.page = defaultFirstPage
 
       // 重置
-      if (this.routerMode && this.saveQuery) {
+      if (this.saveQuery) {
         const newUrl = queryUtil.clear(location.href)
         history.replaceState(history.state, '', newUrl)
       }
@@ -848,61 +869,22 @@ export default {
       this.getList(this.saveQuery)
     },
     /**
-     * 多选事件详解
+     * 切换某一行的选中状态，如果使用了第二个参数，则是设置这一行选中与否
      *
-     * 这里监听了el-table的三个选择事件：
-     * @selection-change - 多选项发生改变
-     * @select - 用户点击某行的多选按钮
-     * @select-all - 用户点击标题栏的多选按钮
-     *
-     * 其中selection-change并不一定是由用户触发的，任何table数据更新时，el-table都会重置多选项为空，这时也会触发selection-change
-     * 当开启跨页保存多选状态，我们只监听确定由用户触发的select和select-all事件里的selection变化
-     */
-    handleSelectionChange(val) {
-      if (!this.persistSelection) this.updateSelected(val)
-    },
-    handleSelect(selection, row) {
-      if (this.persistSelection) {
-        const isChosen = !!selection.find(r => r === row)
-        this.select([row], isChosen)
-      }
-    },
-    handleSelectAll(selection) {
-      if (this.persistSelection) {
-        this.select(this.data, !!selection.length)
-      }
-    },
-    /**
-     * 直接覆盖更新多选项
-     *
-     * @param {Array} rows - 此次覆盖更新的多选项
-     */
-    updateSelected(rows) {
-      this.selected = rows
-      this.$emit('selection-change', rows)
-    },
-    /**
-     * 逐项更新多选项
-     *
-     * @param {Array} rows - 受影响的数据行
+     * @public
+     * @param {object} row - 要更新的数据行
      * @param {boolean} isSelected - 是否被勾选
      */
-    select(rows, isSelected) {
-      const map = Object.assign({}, this.selectedMap)
-      if (isSelected) {
-        rows.forEach(r => (map[r[this.id]] = r))
-      } else {
-        rows.forEach(r => delete map[r[this.id]])
-      }
-      // 更新this.selectedMap会自动更新this.selected, 详见`computed`
-      // 故此函数看起来没有对selected进行操作，却需要对外emit新的值
-      this.selectedMap = map
-
-      /**
-       * 多选项发生变化
-       * @property {array} rows - 已选中的行数据的数组
-       */
-      this.$emit('selection-change', this.selected)
+    toggleRowSelection(row, isSelected) {
+      return this.selectStrategy.toggleRowSelection(row, isSelected)
+    },
+    /**
+     * 清空多选项
+     *
+     * @public
+     */
+    clearSelection() {
+      return this.selectStrategy.clearSelection()
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
@@ -1028,7 +1010,7 @@ export default {
                 .then(resp => {
                   this.showMessage(true)
                   done()
-                  this.selectedMap = {}
+                  this.clearSelection()
                   this.getList()
                 })
                 .catch(e => {})
@@ -1062,7 +1044,7 @@ export default {
                   instance.confirmButtonLoading = false
                   done()
                   this.showMessage(true)
-                  this.selectedMap = {}
+                  this.clearSelection()
                   this.getList()
                 })
                 .catch(er => {

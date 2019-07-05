@@ -1,0 +1,10 @@
+types:
+  feat: 'enhancement'
+  fix: 'bug'
+  docs: 'documentation'
+  refactor: 'refactor'
+  test: 'test'
+  perf: 'performance'
+  chore:
+    deps: 'dependencies'
+    default: 'chore'

@@ -36,6 +36,14 @@ export default {
               setTimeout(() => resolve(false), 1500)
             )
           }
+        },
+        {
+          text: selected => `操作选中的 ${selected.length || 0} 条数据`,
+          atClick: selected => {
+            return new Promise((resolve, reject) =>
+              setTimeout(() => resolve(false), 1500)
+            )
+          }
         }
       ],
       hasOperation: false,

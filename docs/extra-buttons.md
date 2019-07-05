@@ -22,11 +22,11 @@ export default {
       extraButtons: [
         {
           type: 'success',
-          text: '点我',
+          text: row => row.status === 'normal' ? '禁用' : '启用',
           atClick(row) {
             alert(row.name)
           }
-        }
+        },
       ]
     }
   }
