@@ -682,9 +682,12 @@ export default {
     }
   },
   watch: {
-    url: function(val, old) {
-      this.page = defaultFirstPage
-      this.getList()
+    url: {
+      handler() {
+        this.page = defaultFirstPage
+        this.getList()
+      },
+      immediate: true
     },
     dialogVisible: function(val, old) {
       if (!val) {
@@ -718,10 +721,6 @@ export default {
         }
       }
     }
-
-    this.$nextTick(() => {
-      this.getList()
-    })
   },
   methods: {
     /**
