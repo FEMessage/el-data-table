@@ -1,5 +1,10 @@
 <template>
-  <div class="el-data-table">
+  <div>
+    <div class="el-data-table">
+      <!--@slot 获取数据为空时的内容-->
+      <slot name="noData"></slot>
+    </div>
+    <div class="el-data-table">
     <!-- @submit.native.prevent -->
     <!-- 阻止表单提交的默认行为 -->
     <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
@@ -194,6 +199,7 @@
         <el-button type="primary" @click="confirm" :loading="confirmLoading" size="small">确 定</el-button>
       </div>
     </el-dialog>
+  </div>
   </div>
 </template>
 
