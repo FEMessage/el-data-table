@@ -203,7 +203,7 @@ export default {
 encourage using [yarn](https://yarnpkg.com/en/docs/install#mac-stable) to install
 
 ```sh
-yarn add el-data-table
+yarn add @femessage/el-data-table
 ```
 
 [⬆ Back to Top](#table-of-contents)
@@ -222,7 +222,7 @@ instead of one vendor for one page
 import Vue from 'vue'
 
 // register component and loading directive
-import ElDataTable from 'el-data-table'
+import ElDataTable from '@femessage/el-data-table'
 import ElFormRenderer from '@femessage/el-form-renderer'
 import {
   Button,
