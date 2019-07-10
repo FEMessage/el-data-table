@@ -5,7 +5,7 @@ noData插槽<br>
 ```vue
 <template>
   <div>
-    <template v-for="(url,index) in urls" :key="url">
+    <template v-for="(url,index) in urls">
       <div>第{{index + 1}}个table</div>
       <el-data-table
         v-bind="tableConfig"
