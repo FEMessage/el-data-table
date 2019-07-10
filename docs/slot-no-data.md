@@ -1,5 +1,5 @@
 noData插槽<br>
-以下示例中，第一个table第一次请求时没有数据时就显示noData的slot;<br>
+以下示例中，第一个table第一次请求时没有数据时就显示no-data的slot;<br>
 而第二个table第一次查询返回有数据的，第二次用户名输入nodata还是显示table，不显示no-data slot
 
 ```vue
