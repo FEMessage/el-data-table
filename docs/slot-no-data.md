@@ -11,7 +11,7 @@ noData插槽<br>
         v-bind="tableConfig"
         :url="url"
       >
-        <template slot="noData">
+        <template slot="no-data">
           <div class="no-data">没有数据，请去添加数据</div>
         </template>
       </el-data-table>

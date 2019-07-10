@@ -1,8 +1,8 @@
 <template>
   <div class="el-data-table">
-    <template v-if="needToShowNoDataSlot">
+    <template v-if="showNoData">
       <!--@slot 获取数据为空时的内容-->
-      <slot name="noData"></slot>
+      <slot name="no-data"></slot>
     </template>
     <template v-else>
       <!-- @submit.native.prevent -->
@@ -668,7 +668,7 @@ export default {
       // JSON.stringify是为了后面深拷贝作准备
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false,
-      needToShowNoDataSlot: false
+      showNoData: false
     }
   },
   computed: {
@@ -728,7 +728,7 @@ export default {
 
     this.$nextTick(() => {
       this.getList().then(() => {
-        this.needToShowNoDataSlot = this.$slots.noData && this.total === 0
+        this.showNoData = this.$slots['no-data'] && this.total === 0
       })
     })
   },
