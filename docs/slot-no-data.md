@@ -1,18 +1,28 @@
-no-data插槽
+noData插槽<br>
+以下示例中，第一个table第一次请求时没有数据时就显示noData的slot
 
 ```vue
 <template>
-  <el-data-table
-    v-bind="$data"
-  >
-    <template slot="noData">
-      <el-row>
-        <el-col :span="8">_</el-col>
-        <el-col :span="8">没有数据，请去添加数据</el-col>
-        <el-col :span="8">_</el-col>
-      </el-row>
-    </template>
-  </el-data-table>
+  <div>
+    <div>第一个table</div>
+    <el-data-table
+      v-bind="$data"
+    >
+      <template slot="noData">
+        <div class="no-data">没有数据，请去添加数据</div>
+      </template>
+    </el-data-table>
+    <div>第二个table</div>
+    <div class="tip">第一次查询返回有数据的，第二次用户名输入nodata还是显示table，不显示no-data slot</div>
+    <el-data-table
+      v-bind="$data"
+      url="http://yapi.demo.qunar.com/mock/78092/get-data"
+    >
+      <template slot="noData">
+        <div class="no-data">没有数据，请去添加数据</div>
+      </template>
+    </el-data-table>
+  </div> 
 </template>
 <script>
 export default {
@@ -33,15 +43,7 @@ export default {
           id: 'q',
           label: '用户名',
           width: '200px',
-          el: {placeholder: '其输入'},
-          default: 'user'
-        },
-        {
-          type: 'input',
-          id: 'q2',
-          label: '标签',
-          width: '200px',
-          el: {placeholder: '其输入'}
+          el: {placeholder: '输入nodata查询'}
         }
       ],
       hasEdit: false,
@@ -51,4 +53,14 @@ export default {
   }
 }
 </script>
+<style>
+.no-data{
+  padding: 32px 0;
+  text-align:center;
+  font-weight:600;
+}
+.tip{
+  padding-bottom: 16px;
+}
+</style>
 ```
