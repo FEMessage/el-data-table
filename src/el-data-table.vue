@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="el-data-table">
+    <div class="el-data-table" v-if="needToShowNoDataSlot">
       <!--@slot 获取数据为空时的内容-->
       <slot name="noData"></slot>
     </div>
-    <div class="el-data-table">
+    <div class="el-data-table" v-else>
     <!-- @submit.native.prevent -->
     <!-- 阻止表单提交的默认行为 -->
     <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
@@ -685,6 +685,12 @@ export default {
     },
     selectStrategy() {
       return getSelectStrategy(this)
+    },
+    needToShowNoDataSlot() {
+      if (!this.$slots.noData) {
+        return false
+      }
+      return this.total === 0
     }
   },
   watch: {
