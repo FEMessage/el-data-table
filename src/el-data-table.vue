@@ -668,7 +668,9 @@ export default {
       // JSON.stringify是为了后面深拷贝作准备
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false,
-      showNoData: false
+      showNoData: false,
+      // 第一次请求flag
+      isFirstGetList: true
     }
   },
   computed: {
@@ -727,9 +729,7 @@ export default {
     }
 
     this.$nextTick(() => {
-      this.getList().then(() => {
-        this.showNoData = this.$slots['no-data'] && this.total === 0
-      })
+      this.getList()
     })
   },
   methods: {
@@ -743,7 +743,7 @@ export default {
 
       if (!url) {
         console.warn('DataTable: url 为空, 不发送请求')
-        return Promise.resolve()
+        return
       }
 
       // 构造query对象
@@ -782,7 +782,7 @@ export default {
         history.pushState(history.state, 'el-data-table search', newUrl)
       }
 
-      return this.$axios
+      this.$axios
         .get(url + queryStr)
         .then(({data: resp}) => {
           let data = []
@@ -793,6 +793,7 @@ export default {
               _get(resp, this.dataPath) ||
               _get(resp, noPaginationDataPath) ||
               []
+            this.total = data.length
           } else {
             data = _get(resp, this.dataPath) || []
             this.total = _get(resp, this.totalPath)
@@ -803,6 +804,12 @@ export default {
           // 树形结构逻辑
           if (this.isTree) {
             this.data = this.tree2Array(data, this.expandAll)
+          }
+
+          // 第一次getList
+          if (this.isFirstGetList) {
+            this.showNoData = this.$slots['no-data'] && this.total === 0
+            this.isFirstGetList = false
           }
 
           this.loading = false
