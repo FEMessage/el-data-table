@@ -669,8 +669,8 @@ export default {
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false,
       showNoData: false,
-      // 第一次请求flag
-      isFirstGetList: true
+      // 是否请求过flag
+      hasRequest: false
     }
   },
   computed: {
@@ -806,10 +806,10 @@ export default {
             this.data = this.tree2Array(data, this.expandAll)
           }
 
-          // 第一次getList
-          if (this.isFirstGetList) {
+          // 没有请求过
+          if (!this.hasRequest) {
             this.showNoData = this.$slots['no-data'] && this.total === 0
-            this.isFirstGetList = false
+            this.hasRequest = true
           }
 
           this.loading = false
