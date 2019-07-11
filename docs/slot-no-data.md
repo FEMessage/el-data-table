@@ -19,6 +19,7 @@ noData插槽<br>
   </div>
 </template>
 <script>
+const mockUrl = 'https://easy-mock.com/mock/5c1b3895fe5907404e654045/femessage-mock/el-data-table/'
 export default {
   data() {
     return {
@@ -46,8 +47,8 @@ export default {
         saveQuery:false
       },
       urls: [
-        'https://easy-mock.com/mock/5d240d912102c0666393d262/mock/no-data',
-        'http://yapi.demo.qunar.com/mock/78092/get-data'
+        mockUrl + 'no-data',
+        mockUrl + 'has-data'
       ]
     }
   }
