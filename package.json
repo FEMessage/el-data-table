@@ -1,5 +1,5 @@
 {
-  "name": "el-data-table",
+  "name": "@femessage/el-data-table",
   "version": "1.2.1",
   "description": "base on element-ui, makes crud easily",
   "author": "https://github.com/FEMessage",
