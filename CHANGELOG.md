@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.3](https://github.com/FEMessage/el-data-table/compare/v1.6.2...v1.6.3) (2019-07-12)
+
+
+### Bug Fixes
+
+* getList在mounted阶段会发出两次  ([c1403f7](https://github.com/FEMessage/el-data-table/commit/c1403f7)), closes [#162](https://github.com/FEMessage/el-data-table/issues/162)
+
+
+
 ### [1.6.2](https://github.com/FEMessage/el-data-table/compare/v1.6.1...v1.6.2) (2019-07-11)
 
 
