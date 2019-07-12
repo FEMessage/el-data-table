@@ -738,9 +738,7 @@ export default {
      * @param {boolean} saveQuery - 是否保存query到路由上
      */
     getList(saveQuery) {
-      if (this.getListId !== null) {
-        clearTimeout(this.getListId)
-      }
+      clearTimeout(this.getListId)
       this.getListId = setTimeout(() => this._getList(saveQuery), 200)
     },
     /**
