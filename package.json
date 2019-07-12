@@ -1,5 +1,5 @@
 {
-  "name": "el-data-table",
+  "name": "@femessage/el-data-table",
   "version": "1.2.1",
   "description": "base on element-ui, makes crud easily",
   "author": "https://github.com/FEMessage",
@@ -64,6 +64,9 @@
     "vue-styleguidist": "^3.11.4",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.29.6"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "vue-sfc-cli": "1.10.1",
   "engines": {

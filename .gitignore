@@ -6,6 +6,8 @@ yarn-error.log*
 dist
 docs/build
 docs/index.html
+docs/*.woff
+docs/*.ttf
 
 # Editor directories and files
 .idea
