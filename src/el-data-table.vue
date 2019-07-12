@@ -692,10 +692,14 @@ export default {
     }
   },
   watch: {
-    url(val) {
-      if (!val) return
-      this.page = defaultFirstPage
-      this.getList()
+    url: {
+      handler(val) {
+        if (!val) return
+        this.page = defaultFirstPage
+        // mounted处有updateForm的行为，所以至少在初始执行时要等到next tick
+        this.$nextTick(this.getList)
+      },
+      immediate: true
     },
     dialogVisible: function(val, old) {
       if (!val) {
@@ -729,23 +733,14 @@ export default {
         }
       }
     }
-    this.$nextTick(this.getList)
   },
   methods: {
     /**
-     * 手动刷新列表数据。debounce间隔为200ms
+     * 手动刷新列表数据
      * @public
      * @param {boolean} saveQuery - 是否保存query到路由上
      */
     getList(saveQuery) {
-      clearTimeout(this.getListId)
-      this.getListId = setTimeout(() => this._getList(saveQuery), 200)
-    },
-    /**
-     * 手动刷新列表数据
-     * @param {boolean} saveQuery - 是否保存query到路由上
-     */
-    _getList(saveQuery) {
       const {url} = this
 
       if (!url) {
