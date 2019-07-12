@@ -71,6 +71,9 @@
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.29.6"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "vue-sfc-cli": "1.10.1",
   "engines": {
     "node": ">= 4.0.0",
