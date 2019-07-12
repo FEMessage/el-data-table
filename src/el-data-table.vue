@@ -661,6 +661,7 @@ export default {
       // 初始的extraQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
+      getListId: null,
       isSearchCollapse: false
     }
   },
@@ -682,12 +683,10 @@ export default {
     }
   },
   watch: {
-    url: {
-      handler() {
-        this.page = defaultFirstPage
-        this.getList()
-      },
-      immediate: true
+    url(val) {
+      if (!val) return
+      this.page = defaultFirstPage
+      this.getList()
     },
     dialogVisible: function(val, old) {
       if (!val) {
@@ -721,14 +720,25 @@ export default {
         }
       }
     }
+    this.$nextTick(this.getList)
   },
   methods: {
     /**
-     * 手动刷新列表数据
+     * 手动刷新列表数据。debounce间隔为200ms
      * @public
      * @param {boolean} saveQuery - 是否保存query到路由上
      */
     getList(saveQuery) {
+      if (this.getListId !== null) {
+        clearTimeout(this.getListId)
+      }
+      this.getListId = setTimeout(() => this._getList(saveQuery), 200)
+    },
+    /**
+     * 手动刷新列表数据
+     * @param {boolean} saveQuery - 是否保存query到路由上
+     */
+    _getList(saveQuery) {
       const {url} = this
 
       if (!url) {
