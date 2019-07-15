@@ -176,6 +176,7 @@
         <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
         <slot></slot>
       </el-table>
+
       <el-pagination
         v-if="hasPagination"
         @size-change="handleSizeChange"
@@ -187,6 +188,7 @@
         style="text-align: right; padding: 10px 0"
         :layout="paginationLayout"
       ></el-pagination>
+
       <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
         <!--https://github.com/FEMessage/el-form-renderer-->
         <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
@@ -205,8 +207,8 @@
 
 <script>
 import _get from 'lodash.get'
-import SelfLoadingButton from './self-loading-button.vue'
-import TextButton from './text-button.vue'
+import SelfLoadingButton from './components/self-loading-button.vue'
+import TextButton from './components/text-button.vue'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 
@@ -233,7 +235,11 @@ const treeParentKey = 'parentId'
 const treeParentValue = 'id'
 const defaultId = 'id'
 
-const dialogForm = 'dialogForm'
+const dialogModes = {
+  new: 'new',
+  edit: 'edit',
+  view: 'view'
+}
 
 export default {
   name: 'ElDataTable',
@@ -655,11 +661,8 @@ export default {
       selected: [],
 
       //弹窗
-      dialogTitle: this.dialogNewTitle,
+      dialogMode: dialogModes.new,
       dialogVisible: false,
-      isNew: true,
-      isEdit: false,
-      isView: false,
       confirmLoading: false,
       // 要修改的那一行
       row: {},
@@ -688,6 +691,19 @@ export default {
     },
     selectStrategy() {
       return getSelectStrategy(this)
+    },
+    dialogTitle() {
+      switch (this.dialogMode) {
+        case dialogModes.edit:
+          return this.editTitle
+        case dialogModes.view:
+          return this.viewTitle
+        default:
+          return this.newTitle
+      }
+    },
+    isView() {
+      return this.dialogMode === dialogModes.view
     }
   },
   watch: {
@@ -702,12 +718,9 @@ export default {
     },
     dialogVisible: function(val, old) {
       if (!val) {
-        this.isNew = false
-        this.isEdit = false
-        this.isView = false
         this.confirmLoading = false
 
-        this.$refs[dialogForm].resetFields()
+        this.$refs.dialogForm.resetFields()
       }
     },
     selected(val) {
@@ -907,75 +920,56 @@ export default {
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
       this.row = row
-      this.isNew = true
-      this.isEdit = false
-      this.isView = false
-      this.dialogTitle = this.dialogNewTitle
+      this.dialogMode = dialogModes.new
       this.dialogVisible = true
     },
     onDefaultView(row) {
       this.row = row
-      this.isView = true
-      this.isNew = false
-      this.isEdit = false
-      this.dialogTitle = this.dialogViewTitle
+      this.dialogMode = dialogModes.view
       this.dialogVisible = true
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.$refs[dialogForm].updateForm(row)
+        this.$refs.dialogForm.updateForm(row)
       })
     },
     onDefaultEdit(row) {
       this.row = row
-      this.isEdit = true
-      this.isNew = false
-      this.isView = false
-      this.dialogTitle = this.dialogEditTitle
+      this.dialogMode = dialogModes.edit
       this.dialogVisible = true
 
       // 给表单填充值
       this.$nextTick(() => {
-        this.$refs[dialogForm].updateForm(row)
+        this.$refs.dialogForm.updateForm(row)
       })
     },
     cancel() {
       this.dialogVisible = false
     },
     confirm() {
-      if (this.isView) {
-        this.cancel()
-        return
-      }
-
-      this.$refs[dialogForm].validate(valid => {
+      this.$refs.dialogForm.validate(valid => {
         if (!valid) return false
 
         let data = Object.assign(
           {},
-          this.$refs[dialogForm].getFormValue(),
+          this.$refs.dialogForm.getFormValue(),
           this._extraBody
         )
 
+        const isNew = this.dialogMode === dialogModes.new
         if (this.isTree) {
-          if (this.isNew)
-            data[this.treeParentKey] = this.row[this.treeParentValue]
-          else data[this.treeParentKey] = this.row[this.treeParentKey]
+          data[this.treeParentKey] = isNew
+            ? this.row[this.treeParentValue]
+            : this.row[this.treeParentKey]
         }
 
-        this.beforeConfirm(data, this.isNew)
-          .then(resp => {
-            let condiction = 'isNew'
-            let customMethod = 'onNew'
+        this.beforeConfirm(data, isNew)
+          .then(() => {
+            const customMethod = isNew ? 'onNew' : 'onEdit'
 
-            if (this.isEdit) {
-              condiction = 'isEdit'
-              customMethod = 'onEdit'
-            }
-
-            if (this[condiction] && this[customMethod]) {
+            if (this[customMethod]) {
               this[customMethod](data, this.row)
-                .then(resp => {
+                .then(() => {
                   this.getList()
                   this.showMessage(true)
                   this.cancel()
@@ -988,7 +982,7 @@ export default {
             let method = 'post'
             let url = this.url + ''
 
-            if (this.isEdit) {
+            if (!isNew) {
               method = 'put'
               url += `/${this.row[this.id]}`
             }
@@ -996,7 +990,7 @@ export default {
             this.confirmLoading = true
 
             this.$axios[method](url, data)
-              .then(resp => {
+              .then(() => {
                 this.getList()
                 this.showMessage(true)
                 this.cancel()
