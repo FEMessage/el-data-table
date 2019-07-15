@@ -30,17 +30,15 @@
         <el-form-item>
           <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
           <self-loading-button
-            v-for="(btn, i) in headerButtons"
-            v-if="'show' in btn ? btn.show(selected) : true"
-            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
+            v-for="(btn, i) in customButtons(headerButtons, selected)"
+            v-if="btn.show"
             :click="btn.atClick"
-            :params="selected"
-            :callback="getList"
+            @click="getList"
             v-bind="btn"
             :key="i"
             size="small"
           >
-            {{typeof btn.text === 'function' ? btn.text(selected) : btn.text}}
+            {{btn.text}}
           </self-loading-button>
           <el-button
             v-if="hasSelect && hasDelete"
@@ -140,35 +138,34 @@
 
         <!--默认操作列-->
         <el-table-column label="操作" v-if="hasOperation" v-bind="operationAttrs">
-          <template slot-scope="scope">
+          <template slot-scope="{row}">
             <text-button
               v-if="isTree && hasNew"
-              @click="onDefaultNew(scope.row)"
+              @click="onDefaultNew(row)"
             >{{ newText }}</text-button>
             <text-button
               v-if="hasEdit"
-              @click="onDefaultEdit(scope.row)"
+              @click="onDefaultEdit(row)"
             >{{ editText }}</text-button>
             <text-button
               v-if="hasView"
-              @click="onDefaultView(scope.row)"
+              @click="onDefaultView(row)"
             >{{ viewText }}</text-button>
             <self-loading-button
-              v-for="(btn, i) in extraButtons"
-              v-if="'show' in btn ? btn.show(scope.row) : true"
+              v-for="(btn, i) in customButtons(extraButtons, row)"
+              v-if="btn.show"
               v-bind="btn"
               :click="btn.atClick"
-              :params="scope.row"
-              :callback="getList"
+              @click="getList"
               :key="i"
               is-text
             >
-              {{typeof btn.text === 'function' ? btn.text(scope.row) : btn.text}}
+              {{btn.text}}
             </self-loading-button>
             <text-button
-              v-if="!hasSelect && hasDelete && canDelete(scope.row)"
+              v-if="!hasSelect && hasDelete && canDelete(row)"
               type="danger"
-              @click="onDefaultDelete(scope.row)"
+              @click="onDefaultDelete(row)"
             >删除</text-button>
           </template>
         </el-table-column>
@@ -336,9 +333,11 @@ export default {
       default: true
     },
     /**
-     * 操作列的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
-     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示 }
-     * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
+     * 操作列的自定义按钮配置数组，数组项可以是配置对象或函数，函数接受row数据，返回配置对象<br>
+     * 支持包括el-button的所有prop及以下属性:<br>
+     * text: string 按钮文案<br>
+     * atClick: () => any 支持函数返回Promise, 默认点击后会刷新table, return false或resolve(false) 则不刷新<br>
+     * show: boolean 是否显示，默认true
      */
     extraButtons: {
       type: Array,
@@ -347,9 +346,11 @@ export default {
       }
     },
     /**
-     * 头部的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
-     * {type: '', text: '', atClick: selected => Promise.resolve(), show: selected => return true时显示, disabled: selected => return true时禁用}
-     * 点击事件 selected参数 表示选中行所组成的数组, 函数需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
+     * 头部的自定义按钮配置数组，数组项可以是配置对象或函数，函数接受selected数据，返回配置对象<br>
+     * 支持包括el-button的所有prop及以下属性:<br>
+     * text: string 按钮文案<br>
+     * atClick: () => any 支持函数返回Promise, 默认点击后会刷新table, return false或resolve(false) 则不刷新<br>
+     * show: boolean 是否显示，默认true
      */
     headerButtons: {
       type: Array,
@@ -688,6 +689,31 @@ export default {
     },
     selectStrategy() {
       return getSelectStrategy(this)
+    },
+    customButtons() {
+      return (btns, data) => {
+        // 需要在一个新的btn对象上修改，否则会触发无限更新循环
+        return btns
+          .map(btn => (typeof btn === 'function' ? btn(data) : {...btn}))
+          .map(btn => {
+            if (typeof btn.show === 'function') {
+              btn.show = btn.show(data)
+            } else if (typeof btn.show !== 'boolean') {
+              btn.show = true
+            }
+            if (typeof btn.disabled === 'function') {
+              btn.disabled = btn.disabled(data)
+            }
+            if (typeof btn.text === 'function') {
+              btn.text = btn.text(data)
+            }
+            if (btn.atClick) {
+              const {atClick} = btn
+              btn.atClick = () => atClick(data)
+            }
+            return btn
+          })
+      }
     }
   },
   watch: {

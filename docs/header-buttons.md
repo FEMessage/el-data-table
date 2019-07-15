@@ -21,30 +21,23 @@ export default {
       ],
       headerButtons: [
         {
-          text: '自定义头部按钮',
-          disabled: selected => selected.length == 0,
-          atClick: selected => {
-            let ids = selected.map(s => s.id)
-            alert('selected ids: ' + ids)
-            return new Promise((resolve, reject) => setTimeout(resolve, 1500))
-          }
-        },
-        {
           text: '请求后不刷新',
-          atClick: selected => {
+          atClick: () => {
             return new Promise((resolve, reject) =>
               setTimeout(() => resolve(false), 1500)
             )
           }
         },
-        {
-          text: selected => `操作选中的 ${selected.length || 0} 条数据`,
-          atClick: selected => {
+        selected => ({
+          text: `操作选中的 ${selected.length || 0} 条数据`,
+          type: selected.length ? 'success' : 'default',
+          disabled: !selected.length,
+          atClick: () => {
             return new Promise((resolve, reject) =>
-              setTimeout(() => resolve(false), 1500)
+              setTimeout(resolve, 1500)
             )
           }
-        }
+        })
       ],
       hasOperation: false,
       hasNew: false,

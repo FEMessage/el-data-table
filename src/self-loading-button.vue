@@ -2,10 +2,9 @@
   <component
     :is="isText ? 'text-button' : 'el-button'"
     v-bind="$attrs"
-    v-on="$listeners"
+    v-on="listeners"
     :loading="loading"
     :type="type"
-    @click="handleClick"
   >
     <slot></slot>
   </component>
@@ -33,17 +32,6 @@ export default {
      */
     click: {
       type: Function
-    },
-    /**
-     * click函数的参数
-     */
-    params: {},
-    /**
-     * 点击事件的回调函数
-     */
-    callback: {
-      type: Function,
-      default: () => {}
     }
   },
   data() {
@@ -51,22 +39,20 @@ export default {
       loading: false
     }
   },
-  methods: {
-    // 监控按钮的Promise进程
-    handleClick() {
-      if (!this.click) return
-
-      this.loading = true
-      Promise.resolve(this.click(this.params))
-        .then(flag => {
-          if (flag === false) return
-          // 调用父组件中的数据刷新方法
-          this.callback()
-        })
-        .catch(e => {})
-        .finally(e => {
-          this.loading = false
-        })
+  computed: {
+    listeners() {
+      return {
+        ...this.$listeners,
+        // click handler 会被组件覆盖
+        click: () => {
+          if (!this.click) return
+          this.loading = true
+          // 监控按钮的Promise进程
+          Promise.resolve(this.click())
+            .then(flag => flag !== false && this.$emit('click'))
+            .finally(() => (this.loading = false))
+        }
+      }
     }
   }
 }

@@ -16,17 +16,24 @@ export default {
         {
           prop: 'status',
           label: '状态',
-          formatter: row => (row.status === 'normal' ? '启用' : '禁用')
         }
       ],
       extraButtons: [
         {
           type: 'success',
-          text: row => row.status === 'normal' ? '禁用' : '启用',
-          atClick(row) {
-            alert(row.name)
+          text: 'hello',
+          atClick() {
+            alert('world')
           }
         },
+        row => ({
+          text: row => row.status === 'normal' ? '启用' : '禁用',
+          disabled: row.status !== 'normal',
+          atClick() {
+            alert(row.name)
+            return false
+          }
+        })
       ]
     }
   }
