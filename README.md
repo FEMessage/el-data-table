@@ -15,19 +15,19 @@
 
 ## Table of Contents <!-- omit in toc -->
 
-* [Introduction](#Introduction)
-  * [CRUD](#CRUD)
+* [Introduction](#introduction)
+  * [CRUD](#crud)
   * [数据驱动](#数据驱动)
-  * [Why](#Why)
-* [Feature](#Feature)
-* [Demo](#Demo)
-* [Install](#Install)
-* [Quick Start](#Quick-Start)
-  * [Global Register Component](#Global-Register-Component)
-  * [Template](#Template)
-* [Reference](#Reference)
-* [License](#License)
-* [Contributors](#Contributors)
+  * [Why](#why)
+* [Feature](#feature)
+* [Demo](#demo)
+* [Install](#install)
+* [Quick Start](#quick-start)
+  * [Global Register Component](#global-register-component)
+  * [Template](#template)
+* [Reference](#reference)
+* [License](#license)
+* [Contributors](#contributors)
 
 ## Introduction
 
