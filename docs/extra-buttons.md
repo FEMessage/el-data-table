@@ -27,6 +27,11 @@ export default {
           }
         },
         row => ({
+          type: 'success',
+          text: 'world',
+          show: row.status !== 'normal',
+        }),
+        row => ({
           text: row => row.status === 'normal' ? '启用' : '禁用',
           disabled: row.status !== 'normal',
           atClick() {

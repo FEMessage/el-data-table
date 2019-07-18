@@ -31,7 +31,6 @@
           <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
           <self-loading-button
             v-for="(btn, i) in customButtons(headerButtons, selected)"
-            v-if="btn.show"
             :click="btn.atClick"
             @click="getList"
             v-bind="btn"
@@ -75,12 +74,9 @@
 
             <el-table-column key="tree-ctrl" v-bind="columns[1]">
               <template slot-scope="scope">
-                <span
-                  v-if="isTree"
-                  v-for="space in scope.row._level"
-                  class="ms-tree-space"
-                  :key="space"
-                ></span>
+                <template v-if="isTree">
+                  <span v-for="space in scope.row._level" :key="space" class="ms-tree-space" />
+                </template>
                 <span
                   v-if="isTree && iconShow(scope.$index, scope.row)"
                   class="tree-ctrl"
@@ -105,12 +101,9 @@
             <!--展开这列, 丢失 el-table-column属性-->
             <el-table-column key="tree-ctrl" v-bind="columns[0]">
               <template slot-scope="scope">
-                <span
-                  v-if="isTree"
-                  v-for="space in scope.row._level"
-                  class="ms-tree-space"
-                  :key="space"
-                ></span>
+                <template v-if="isTree">
+                  <span v-for="space in scope.row._level" :key="space" class="ms-tree-space" />
+                </template>
                 <span
                   v-if="isTree && iconShow(scope.$index, scope.row)"
                   class="tree-ctrl"
@@ -153,7 +146,6 @@
             >{{ viewText }}</text-button>
             <self-loading-button
               v-for="(btn, i) in customButtons(extraButtons, row)"
-              v-if="btn.show"
               v-bind="btn"
               :click="btn.atClick"
               @click="getList"
@@ -695,12 +687,17 @@ export default {
         // 需要在一个新的btn对象上修改，否则会触发无限更新循环
         return btns
           .map(btn => (typeof btn === 'function' ? btn(data) : {...btn}))
-          .map(btn => {
-            if (typeof btn.show === 'function') {
-              btn.show = btn.show(data)
-            } else if (typeof btn.show !== 'boolean') {
-              btn.show = true
+          .filter(btn => {
+            switch (typeof btn.show) {
+              case 'function':
+                return btn.show(data)
+              case 'boolean':
+                return btn.show
+              default:
+                return true
             }
+          })
+          .map(btn => {
             if (typeof btn.disabled === 'function') {
               btn.disabled = btn.disabled(data)
             }
