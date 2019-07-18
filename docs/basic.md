@@ -42,7 +42,8 @@ export default {
           id: 'name',
           type: 'input'
         }
-      ]
+      ],
+      hasView: true
     }
   }
 }
