@@ -695,11 +695,11 @@ export default {
     dialogTitle() {
       switch (this.dialogMode) {
         case dialogModes.edit:
-          return this.editTitle
+          return this.dialogEditTitle
         case dialogModes.view:
-          return this.viewTitle
+          return this.dialogViewTitle
         default:
-          return this.newTitle
+          return this.dialogNewTitle
       }
     },
     isView() {
