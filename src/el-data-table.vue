@@ -707,7 +707,7 @@ export default {
             if (typeof btn.text === 'function') {
               btn.text = btn.text(data)
             }
-            if (btn.atClick) {
+            if (typeof btn.atClick === 'function') {
               const {atClick} = btn
               btn.atClick = () => atClick(data)
             }
