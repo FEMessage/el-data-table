@@ -26,38 +26,38 @@
         </el-form-item>
       </el-form-renderer>
 
-      <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
-        <el-form-item>
-          <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
-          <self-loading-button
-            v-for="(btn, i) in headerButtons"
-            v-if="'show' in btn ? btn.show(selected) : true"
-            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-            :click="btn.atClick"
-            :params="selected"
-            :callback="getList"
-            v-bind="btn"
-            :key="i"
-            size="small"
-          >
-            {{typeof btn.text === 'function' ? btn.text(selected) : btn.text}}
-          </self-loading-button>
-          <el-button
-            v-if="hasSelect && hasDelete"
-            type="danger"
-            size="small"
-            @click="onDefaultDelete($event)"
-            :disabled="single ? (!selected.length || selected.length > 1) : !selected.length"
-          >删除</el-button>
-          <el-button
-            v-if="canSearchCollapse"
-            type="default"
-            size="small"
-            :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
-            @click="isSearchCollapse = !isSearchCollapse"
-          >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
-        </el-form-item>
-      </el-form>
+      <div v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse" style="margin-bottom: 22px">
+        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
+        <self-loading-button
+          v-for="(btn, i) in headerButtons"
+          v-if="'show' in btn ? btn.show(selected) : true"
+          :disabled="'disabled' in btn ? btn.disabled(selected) : false"
+          :click="btn.atClick"
+          :params="selected"
+          :callback="getList"
+          v-bind="btn"
+          :key="i"
+          size="small"
+        >
+          {{typeof btn.text === 'function' ? btn.text(selected) : btn.text}}
+        </self-loading-button>
+        <el-button
+          v-if="hasSelect && hasDelete"
+          type="danger"
+          size="small"
+          @click="onDefaultDelete($event)"
+          :disabled="single ? (!selected.length || selected.length > 1) : !selected.length"
+        >删除</el-button>
+        <el-button
+          v-if="canSearchCollapse"
+          type="default"
+          size="small"
+          :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
+          @click="isSearchCollapse = !isSearchCollapse"
+        >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
+        <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，作用域传入selected -->
+        <slot name="header" v-bind:selected="selected" />
+      </div>
 
       <el-table
         ref="table"
