@@ -57,7 +57,7 @@
             @click="isSearchCollapse = !isSearchCollapse"
           >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
           <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，作用域传入selected -->
-          <slot name="header" v-bind:selected="selected" />
+          <slot name="header" :selected="selected" />
         </el-form-item>
       </el-form>
 
