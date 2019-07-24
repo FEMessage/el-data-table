@@ -189,7 +189,7 @@
         :layout="paginationLayout"
       ></el-pagination>
 
-      <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
+      <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog" @close="handleDialogClose">
         <!--https://github.com/FEMessage/el-form-renderer-->
         <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
           <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用，参考：https://femessage.github.io/el-form-renderer/#/Demo?id=slot -->
@@ -716,13 +716,6 @@ export default {
       },
       immediate: true
     },
-    dialogVisible: function(val, old) {
-      if (!val) {
-        this.confirmLoading = false
-
-        this.$refs.dialogForm.resetFields()
-      }
-    },
     selected(val) {
       /**
        * 多选项发生变化
@@ -945,6 +938,10 @@ export default {
     },
     cancel() {
       this.dialogVisible = false
+    },
+    handleDialogClose() {
+      this.confirmLoading = false
+      this.$refs.dialogForm.resetFields()
     },
     confirm() {
       this.$refs.dialogForm.validate(valid => {
