@@ -56,6 +56,8 @@
             :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
             @click="isSearchCollapse = !isSearchCollapse"
           >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
+          <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，作用域传入selected -->
+          <slot name="header" :selected="selected" />
         </el-form-item>
       </el-form>
 
@@ -176,6 +178,7 @@
         <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
         <slot></slot>
       </el-table>
+
       <el-pagination
         v-if="hasPagination"
         @size-change="handleSizeChange"
@@ -187,26 +190,28 @@
         style="text-align: right; padding: 10px 0"
         :layout="paginationLayout"
       ></el-pagination>
-      <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
-        <!--https://github.com/FEMessage/el-form-renderer-->
-        <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
-          <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用，参考：https://femessage.github.io/el-form-renderer/#/Demo?id=slot -->
-          <slot name="form"></slot>
-        </el-form-renderer>
 
-        <div slot="footer" v-show="!isView">
-          <el-button @click="cancel" size="small">取 消</el-button>
-          <el-button type="primary" @click="confirm" :loading="confirmLoading" size="small">确 定</el-button>
-        </div>
-      </el-dialog>
+      <the-dialog
+        v-if="hasDialog"
+        :newTitle="dialogNewTitle"
+        :editTitle="dialogEditTitle"
+        :viewTitle="dialogViewTitle"
+        :form="form"
+        :formAttrs="formAttrs"
+        ref="dialog"
+        @confirm="onConfirm"
+      >
+        <slot name="form"></slot>
+      </the-dialog>
     </template>
   </div>
 </template>
 
 <script>
 import _get from 'lodash.get'
-import SelfLoadingButton from './self-loading-button.vue'
-import TextButton from './text-button.vue'
+import SelfLoadingButton from './components/self-loading-button.vue'
+import TextButton from './components/text-button.vue'
+import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 
@@ -233,13 +238,12 @@ const treeParentKey = 'parentId'
 const treeParentValue = 'id'
 const defaultId = 'id'
 
-const dialogForm = 'dialogForm'
-
 export default {
   name: 'ElDataTable',
   components: {
     SelfLoadingButton,
-    TextButton
+    TextButton,
+    TheDialog
   },
   props: {
     /**
@@ -654,13 +658,6 @@ export default {
       // 多选项的数组
       selected: [],
 
-      //弹窗
-      dialogTitle: this.dialogNewTitle,
-      dialogVisible: false,
-      isNew: true,
-      isEdit: false,
-      isView: false,
-      confirmLoading: false,
       // 要修改的那一行
       row: {},
 
@@ -699,16 +696,6 @@ export default {
         this.$nextTick(this.getList)
       },
       immediate: true
-    },
-    dialogVisible: function(val, old) {
-      if (!val) {
-        this.isNew = false
-        this.isEdit = false
-        this.isView = false
-        this.confirmLoading = false
-
-        this.$refs[dialogForm].resetFields()
-      }
     },
     selected(val) {
       /**
@@ -907,106 +894,49 @@ export default {
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
     onDefaultNew(row = {}) {
       this.row = row
-      this.isNew = true
-      this.isEdit = false
-      this.isView = false
-      this.dialogTitle = this.dialogNewTitle
-      this.dialogVisible = true
+      this.$refs.dialog.show(dialogModes.new)
     },
     onDefaultView(row) {
       this.row = row
-      this.isView = true
-      this.isNew = false
-      this.isEdit = false
-      this.dialogTitle = this.dialogViewTitle
-      this.dialogVisible = true
-
-      // 给表单填充值
-      this.$nextTick(() => {
-        this.$refs[dialogForm].updateForm(row)
-      })
+      this.$refs.dialog.show(dialogModes.view, row)
     },
     onDefaultEdit(row) {
       this.row = row
-      this.isEdit = true
-      this.isNew = false
-      this.isView = false
-      this.dialogTitle = this.dialogEditTitle
-      this.dialogVisible = true
-
-      // 给表单填充值
-      this.$nextTick(() => {
-        this.$refs[dialogForm].updateForm(row)
-      })
+      this.$refs.dialog.show(dialogModes.edit, row)
     },
-    cancel() {
-      this.dialogVisible = false
-    },
-    confirm() {
-      if (this.isView) {
-        this.cancel()
-        return
+    async onConfirm(isNew, formValue, done) {
+      const data = {
+        ...formValue,
+        ...this._extraBody
       }
 
-      this.$refs[dialogForm].validate(valid => {
-        if (!valid) return false
+      if (this.isTree) {
+        data[this.treeParentKey] = isNew
+          ? this.row[this.treeParentValue]
+          : this.row[this.treeParentKey]
+      }
 
-        let data = Object.assign(
-          {},
-          this.$refs[dialogForm].getFormValue(),
-          this._extraBody
-        )
+      try {
+        await this.beforeConfirm(data, isNew)
+        const customMethod = isNew ? 'onNew' : 'onEdit'
 
-        if (this.isTree) {
-          if (this.isNew)
-            data[this.treeParentKey] = this.row[this.treeParentValue]
-          else data[this.treeParentKey] = this.row[this.treeParentKey]
+        if (this[customMethod]) {
+          await this[customMethod](data, this.row)
+        } else {
+          // 默认新增/修改逻辑
+          const [method, url] = isNew
+            ? ['post', this.url]
+            : ['put', `${this.url}/${this.row[this.id]}`]
+
+          await this.$axios[method](url, data)
         }
-
-        this.beforeConfirm(data, this.isNew)
-          .then(resp => {
-            let condiction = 'isNew'
-            let customMethod = 'onNew'
-
-            if (this.isEdit) {
-              condiction = 'isEdit'
-              customMethod = 'onEdit'
-            }
-
-            if (this[condiction] && this[customMethod]) {
-              this[customMethod](data, this.row)
-                .then(resp => {
-                  this.getList()
-                  this.showMessage(true)
-                  this.cancel()
-                })
-                .catch(e => {})
-              return
-            }
-
-            // 默认新增/修改逻辑
-            let method = 'post'
-            let url = this.url + ''
-
-            if (this.isEdit) {
-              method = 'put'
-              url += `/${this.row[this.id]}`
-            }
-
-            this.confirmLoading = true
-
-            this.$axios[method](url, data)
-              .then(resp => {
-                this.getList()
-                this.showMessage(true)
-                this.cancel()
-              })
-              .catch(err => {
-                this.confirmLoading = false
-              })
-          })
-          .catch(e => {})
-      })
+        this.getList()
+        this.showMessage(true)
+        done()
+      } catch (e) {
+        // 出错则不关闭dialog
+        done(false)
+      }
     },
     onDefaultDelete(row) {
       this.$confirm('确认删除吗', '提示', {
