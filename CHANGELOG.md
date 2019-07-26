@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/FEMessage/el-data-table/compare/v1.6.3...v1.7.0) (2019-07-26)
+
+
+### Features
+
+* 增加header-slot ([#177](https://github.com/FEMessage/el-data-table/issues/177)) ([d3aeccf](https://github.com/FEMessage/el-data-table/commit/d3aeccf))
+
+
+
 ### [1.6.3](https://github.com/FEMessage/el-data-table/compare/v1.6.2...v1.6.3) (2019-07-12)
 
 
