@@ -26,7 +26,7 @@
         </el-form-item>
       </el-form-renderer>
 
-      <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
+      <el-form v-if="hasHeader">
         <el-form-item>
           <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
           <self-loading-button
@@ -676,6 +676,14 @@ export default {
     },
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
+    },
+    hasHeader() {
+      return (
+        this.hasNew ||
+        (this.hasSelect && hasDelete) ||
+        this.headerButtons.length ||
+        this.canSearchCollapse
+      )
     },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
