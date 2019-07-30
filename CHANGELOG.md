@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/FEMessage/el-data-table/compare/v1.7.0...v1.7.1) (2019-07-30)
+
+
+### Bug Fixes
+
+* header 在没有头部按钮时出现 22px 高度的问题 ([1e766b1](https://github.com/FEMessage/el-data-table/commit/1e766b1))
+* 修复 tr 淡入动画 ([#179](https://github.com/FEMessage/el-data-table/issues/179)) ([6135a4a](https://github.com/FEMessage/el-data-table/commit/6135a4a))
+
+
+
 ## [1.7.0](https://github.com/FEMessage/el-data-table/compare/v1.6.3...v1.7.0) (2019-07-26)
 
 
