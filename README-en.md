@@ -1,9 +1,9 @@
 # el-data-table
 
-[![Build Status](https://travis-ci.com/FEMessage/el-data-table.svg?branch=master)](https://travis-ci.com/FEMessage/el-data-table)
-[![NPM Download](https://img.shields.io/npm/dm/@femessage/el-data-table.svg)](https://www.npmjs.com/package/@femessage/el-data-table)
-[![NPM Version](https://img.shields.io/npm/v/@femessage/el-data-table.svg)](https://www.npmjs.com/package/@femessage/el-data-table)
-[![NPM License](https://img.shields.io/npm/l/@femessage/el-data-table.svg)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
+[![Build Status](https://badgen.net/travis/FEMessage/el-data-table/master)](https://travis-ci.com/FEMessage/el-data-table)
+[![NPM Download](https://badgen.net/npm/dm/@femessage/el-data-table)](https://www.npmjs.com/package/@femessage/el-data-table)
+[![NPM Version](https://badgen.net/npm/v/@femessage/el-data-table)](https://www.npmjs.com/package/@femessage/el-data-table)
+[![NPM License](https://badgen.net/npm/license/@femessage/el-data-table)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-data-table/pulls)
 [![Automated Release Notes by gren](https://img.shields.io/badge/%F0%9F%A4%96-release%20notes-00B2EE.svg)](https://github-tools.github.io/github-release-notes/)
 
@@ -18,14 +18,15 @@ Auto requesting by `axios`, supports pagination, tree data structure, custom se
   * [Data Driven](#data-driven)
   * [Why](#why)
 * [Feature](#feature)
-* [Demo](#demo)
+* [Links](#links)
 * [Install](#install)
 * [Quick Start](#quick-start)
   * [Global Register Component](#global-register-component)
   * [Template](#template)
 * [Reference](#reference)
-* [License](#license)
+* [Contributing](#contributing)
 * [Contributors](#contributors)
+* [License](#license)
 
 ## Introduction
 
@@ -134,7 +135,7 @@ The results are as follows:
 
 [⬆Back to Top](#table-of-contents)
 
-### Data driven
+### Data Driven
 
 Moving the content of the template to the script means that the template can be reduced and js can be extracted to another file to reuse.
 At the same time, the data in js is actually a piece of json, this means code generation tool can help.
@@ -152,8 +153,8 @@ Why do you create el-data-table based on el-table of element-ui?
 I often hear the following sounds:
 
 1.  el-table can cover most scenarios without extended requirements
-1.  wrap up so many things, it's heavy and high coupling
-1.  bound with too many business logic, it's not flexible; business logic should handle by developers
+2.  wrap up so many things, it's heavy and high coupling
+3.  bound with too many business logic, it's not flexible; business logic should handle by developers
 
 First of all, I have to say, el-table is really flexible, but when implementing paging requests, only el-table is not enough, and the el-pagination component needs to be combined. Most of the content of paging processing is repeated. Without a high level business component, we get duplicate code everywhere.
 
@@ -179,11 +180,12 @@ In such situation, el-data-table was born.
 
 [⬆Back to Top](#table-of-contents)
 
-## Demo
+## Links
 
-* [Doc and online demo](https://femessage.github.io/el-data-table/)
+* [docs](https://FEMessage.github.io/el-data-table/)
+* [fem-vscode-helper](https://marketplace.visualstudio.com/items?itemName=FEMessage.fem-vscode-helper)
 
-[⬆Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Install
 
@@ -261,11 +263,18 @@ Vue.prototype.$axios = axios
 
 [⬆Back to Top](#table-of-contents)
 
-## License
+## Contributing
 
-[MIT](https://www.yuque.com/deepexi-serverless/onx52o/LICENSE)
+For those who are interested in contributing to this project, such as:
 
-[⬆Back to Top](#table-of-contents)
+* report a bug
+* request new feature
+* fix a bug
+* implement a new feature
+
+Please refer to our [contributing guide](https://github.com/FEMessage/.github/blob/master/CONTRIBUTING.md).
+
+[⬆ Back to Top](#table-of-contents)
 
 ## Contributors
 
@@ -279,3 +288,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## License
+
+[MIT](https://www.yuque.com/deepexi-serverless/onx52o/LICENSE)
+
+[⬆Back to Top](#table-of-contents)
