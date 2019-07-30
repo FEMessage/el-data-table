@@ -17,8 +17,7 @@
   ],
   "files": [
     "src",
-    "dist",
-    "yarn.lock"
+    "dist"
   ],
   "main": "dist/el-data-table.umd.js",
   "module": "dist/el-data-table.esm.js",
