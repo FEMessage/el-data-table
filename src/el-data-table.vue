@@ -26,7 +26,7 @@
         </el-form-item>
       </el-form-renderer>
 
-      <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
+      <el-form v-if="hasHeader">
         <el-form-item>
           <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
           <self-loading-button
@@ -65,7 +65,7 @@
         ref="table"
         v-bind="tableAttrs"
         :data="data"
-        :row-style="showRow"
+        :row-class-name="showRow"
         v-loading="loading"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
@@ -677,6 +677,14 @@ export default {
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
     },
+    hasHeader() {
+      return (
+        this.hasNew ||
+        (this.hasSelect && hasDelete) ||
+        this.headerButtons.length ||
+        this.canSearchCollapse
+      )
+    },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
     },
@@ -1040,9 +1048,7 @@ export default {
         ? row.row.parent._expanded && row.row.parent._show
         : true
       row.row._show = show
-      return show
-        ? 'animation:treeTableShow 1s-webkit-animation:treeTableShow 1s'
-        : 'display:none'
+      return show ? 'row-show' : 'row-hide'
     },
     // 切换下级是否展开
     toggleExpanded(trIndex) {
@@ -1104,6 +1110,14 @@ export default {
     to {
       opacity: 1;
     }
+  }
+
+  .row-show {
+    animation: treeTableShow 1s;
+  }
+
+  .row-hide {
+    display: none;
   }
 }
 </style>
