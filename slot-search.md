@@ -29,6 +29,7 @@ export default {
         {
           type: 'input',
           id: 'q',
+          default: 'fem',
           label: 'github用户名',
           width: '200px',
           el: {placeholder: '1分钟只能调用10次'},
