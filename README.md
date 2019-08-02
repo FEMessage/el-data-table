@@ -1,9 +1,9 @@
 # el-data-table
 
-[![Build Status](https://travis-ci.com/FEMessage/el-data-table.svg?branch=master)](https://travis-ci.com/FEMessage/el-data-table)
-[![NPM Download](https://img.shields.io/npm/dm/@femessage/el-data-table.svg)](https://www.npmjs.com/package/@femessage/el-data-table)
-[![NPM Version](https://img.shields.io/npm/v/@femessage/el-data-table.svg)](https://www.npmjs.com/package/@femessage/el-data-table)
-[![NPM License](https://img.shields.io/npm/l/@femessage/el-data-table.svg)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
+[![Build Status](https://badgen.net/travis/FEMessage/el-data-table/master)](https://travis-ci.com/FEMessage/el-data-table)
+[![NPM Download](https://badgen.net/npm/dm/@femessage/el-data-table)](https://www.npmjs.com/package/@femessage/el-data-table)
+[![NPM Version](https://badgen.net/npm/v/@femessage/el-data-table)](https://www.npmjs.com/package/@femessage/el-data-table)
+[![NPM License](https://badgen.net/npm/license/@femessage/el-data-table)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-data-table/pulls)
 [![Automated Release Notes by gren](https://img.shields.io/badge/%F0%9F%A4%96-release%20notes-00B2EE.svg)](https://github-tools.github.io/github-release-notes/)
 
@@ -13,21 +13,22 @@
 
 [English](./README-en.md)
 
-## Table of Contents <!-- omit in toc -->
+## Table of Contents
 
 * [Introduction](#introduction)
   * [CRUD](#crud)
   * [数据驱动](#数据驱动)
   * [Why](#why)
 * [Feature](#feature)
-* [Demo](#demo)
+* [Links](#links)
 * [Install](#install)
 * [Quick Start](#quick-start)
   * [Global Register Component](#global-register-component)
   * [Template](#template)
 * [Reference](#reference)
-* [License](#license)
+* [Contributing](#contributing)
 * [Contributors](#contributors)
+* [License](#license)
 
 ## Introduction
 
@@ -192,9 +193,10 @@ export default {
 
 [⬆ Back to Top](#table-of-contents)
 
-## Demo
+## Links
 
-* [doc and online demo](https://femessage.github.io/el-data-table/)
+* [docs](https://FEMessage.github.io/el-data-table/)
+* [fem-vscode-helper](https://marketplace.visualstudio.com/items?itemName=FEMessage.fem-vscode-helper)
 
 [⬆ Back to Top](#table-of-contents)
 
@@ -283,9 +285,16 @@ Vue.prototype.$axios = axios
 
 [⬆ Back to Top](#table-of-contents)
 
-## License
+## Contributing
 
-[MIT](./LICENSE)
+For those who are interested in contributing to this project, such as:
+
+* report a bug
+* request new feature
+* fix a bug
+* implement a new feature
+
+Please refer to our [contributing guide](https://github.com/FEMessage/.github/blob/master/CONTRIBUTING.md).
 
 [⬆ Back to Top](#table-of-contents)
 
@@ -301,3 +310,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## License
+
+[MIT](./LICENSE)
+
+[⬆ Back to Top](#table-of-contents)
