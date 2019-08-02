@@ -21,26 +21,14 @@
         <slot name="search"></slot>
         <el-form-item>
           <!--https://github.com/ElemeFE/element/pull/5920-->
-          <el-button
-            native-type="submit"
-            type="primary"
-            @click="search"
-            size="small"
-            >查询</el-button
-          >
+          <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
           <el-button @click="resetSearch" size="small">重置</el-button>
         </el-form-item>
       </el-form-renderer>
 
       <el-form v-if="hasHeader">
         <el-form-item>
-          <el-button
-            v-if="hasNew"
-            type="primary"
-            size="small"
-            @click="onDefaultNew"
-            >{{ newText }}</el-button
-          >
+          <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
           <self-loading-button
             v-for="(btn, i) in headerButtons"
             v-if="'show' in btn ? btn.show(selected) : true"
@@ -52,7 +40,9 @@
             :key="i"
             size="small"
           >
-            {{ typeof btn.text === 'function' ? btn.text(selected) : btn.text }}
+            {{
+            typeof btn.text === 'function' ? btn.text(selected) : btn.text
+            }}
           </self-loading-button>
           <el-button
             v-if="hasSelect && hasDelete"
@@ -64,16 +54,14 @@
                 ? !selected.length || selected.length > 1
                 : !selected.length
             "
-            >删除</el-button
-          >
+          >删除</el-button>
           <el-button
             v-if="canSearchCollapse"
             type="default"
             size="small"
             :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
             @click="isSearchCollapse = !isSearchCollapse"
-            >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button
-          >
+          >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
           <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，作用域传入selected -->
           <slot name="header" :selected="selected" />
         </el-form-item>
@@ -93,10 +81,7 @@
         <template v-if="isTree">
           <!--有多选-->
           <template v-if="hasSelect">
-            <el-table-column
-              key="selection-key"
-              v-bind="columns[0]"
-            ></el-table-column>
+            <el-table-column key="selection-key" v-bind="columns[0]"></el-table-column>
 
             <el-table-column key="tree-ctrl" v-bind="columns[1]">
               <template slot-scope="scope">
@@ -158,31 +143,15 @@
 
         <!--非树-->
         <template v-else>
-          <el-table-column
-            v-for="col in columns"
-            :key="col.prop"
-            v-bind="col"
-          ></el-table-column>
+          <el-table-column v-for="col in columns" :key="col.prop" v-bind="col"></el-table-column>
         </template>
 
         <!--默认操作列-->
-        <el-table-column
-          label="操作"
-          v-if="hasOperation"
-          v-bind="operationAttrs"
-        >
+        <el-table-column label="操作" v-if="hasOperation" v-bind="operationAttrs">
           <template slot-scope="scope">
-            <text-button
-              v-if="isTree && hasNew"
-              @click="onDefaultNew(scope.row)"
-              >{{ newText }}</text-button
-            >
-            <text-button v-if="hasEdit" @click="onDefaultEdit(scope.row)">{{
-              editText
-            }}</text-button>
-            <text-button v-if="hasView" @click="onDefaultView(scope.row)">{{
-              viewText
-            }}</text-button>
+            <text-button v-if="isTree && hasNew" @click="onDefaultNew(scope.row)">{{ newText }}</text-button>
+            <text-button v-if="hasEdit" @click="onDefaultEdit(scope.row)">{{ editText }}</text-button>
+            <text-button v-if="hasView" @click="onDefaultView(scope.row)">{{ viewText }}</text-button>
             <self-loading-button
               v-for="(btn, i) in extraButtons"
               v-if="'show' in btn ? btn.show(scope.row) : true"
@@ -194,15 +163,14 @@
               is-text
             >
               {{
-                typeof btn.text === 'function' ? btn.text(scope.row) : btn.text
+              typeof btn.text === 'function' ? btn.text(scope.row) : btn.text
               }}
             </self-loading-button>
             <text-button
               v-if="!hasSelect && hasDelete && canDelete(scope.row)"
               type="danger"
               @click="onDefaultDelete(scope.row)"
-              >删除</text-button
-            >
+            >删除</text-button>
           </template>
         </el-table-column>
 
@@ -1114,8 +1082,9 @@ export default {
 </script>
 <style lang="stylus">
 .el-data-table {
-  color-blue = #2196F3
-  space-width = 18px
+  color-blue = #2196F3;
+  space-width = 18px;
+
   .ms-tree-space {
     position: relative;
     top: 1px;
