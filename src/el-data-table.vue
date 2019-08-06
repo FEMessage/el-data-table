@@ -159,11 +159,19 @@
 
         <!--非树-->
         <template v-else>
-          <el-table-column
-            v-for="col in columns"
-            :key="col.prop"
-            v-bind="col"
-          ></el-table-column>
+          <template v-for="col in columns">
+            <!--不命名slot的原因使用slot的原因是因为v-bind="col"-->
+            <el-table-column
+              v-if="!col.slots"
+              :key="col.prop"
+              v-bind="col"
+            ></el-table-column>
+            <el-table-column v-else :key="col.prop" v-bind="col">
+              <template slot-scope="scope">
+                <slot :name="col.slots" :scope="scope"></slot>
+              </template>
+            </el-table-column>
+          </template>
         </template>
 
         <!--默认操作列-->
