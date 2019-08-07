@@ -679,7 +679,7 @@ export default {
     hasHeader() {
       return (
         this.hasNew ||
-        (this.hasSelect && hasDelete) ||
+        (this.hasSelect && this.hasDelete) ||
         this.headerButtons.length ||
         this.canSearchCollapse
       )
@@ -714,20 +714,32 @@ export default {
   },
   mounted() {
     if (this.saveQuery) {
-      const query = queryUtil.get(location.href)
-      if (query) {
-        this.page = parseInt(query.page)
-        this.size = parseInt(query.size)
-        // 恢复查询条件，但对slot=search无效
-        if (this.$refs.searchForm) {
-          delete query.page
-          delete query.size
-          this.$refs.searchForm.updateForm(query)
-        }
-      }
+      this.updateFromQuery()
+      window.addEventListener('hashchange', this.updateFromQuery)
+    }
+  },
+  destroyed() {
+    if (this.saveQuery) {
+      window.removeEventListener('hashchange', this.updateFromQuery)
     }
   },
   methods: {
+    /**
+     * 从query中获取搜索值、页码等数据，然后发出请求
+     */
+    updateFromQuery() {
+      const query = queryUtil.get(location.href)
+      if (!query) return
+      this.page = parseInt(query.page)
+      this.size = parseInt(query.size)
+      // 恢复查询条件，但对slot=search无效
+      if (this.$refs.searchForm) {
+        delete query.page
+        delete query.size
+        this.$refs.searchForm.updateForm(query)
+      }
+      this.$nextTick(this.getList)
+    },
     /**
      * 手动刷新列表数据
      * @public
