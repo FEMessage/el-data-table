@@ -881,6 +881,14 @@ export default {
      * @public
      */
     resetSearch() {
+      /**
+       * 按下重置按钮后触发
+       */
+      this.$emit('reset')
+
+      this.$emit('update:customQuery', JSON.parse(this.initExtraQuery))
+      this.$emit('update:extraQuery', JSON.parse(this.initExtraQuery))
+
       // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
       this.page = defaultFirstPage
@@ -894,14 +902,6 @@ export default {
       this.$nextTick(() => {
         this.getList()
       })
-
-      /**
-       * 按下重置按钮后触发
-       */
-      this.$emit('reset')
-
-      this.$emit('update:customQuery', JSON.parse(this.initExtraQuery))
-      this.$emit('update:extraQuery', JSON.parse(this.initExtraQuery))
     },
     handleSizeChange(val) {
       if (this.size === val) return
