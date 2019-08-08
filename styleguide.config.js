@@ -64,8 +64,8 @@ module.exports = {
           loaders: ['style-loader', 'css-loader']
         },
         {
-          test: /\.styl(us)?$/,
-          loaders: ['vue-style-loader', 'css-loader', 'stylus-loader']
+          test: /\.less$/,
+          loaders: ['vue-style-loader', 'css-loader', 'less-loader']
         },
         {
           test: /\.(woff2?|eot|[ot]tf)(\?.*)?$/,

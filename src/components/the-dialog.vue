@@ -1,14 +1,30 @@
 <template>
-  <el-dialog :title="title" :visible.sync="visible" ref="dialog" @close="resetFields">
+  <el-dialog
+    :title="title"
+    :visible.sync="visible"
+    ref="dialog"
+    @close="resetFields"
+  >
     <!--https://github.com/FEMessage/el-form-renderer-->
-    <el-form-renderer :content="form" ref="form" v-bind="formAttrs" :disabled="isView">
+    <el-form-renderer
+      :content="form"
+      ref="form"
+      v-bind="formAttrs"
+      :disabled="isView"
+    >
       <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用，参考：https://femessage.github.io/el-form-renderer/#/Demo?id=slot -->
       <slot></slot>
     </el-form-renderer>
 
     <div slot="footer" v-show="!isView">
       <el-button @click="visible = false" size="small">取 消</el-button>
-      <el-button type="primary" @click="confirm" :loading="confirmLoading" size="small">确 定</el-button>
+      <el-button
+        type="primary"
+        @click="confirm"
+        :loading="confirmLoading"
+        size="small"
+        >确 定</el-button
+      >
     </div>
   </el-dialog>
 </template>
@@ -100,5 +116,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -1112,10 +1112,11 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
+<style lang="less">
 .el-data-table {
-  color-blue = #2196F3
-  space-width = 18px
+  @color-blue: #2196f3;
+  @space-width: 18px;
+
   .ms-tree-space {
     position: relative;
     top: 1px;
@@ -1123,7 +1124,7 @@ export default {
     font-style: normal;
     font-weight: 400;
     line-height: 1;
-    width: space-width;
+    width: @space-width;
     height: 14px;
 
     &::before {
@@ -1134,7 +1135,7 @@ export default {
   .tree-ctrl {
     position: relative;
     cursor: pointer;
-    color: color-blue;
+    color: @color-blue;
   }
 
   @keyframes treeTableShow {
