@@ -3,6 +3,7 @@
     :title="title"
     :visible.sync="visible"
     ref="dialog"
+    v-bind="dialogAttrs"
     @close="resetFields"
   >
     <!--https://github.com/FEMessage/el-form-renderer-->
@@ -55,6 +56,10 @@ export default {
       required: true
     },
     formAttrs: {
+      type: Object,
+      required: true
+    },
+    dialogAttrs: {
       type: Object,
       required: true
     }

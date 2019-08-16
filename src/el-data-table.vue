@@ -229,6 +229,7 @@
         :viewTitle="dialogViewTitle"
         :form="form"
         :formAttrs="formAttrs"
+        :dialogAttrs="dialogAttrs"
         ref="dialog"
         @confirm="onConfirm"
       >
@@ -615,6 +616,16 @@ export default {
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/form#form-attributes
      */
     formAttrs: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    /**
+     * 对话框属性设置, 详情配置参考element-ui官网
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/dialog#attributes
+     */
+    dialogAttrs: {
       type: Object,
       default() {
         return {}
