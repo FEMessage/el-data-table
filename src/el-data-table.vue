@@ -41,19 +41,22 @@
             @click="onDefaultNew"
             >{{ newText }}</el-button
           >
-          <self-loading-button
-            v-for="(btn, i) in headerButtons"
-            v-if="'show' in btn ? btn.show(selected) : true"
-            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-            :click="btn.atClick"
-            :params="selected"
-            :callback="getList"
-            v-bind="btn"
-            :key="i"
-            size="small"
-          >
-            {{ typeof btn.text === 'function' ? btn.text(selected) : btn.text }}
-          </self-loading-button>
+          <template v-if="'show' in btn ? btn.show(selected) : true">
+            <self-loading-button
+              v-for="(btn, i) in headerButtons"
+              :disabled="'disabled' in btn ? btn.disabled(selected) : false"
+              :click="btn.atClick"
+              :params="selected"
+              :callback="getList"
+              v-bind="btn"
+              :key="i"
+              size="small"
+            >
+              {{
+                typeof btn.text === 'function' ? btn.text(selected) : btn.text
+              }}
+            </self-loading-button>
+          </template>
           <el-button
             v-if="hasSelect && hasDelete"
             type="danger"
@@ -99,9 +102,8 @@
             ></el-table-column>
 
             <el-table-column key="tree-ctrl" v-bind="columns[1]">
-              <template slot-scope="scope">
+              <template slot-scope="scope" v-if="isTree">
                 <span
-                  v-if="isTree"
                   v-for="space in scope.row._level"
                   class="ms-tree-space"
                   :key="space"
@@ -129,9 +131,8 @@
           <template v-else>
             <!--展开这列, 丢失 el-table-column属性-->
             <el-table-column key="tree-ctrl" v-bind="columns[0]">
-              <template slot-scope="scope">
+              <template slot-scope="scope" v-if="isTree">
                 <span
-                  v-if="isTree"
                   v-for="space in scope.row._level"
                   class="ms-tree-space"
                   :key="space"
@@ -183,20 +184,23 @@
             <text-button v-if="hasView" @click="onDefaultView(scope.row)">{{
               viewText
             }}</text-button>
-            <self-loading-button
-              v-for="(btn, i) in extraButtons"
-              v-if="'show' in btn ? btn.show(scope.row) : true"
-              v-bind="btn"
-              :click="btn.atClick"
-              :params="scope.row"
-              :callback="getList"
-              :key="i"
-              is-text
-            >
-              {{
-                typeof btn.text === 'function' ? btn.text(scope.row) : btn.text
-              }}
-            </self-loading-button>
+            <template v-if="'show' in btn ? btn.show(scope.row) : true">
+              <self-loading-button
+                v-for="(btn, i) in extraButtons"
+                v-bind="btn"
+                :click="btn.atClick"
+                :params="scope.row"
+                :callback="getList"
+                :key="i"
+                is-text
+              >
+                {{
+                  typeof btn.text === 'function'
+                    ? btn.text(scope.row)
+                    : btn.text
+                }}
+              </self-loading-button>
+            </template>
             <text-button
               v-if="!hasSelect && hasDelete && canDelete(scope.row)"
               type="danger"
