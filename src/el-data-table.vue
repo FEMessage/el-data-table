@@ -986,63 +986,40 @@ export default {
       this.$confirm('确认删除吗', '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
-        beforeClose: (action, instance, done) => {
-          if (action == 'confirm') {
-            instance.confirmButtonLoading = true
+        beforeClose: async (action, instance, done) => {
+          if (action !== 'confirm') return done()
 
+          instance.confirmButtonLoading = true
+
+          try {
             if (this.onDelete) {
-              this.onDelete(
-                this.hasSelect
-                  ? !this.single
-                    ? this.selected
-                    : this.selected[0]
-                  : row
-              )
-                .then(resp => {
-                  this.showMessage(true)
-                  done()
-                  this.clearSelection()
-                  this.getList()
-                })
-                .catch(e => {})
-                .finally(e => {
-                  instance.confirmButtonLoading = false
-                })
-              return
-            }
-
-            // 默认删除逻辑
-            // 单个删除
-            if (!this.hasSelect) {
-              this.$axios
-                .delete(this.url + '/' + row[this.id])
-                .then(resp => {
-                  instance.confirmButtonLoading = false
-                  done()
-                  this.showMessage(true)
-                  this.getList()
-                })
-                .catch(er => {
-                  instance.confirmButtonLoading = false
-                })
-            } else {
-              // 多选模式
-              this.$axios
-                .delete(
-                  this.url + '/' + this.selected.map(v => v[this.id]).toString()
+              // 自定义删除逻辑
+              if (this.hasSelect) {
+                await this.onDelete(
+                  this.single ? this.selected[0] : this.selected
                 )
-                .then(resp => {
-                  instance.confirmButtonLoading = false
-                  done()
-                  this.showMessage(true)
-                  this.clearSelection()
-                  this.getList()
-                })
-                .catch(er => {
-                  instance.confirmButtonLoading = false
-                })
+                this.clearSelection()
+              } else {
+                await this.onDelete(row)
+              }
+            } else if (this.hasSelect) {
+              // 多选模式
+              await this.$axios.delete(
+                this.url + '/' + this.selected.map(v => v[this.id]).join(',')
+              )
+              this.clearSelection()
+            } else {
+              // 单个删除
+              await this.$axios.delete(this.url + '/' + row[this.id])
             }
-          } else done()
+            done()
+            this.showMessage(true)
+            this.getList()
+          } catch (error) {
+            // do nothing
+          } finally {
+            instance.confirmButtonLoading = false
+          }
         }
       }).catch(er => {
         /*取消*/
