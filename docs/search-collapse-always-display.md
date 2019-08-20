@@ -18,14 +18,14 @@ export default {
         {
           type: 'input',
           id: 'name',
-          label: '用户名',
+          label: '您的用户名',
+          alwaysDisplay: true,
           el: {placeholder: '请输入用户名'}
         },
         {
           type: 'select',
           id: 'age',
           label: '年龄',
-          alwaysDisplay: true,
           el: {
             placeholder: '请输入年龄'
           },
@@ -35,6 +35,27 @@ export default {
             },
             {
               value: 18
+            }
+          ]
+        },
+        {
+          type: 'input',
+          id: 'favorite',
+          label: '喜欢的东西'
+        },
+        {
+          type: 'input',
+          id: 'wishTravel',
+          label: '想去的地方'
+        },
+        {
+          type: 'select',
+          id: 'lived',
+          label: '待过的地方',
+          options: [
+            {
+              label: '三番',
+              value: 'San Francisco'
             }
           ]
         }
