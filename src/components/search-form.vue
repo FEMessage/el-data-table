@@ -61,7 +61,10 @@ export default {
   },
 
   mounted() {
-    formValue = {}
+    formValue = Object.assign(
+      {},
+      this.$refs.mainForm.getFormValue()
+    )
     unwatchMainForm = this.$refs.mainForm.$watch('value', val => {
       formValue = Object.assign(formValue, val)
     })
