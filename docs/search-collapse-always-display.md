@@ -2,10 +2,7 @@ search表单折叠并且设置部分总是可见
 
 ```vue
 <template>
-  <div>
-    <el-data-table v-bind="$data" ref="table" />
-    <button @click="setOptions">setoptions</button>
-  </div>
+  <el-data-table v-bind="$data" ref="table" />
 </template>
 <script>
 export default {
@@ -44,16 +41,7 @@ export default {
       ],
       canSearchCollapse: true
     }
-  },
-  methods: {
-    setOptions() {
-      this.$refs.table.$refs.searchForm.setOptions('age', [
-        {
-          value: 20
-        }
-      ])
-    }
-  },
+  }
 }
 </script>
 ```
