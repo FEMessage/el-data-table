@@ -8,8 +8,17 @@
     "type": "git",
     "url": "https://github.com/FEMessage/el-data-table.git"
   },
-  "keywords": ["vue", "element-ui", "table", "data-table", "element table"],
-  "files": ["src", "dist", "yarn.lock"],
+  "keywords": [
+    "vue",
+    "element-ui",
+    "table",
+    "data-table",
+    "element table"
+  ],
+  "files": [
+    "src",
+    "dist"
+  ],
   "main": "dist/el-data-table.umd.js",
   "module": "dist/el-data-table.esm.js",
   "unpkg": "dist/el-data-table.min.js",
@@ -17,18 +26,13 @@
     "./sfc": "src/el-data-table.vue"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose",
     "dev": "vue-styleguidist server",
     "doc": "vue-styleguidist build",
-    "build":
-      "npm run build:unpkg & npm run build:es & npm run build:umd & npm run doc",
-    "build:umd":
-      "rollup --config build/rollup.config.js --format umd --file dist/el-data-table.umd.js",
-    "build:es":
-      "rollup --config build/rollup.config.js --format es --file dist/el-data-table.esm.js",
-    "build:unpkg":
-      "rollup --config build/rollup.config.js --format iife --file dist/el-data-table.min.js",
-    "precommit": "pretty-quick --staged",
+    "build": "npm run build:unpkg & npm run build:es & npm run build:umd & npm run doc",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/el-data-table.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/el-data-table.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/el-data-table.min.js",
     "stdver": "standard-version -m '[skip ci] chore(release): v%s'",
     "release": "gren release --override"
   },
@@ -46,31 +50,50 @@
     "file-loader": "^3.0.1",
     "github-release-notes": "^0.17.0",
     "glob": "^7.1.3",
-    "husky": "^0.14.3",
+    "husky": "1.3.1",
     "jest": "^24.8.0",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
+    "lint-staged": "^8.1.0",
     "minimist": "^1.2.0",
-    "prettier": "1.12.1",
-    "pretty-quick": "^1.4.1",
+    "prettier": "1.18.2",
     "rollup": "^1.9.0",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-vue": "^4.7.2",
     "standard-version": "^6.0.1",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2",
-    "vue": "^2.5.16",
-    "vue-loader": "^15.7.0",
-    "vue-styleguidist": "^3.11.4",
+    "stylelint": "^9.10.0",
+    "stylelint-config-standard": "^18.2.0",
+    "vue": "^2.6.10",
+    "vue-loader": "^15.7.1",
+    "vue-styleguidist": "^3.16.3",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^4.29.6"
   },
   "publishConfig": {
     "access": "public"
   },
-  "vue-sfc-cli": "1.10.1",
+  "vue-sfc-cli": "1.10.6",
   "engines": {
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "post-commit": "git update-index --again"
+    }
+  },
+  "lint-staged": {
+    "*.(js|md|json)": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.vue": [
+      "prettier --write",
+      "stylelint --fix",
+      "git add"
+    ]
   }
 }

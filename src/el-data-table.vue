@@ -21,14 +21,26 @@
         <slot name="search"></slot>
         <el-form-item>
           <!--https://github.com/ElemeFE/element/pull/5920-->
-          <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
+          <el-button
+            native-type="submit"
+            type="primary"
+            @click="search"
+            size="small"
+            >查询</el-button
+          >
           <el-button @click="resetSearch" size="small">重置</el-button>
         </el-form-item>
       </el-form-renderer>
 
-      <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
+      <el-form v-if="hasHeader">
         <el-form-item>
-          <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
+          <el-button
+            v-if="hasNew"
+            type="primary"
+            size="small"
+            @click="onDefaultNew"
+            >{{ newText }}</el-button
+          >
           <self-loading-button
             v-for="(btn, i) in customButtons(headerButtons, selected)"
             :click="btn.atClick"
@@ -36,21 +48,28 @@
             v-bind="btn"
             :key="i"
             size="small"
-          >{{btn.text}}</self-loading-button>
+            >{{ btn.text }}</self-loading-button
+          >
           <el-button
             v-if="hasSelect && hasDelete"
             type="danger"
             size="small"
             @click="onDefaultDelete($event)"
-            :disabled="single ? (!selected.length || selected.length > 1) : !selected.length"
-          >删除</el-button>
+            :disabled="
+              single
+                ? !selected.length || selected.length > 1
+                : !selected.length
+            "
+            >删除</el-button
+          >
           <el-button
             v-if="canSearchCollapse"
             type="default"
             size="small"
             :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
             @click="isSearchCollapse = !isSearchCollapse"
-          >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
+            >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button
+          >
           <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，作用域传入selected -->
           <slot name="header" :selected="selected" />
         </el-form-item>
@@ -60,7 +79,7 @@
         ref="table"
         v-bind="tableAttrs"
         :data="data"
-        :row-style="showRow"
+        :row-class-name="showRow"
         v-loading="loading"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
@@ -70,12 +89,19 @@
         <template v-if="isTree">
           <!--有多选-->
           <template v-if="hasSelect">
-            <el-table-column key="selection-key" v-bind="columns[0]"></el-table-column>
+            <el-table-column
+              key="selection-key"
+              v-bind="columns[0]"
+            ></el-table-column>
 
             <el-table-column key="tree-ctrl" v-bind="columns[1]">
               <template slot-scope="scope">
                 <template v-if="isTree">
-                  <span v-for="space in scope.row._level" :key="space" class="ms-tree-space" />
+                  <span
+                    v-for="space in scope.row._level"
+                    :key="space"
+                    class="ms-tree-space"
+                  />
                 </template>
                 <span
                   v-if="isTree && iconShow(scope.$index, scope.row)"
@@ -85,12 +111,12 @@
                   <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
                   <i v-else class="el-icon-minus"></i>
                 </span>
-                {{scope.row[columns[1].prop]}}
+                {{ scope.row[columns[1].prop] }}
               </template>
             </el-table-column>
 
             <el-table-column
-              v-for="(col) in columns.filter((c, i) => i !== 0 && i !== 1)"
+              v-for="col in columns.filter((c, i) => i !== 0 && i !== 1)"
               :key="col.prop"
               v-bind="col"
             ></el-table-column>
@@ -102,7 +128,11 @@
             <el-table-column key="tree-ctrl" v-bind="columns[0]">
               <template slot-scope="scope">
                 <template v-if="isTree">
-                  <span v-for="space in scope.row._level" :key="space" class="ms-tree-space" />
+                  <span
+                    v-for="space in scope.row._level"
+                    :key="space"
+                    class="ms-tree-space"
+                  />
                 </template>
                 <span
                   v-if="isTree && iconShow(scope.$index, scope.row)"
@@ -112,12 +142,12 @@
                   <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
                   <i v-else class="el-icon-minus"></i>
                 </span>
-                {{scope.row[columns[0].prop]}}
+                {{ scope.row[columns[0].prop] }}
               </template>
             </el-table-column>
 
             <el-table-column
-              v-for="(col) in columns.filter((c, i) => i !== 0)"
+              v-for="col in columns.filter((c, i) => i !== 0)"
               :key="col.prop"
               v-bind="col"
             ></el-table-column>
@@ -126,15 +156,29 @@
 
         <!--非树-->
         <template v-else>
-          <el-table-column v-for="(col) in columns" :key="col.prop" v-bind="col"></el-table-column>
+          <el-table-column
+            v-for="col in columns"
+            :key="col.prop"
+            v-bind="col"
+          ></el-table-column>
         </template>
 
         <!--默认操作列-->
-        <el-table-column label="操作" v-if="hasOperation" v-bind="operationAttrs">
+        <el-table-column
+          label="操作"
+          v-if="hasOperation"
+          v-bind="operationAttrs"
+        >
           <template slot-scope="{row}">
-            <text-button v-if="isTree && hasNew" @click="onDefaultNew(row)">{{ newText }}</text-button>
-            <text-button v-if="hasEdit" @click="onDefaultEdit(row)">{{ editText }}</text-button>
-            <text-button v-if="hasView" @click="onDefaultView(row)">{{ viewText }}</text-button>
+            <text-button v-if="isTree && hasNew" @click="onDefaultNew(row)">{{
+              newText
+            }}</text-button>
+            <text-button v-if="hasEdit" @click="onDefaultEdit(row)">{{
+              editText
+            }}</text-button>
+            <text-button v-if="hasView" @click="onDefaultView(row)">{{
+              viewText
+            }}</text-button>
             <self-loading-button
               v-for="(btn, i) in customButtons(extraButtons, row)"
               v-bind="btn"
@@ -142,12 +186,14 @@
               @click="getList"
               :key="i"
               is-text
-            >{{btn.text}}</self-loading-button>
+              >{{ btn.text }}</self-loading-button
+            >
             <text-button
               v-if="!hasSelect && hasDelete && canDelete(row)"
               type="danger"
               @click="onDefaultDelete(row)"
-            >删除</text-button>
+              >删除</text-button
+            >
           </template>
         </el-table-column>
 
@@ -163,7 +209,7 @@
         :page-sizes="paginationSizes"
         :page-size="size"
         :total="total"
-        style="text-align: right; padding: 10px 0"
+        style="text-align: right; padding: 10px 0;"
         :layout="paginationLayout"
       ></el-pagination>
 
@@ -657,6 +703,14 @@ export default {
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
     },
+    hasHeader() {
+      return (
+        this.hasNew ||
+        (this.hasSelect && this.hasDelete) ||
+        this.headerButtons.length ||
+        this.canSearchCollapse
+      )
+    },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
     },
@@ -777,7 +831,7 @@ export default {
         // 存储的page是table的页码，无需偏移
         query.page = this.page
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
-        history.pushState(history.state, 'el-data-table search', newUrl)
+        history.replaceState(history.state, 'el-data-table search', newUrl)
       }
 
       this.$axios
@@ -846,6 +900,11 @@ export default {
           })
       })
     },
+    /**
+     * 重置查询，相当于点击「重置」按钮
+     *
+     * @public
+     */
     resetSearch() {
       // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
@@ -1050,9 +1109,7 @@ export default {
         ? row.row.parent._expanded && row.row.parent._show
         : true
       row.row._show = show
-      return show
-        ? 'animation:treeTableShow 1s-webkit-animation:treeTableShow 1s'
-        : 'display:none'
+      return show ? 'row-show' : 'row-hide'
     },
     // 切换下级是否展开
     toggleExpanded(trIndex) {
@@ -1080,10 +1137,10 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
+<style lang="less">
 .el-data-table {
-  color-blue = #2196F3;
-  space-width = 18px;
+  @color-blue: #2196f3;
+  @space-width: 18px;
 
   .ms-tree-space {
     position: relative;
@@ -1092,7 +1149,7 @@ export default {
     font-style: normal;
     font-weight: 400;
     line-height: 1;
-    width: space-width;
+    width: @space-width;
     height: 14px;
 
     &::before {
@@ -1103,7 +1160,7 @@ export default {
   .tree-ctrl {
     position: relative;
     cursor: pointer;
-    color: color-blue;
+    color: @color-blue;
   }
 
   @keyframes treeTableShow {
@@ -1114,6 +1171,14 @@ export default {
     to {
       opacity: 1;
     }
+  }
+
+  .row-show {
+    animation: treeTableShow 1s;
+  }
+
+  .row-hide {
+    display: none;
   }
 }
 </style>

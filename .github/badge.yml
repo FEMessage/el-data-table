@@ -1,8 +1,12 @@
 types:
   feat: 'enhancement'
-  fix: 'bug'
+  fix:
+    hack: 'hack'
+    default: 'bug'
+  hack: 'hack'
   docs: 'documentation'
   refactor: 'refactor'
+  style: 'style'
   test: 'test'
   perf: 'performance'
   chore:

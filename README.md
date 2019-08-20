@@ -1,9 +1,9 @@
 # el-data-table
 
-[![Build Status](https://travis-ci.com/FEMessage/el-data-table.svg?branch=master)](https://travis-ci.com/FEMessage/el-data-table)
-[![NPM Download](https://img.shields.io/npm/dm/@femessage/el-data-table.svg)](https://www.npmjs.com/package/@femessage/el-data-table)
-[![NPM Version](https://img.shields.io/npm/v/@femessage/el-data-table.svg)](https://www.npmjs.com/package/@femessage/el-data-table)
-[![NPM License](https://img.shields.io/npm/l/@femessage/el-data-table.svg)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
+[![Build Status](https://badgen.net/travis/FEMessage/el-data-table/master)](https://travis-ci.com/FEMessage/el-data-table)
+[![NPM Download](https://badgen.net/npm/dm/@femessage/el-data-table)](https://www.npmjs.com/package/@femessage/el-data-table)
+[![NPM Version](https://badgen.net/npm/v/@femessage/el-data-table)](https://www.npmjs.com/package/@femessage/el-data-table)
+[![NPM License](https://badgen.net/npm/license/@femessage/el-data-table)](https://github.com/FEMessage/el-data-table/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-data-table/pulls)
 [![Automated Release Notes by gren](https://img.shields.io/badge/%F0%9F%A4%96-release%20notes-00B2EE.svg)](https://github-tools.github.io/github-release-notes/)
 
@@ -13,21 +13,22 @@
 
 [English](./README-en.md)
 
-## Table of Contents <!-- omit in toc -->
+## Table of Contents
 
-* [Introduction](#introduction)
-  * [CRUD](#crud)
-  * [数据驱动](#数据驱动)
-  * [Why](#why)
-* [Feature](#feature)
-* [Demo](#demo)
-* [Install](#install)
-* [Quick Start](#quick-start)
-  * [Global Register Component](#global-register-component)
-  * [Template](#template)
-* [Reference](#reference)
-* [License](#license)
-* [Contributors](#contributors)
+- [Introduction](#introduction)
+  - [CRUD](#crud)
+  - [数据驱动](#数据驱动)
+  - [Why](#why)
+- [Feature](#feature)
+- [Links](#links)
+- [Install](#install)
+- [Quick Start](#quick-start)
+  - [Global Register Component](#global-register-component)
+  - [Template](#template)
+- [Reference](#reference)
+- [Contributing](#contributing)
+- [Contributors](#contributors)
+- [License](#license)
 
 ## Introduction
 
@@ -43,25 +44,25 @@ el-data-table 就是为了解决业务问题而生的，故而封装了 CRUD 的
 
 则其 restful CRUD 接口如下：
 
-* 查询
+- 查询
 
 ```sh
 GET /api/v1/users?page=1&size=10
 ```
 
-* 新增
+- 新增
 
 ```sh
 POST /api/v1/users
 ```
 
-* 修改(编辑)
+- 修改(编辑)
 
 ```sh
 PUT /api/v1/users/:id
 ```
 
-* 删除
+- 删除
 
 ```sh
 DELETE /api/v1/users/:id
@@ -124,21 +125,21 @@ export default {
 
 效果如下：
 
-* 查询
+- 查询
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343957765-301a3072-46f0-43b2-b660-d87fb45a846b.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343957835-08c31670-621f-4572-a3fc-ea277648ddde.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
 
-* 新增
+- 新增
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343956003-84c809b6-73c2-428e-89c8-64cb12d89b52.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
 
-* 修改
+- 修改
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343956268-32e63e31-117d-475f-91ac-03b0ffc98455.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
 
-* 删除
+- 删除
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343955968-f7147279-ee7c-4eef-bac7-5277a7316eb9.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)
 
@@ -184,17 +185,18 @@ export default {
 
 ## Feature
 
-* 只需进行 json 配置，即可实现 restful 风格的 CRUD 四个接口的对接
-* 支持表格内展示树形结构数据(该功能 element-ui 官方是不支持的)
-* 自带分页逻辑
-* 可扩展自定义列按钮，以及自定义操作函数
-* 支持分页查询后，点击详情再返回，恢复上一次的查询状态
+- 只需进行 json 配置，即可实现 restful 风格的 CRUD 四个接口的对接
+- 支持表格内展示树形结构数据(该功能 element-ui 官方是不支持的)
+- 自带分页逻辑
+- 可扩展自定义列按钮，以及自定义操作函数
+- 支持分页查询后，点击详情再返回，恢复上一次的查询状态
 
 [⬆ Back to Top](#table-of-contents)
 
-## Demo
+## Links
 
-* [doc and online demo](https://femessage.github.io/el-data-table/)
+- [docs](https://FEMessage.github.io/el-data-table/)
+- [fem-vscode-helper](https://marketplace.visualstudio.com/items?itemName=FEMessage.fem-vscode-helper)
 
 [⬆ Back to Top](#table-of-contents)
 
@@ -271,21 +273,28 @@ Vue.prototype.$axios = axios
 
 ## Reference
 
-* [form rules detail see async-validator](https://github.com/yiminghe/async-validator)
-* [el-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
-* [html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
-* [What_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
-* [History_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
-* [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
-* [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
-* [从 vue-router 看前端路由的两种实现](https://zhuanlan.zhihu.com/p/27588422)
-* [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
+- [form rules detail see async-validator](https://github.com/yiminghe/async-validator)
+- [el-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
+- [html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
+- [What_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
+- [History_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+- [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
+- [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+- [从 vue-router 看前端路由的两种实现](https://zhuanlan.zhihu.com/p/27588422)
+- [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
 
 [⬆ Back to Top](#table-of-contents)
 
-## License
+## Contributing
 
-[MIT](./LICENSE)
+For those who are interested in contributing to this project, such as:
+
+- report a bug
+- request new feature
+- fix a bug
+- implement a new feature
+
+Please refer to our [contributing guide](https://github.com/FEMessage/.github/blob/master/CONTRIBUTING.md).
 
 [⬆ Back to Top](#table-of-contents)
 
@@ -301,3 +310,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## License
+
+[MIT](./LICENSE)
+
+[⬆ Back to Top](#table-of-contents)
