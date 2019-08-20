@@ -5,18 +5,7 @@
       <slot name="no-data"></slot>
     </template>
     <template v-else>
-      <!-- @submit.native.prevent -->
-      <!-- 阻止表单提交的默认行为 -->
-      <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
-      <!--搜索字段-->
-      <el-form-renderer
-        v-if="hasSearchForm"
-        v-show="!isSearchCollapse"
-        inline
-        :content="searchForm"
-        ref="searchForm"
-        @submit.native.prevent
-      >
+      <search-form ref="searchForm" v-if="hasSearchForm">
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
         <el-form-item>
@@ -30,7 +19,7 @@
           >
           <el-button @click="resetSearch" size="small">重置</el-button>
         </el-form-item>
-      </el-form-renderer>
+      </search-form>
 
       <el-form v-if="hasHeader">
         <el-form-item>
@@ -243,6 +232,7 @@ import _get from 'lodash.get'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TextButton from './components/text-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
+import SearchForm from './components/search-form.vue'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 
@@ -274,8 +264,16 @@ export default {
   components: {
     SelfLoadingButton,
     TextButton,
-    TheDialog
+    TheDialog,
+    SearchForm
   },
+
+  provide() {
+    return {
+      $table: this
+    }
+  },
+
   props: {
     /**
      * 请求url, 如果为空, 则不会发送请求; 改变url, 则table会重新发送请求
