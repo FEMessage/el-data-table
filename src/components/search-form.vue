@@ -61,6 +61,7 @@ export default {
   },
 
   mounted() {
+    formValue = {}
     unwatchMainForm = this.$refs.mainForm.$watch('value', val => {
       formValue = Object.assign(formValue, val)
     })
@@ -74,7 +75,7 @@ export default {
     }
   },
 
-  destroyed() {
+  beforeDestroy() {
     unwatchMainForm()
     if (this.canSearchCollapse) {
       unwatchAlwaysDisplayForm()
