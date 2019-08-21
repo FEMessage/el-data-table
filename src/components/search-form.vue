@@ -17,7 +17,7 @@
     <el-form-renderer
       v-if="unCollapsibleForm"
       v-show="isSearchCollapse"
-      ref="alwaysDisplayForm"
+      ref="unCollapsibleForm"
       inline
       :content="unCollapsibleContent"
       @submit.native.prevent
@@ -30,7 +30,7 @@
 <script>
 let formValue = {}
 let unwatchNormalForm
-let unwatchAlwaysDisplayForm
+let unwatchUnCollapsibleForm
 
 export default {
   name: 'SearchForm',
@@ -57,7 +57,7 @@ export default {
       )
     },
     currentForm() {
-      return this.isSearchCollapse ? 'alwaysDisplayForm' : 'normalForm'
+      return this.isSearchCollapse ? 'unCollapsibleForm' : 'normalForm'
     }
   },
 
@@ -76,7 +76,7 @@ export default {
       formValue = Object.assign(formValue, val)
     })
     if (this.canSearchCollapse) {
-      unwatchAlwaysDisplayForm = this.$refs.alwaysDisplayForm.$watch(
+      unwatchUnCollapsibleForm = this.$refs.unCollapsibleForm.$watch(
         'value',
         val => {
           formValue = Object.assign(formValue, val)
@@ -88,7 +88,7 @@ export default {
   beforeDestroy() {
     unwatchNormalForm()
     if (this.canSearchCollapse) {
-      unwatchAlwaysDisplayForm()
+      unwatchUnCollapsibleForm()
     }
   },
 
@@ -101,7 +101,7 @@ export default {
       formValue = {}
       this.$refs.normalForm.resetFields()
       if (this.canSearchCollapse) {
-        this.$refs.alwaysDisplayForm.resetFields()
+        this.$refs.unCollapsibleForm.resetFields()
       }
     },
 
@@ -109,7 +109,7 @@ export default {
       formValue = Object.assign(formValue, value)
       this.$refs.normalForm.updateForm(formValue)
       if (this.canSearchCollapse) {
-        this.$refs.alwaysDisplayForm.updateForm(formValue)
+        this.$refs.unCollapsibleForm.updateForm(formValue)
       }
     },
 
@@ -120,7 +120,7 @@ export default {
     setOptions(id, options) {
       this.$refs.normalForm.setOptions(id, options)
       if (this.canSearchCollapse) {
-        this.$refs.alwaysDisplayForm.setOptions(id, options)
+        this.$refs.unCollapsibleForm.setOptions(id, options)
       }
     }
   }
