@@ -54,15 +54,15 @@ export default {
     },
     currentForm() {
       return this.isSearchCollapse ? 'unCollapsibleForm' : 'normalForm'
-    },
-    inactiveForm() {
-      return !this.isSearchCollapse ? 'unCollapsibleForm' : 'normalForm'
     }
   },
 
   watch: {
     isSearchCollapse(collapse) {
-      this.updateFormValue(this.currentForm, this.inactiveForm)
+      this.updateFormValue(
+        this.currentForm,
+        !this.isSearchCollapse ? 'unCollapsibleForm' : 'normalForm'
+      )
     }
   },
 
