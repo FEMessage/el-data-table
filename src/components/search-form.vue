@@ -28,10 +28,6 @@
 </template>
 
 <script>
-let formValue = {}
-let unwatchNormalForm
-let unwatchUnCollapsibleForm
-
 export default {
   name: 'SearchForm',
 
@@ -49,46 +45,24 @@ export default {
 
   computed: {
     unCollapsibleContent() {
-      return this.searchForm.filter(item => item.collapsible !== undefined || item.collapsible === false)
+      return this.searchForm.filter(
+        item => item.collapsible !== undefined || item.collapsible === false
+      )
     },
     hasUnCollapsibleForm() {
-      return (
-        this.canSearchCollapse && this.unCollapsibleContent.length > 0
-      )
+      return this.canSearchCollapse && this.unCollapsibleContent.length > 0
     },
     currentForm() {
       return this.isSearchCollapse ? 'unCollapsibleForm' : 'normalForm'
+    },
+    inactiveForm() {
+      return !this.isSearchCollapse ? 'unCollapsibleForm' : 'normalForm'
     }
   },
 
   watch: {
     isSearchCollapse(collapse) {
-      this.updateForm(formValue)
-    }
-  },
-
-  mounted() {
-    formValue = Object.assign(
-      {},
-      this.$refs.normalForm.getFormValue()
-    )
-    unwatchNormalForm = this.$refs.normalForm.$watch('value', val => {
-      formValue = Object.assign(formValue, val)
-    })
-    if (this.hasUnCollapsibleForm) {
-      unwatchUnCollapsibleForm = this.$refs.unCollapsibleForm.$watch(
-        'value',
-        val => {
-          formValue = Object.assign(formValue, val)
-        }
-      )
-    }
-  },
-
-  beforeDestroy() {
-    unwatchNormalForm()
-    if (this.hasUnCollapsibleForm) {
-      unwatchUnCollapsibleForm()
+      this.updateFormValue(this.currentForm, this.inactiveForm)
     }
   },
 
@@ -98,7 +72,6 @@ export default {
     },
 
     resetFields() {
-      formValue = {}
       this.$refs.normalForm.resetFields()
       if (this.hasUnCollapsibleForm) {
         this.$refs.unCollapsibleForm.resetFields()
@@ -106,15 +79,28 @@ export default {
     },
 
     updateForm(value) {
-      formValue = Object.assign(formValue, value)
-      this.$refs.normalForm.updateForm(formValue)
+      this.$refs.normalForm.updateForm(value)
       if (this.hasUnCollapsibleForm) {
-        this.$refs.unCollapsibleForm.updateForm(formValue)
+        this.$refs.unCollapsibleForm.updateForm(value)
       }
     },
 
     getFormValue() {
-      return formValue
+      if (this.hasUnCollapsibleForm) {
+        this.$refs.normalForm.updateForm(
+          this.$refs.unCollapsibleForm.getFormValue()
+        )
+      }
+
+      return this.$refs.normalForm.getFormValue()
+    },
+
+    updateFormValue(activeForm, inactiveForm) {
+      if (this.hasUnCollapsibleForm) {
+        this.$refs[activeForm].updateForm(
+          this.$refs[inactiveForm].getFormValue()
+        )
+      }
     },
 
     setOptions(id, options) {
