@@ -6,7 +6,7 @@
     <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
     <el-form-renderer
       v-show="!isSearchCollapse"
-      ref="mainForm"
+      ref="normalForm"
       inline
       :content="$table.searchForm"
       @submit.native.prevent
@@ -29,7 +29,7 @@
 
 <script>
 let formValue = {}
-let unwatchMainForm
+let unwatchNormalForm
 let unwatchAlwaysDisplayForm
 
 export default {
@@ -50,7 +50,7 @@ export default {
       return this.$table.isSearchCollapse
     },
     currentForm() {
-      return this.isSearchCollapse ? 'alwaysDisplayForm' : 'mainForm'
+      return this.isSearchCollapse ? 'alwaysDisplayForm' : 'normalForm'
     }
   },
 
@@ -63,9 +63,9 @@ export default {
   mounted() {
     formValue = Object.assign(
       {},
-      this.$refs.mainForm.getFormValue()
+      this.$refs.normalForm.getFormValue()
     )
-    unwatchMainForm = this.$refs.mainForm.$watch('value', val => {
+    unwatchNormalForm = this.$refs.normalForm.$watch('value', val => {
       formValue = Object.assign(formValue, val)
     })
     if (this.canSearchCollapse) {
@@ -79,7 +79,7 @@ export default {
   },
 
   beforeDestroy() {
-    unwatchMainForm()
+    unwatchNormalForm()
     if (this.canSearchCollapse) {
       unwatchAlwaysDisplayForm()
     }
@@ -92,7 +92,7 @@ export default {
 
     resetFields() {
       formValue = {}
-      this.$refs.mainForm.resetFields()
+      this.$refs.normalForm.resetFields()
       if (this.canSearchCollapse) {
         this.$refs.alwaysDisplayForm.resetFields()
       }
@@ -100,7 +100,7 @@ export default {
 
     updateForm(value) {
       formValue = Object.assign(formValue, value)
-      this.$refs.mainForm.updateForm(formValue)
+      this.$refs.normalForm.updateForm(formValue)
       if (this.canSearchCollapse) {
         this.$refs.alwaysDisplayForm.updateForm(formValue)
       }
@@ -111,8 +111,10 @@ export default {
     },
 
     setOptions(id, options) {
-      this.$refs.mainForm.setOptions(id, options)
-      this.$refs.alwaysDisplayForm.setOptions(id, options)
+      this.$refs.normalForm.setOptions(id, options)
+      if (this.canSearchCollapse) {
+        this.$refs.alwaysDisplayForm.setOptions(id, options)
+      }
     }
   }
 }
