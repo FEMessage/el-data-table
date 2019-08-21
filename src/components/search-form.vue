@@ -15,7 +15,7 @@
     </el-form-renderer>
 
     <el-form-renderer
-      v-if="unCollapsibleForm"
+      v-if="hasUnCollapsibleForm"
       v-show="isSearchCollapse"
       ref="unCollapsibleForm"
       inline
@@ -51,7 +51,7 @@ export default {
     unCollapsibleContent() {
       return this.searchForm.filter(item => item.collapsible !== undefined || item.collapsible === false)
     },
-    unCollapsibleForm() {
+    hasUnCollapsibleForm() {
       return (
         this.canSearchCollapse && this.unCollapsibleContent.length > 0
       )
@@ -75,7 +75,7 @@ export default {
     unwatchNormalForm = this.$refs.normalForm.$watch('value', val => {
       formValue = Object.assign(formValue, val)
     })
-    if (this.canSearchCollapse) {
+    if (this.hasUnCollapsibleForm) {
       unwatchUnCollapsibleForm = this.$refs.unCollapsibleForm.$watch(
         'value',
         val => {
@@ -87,7 +87,7 @@ export default {
 
   beforeDestroy() {
     unwatchNormalForm()
-    if (this.canSearchCollapse) {
+    if (this.hasUnCollapsibleForm) {
       unwatchUnCollapsibleForm()
     }
   },
@@ -100,7 +100,7 @@ export default {
     resetFields() {
       formValue = {}
       this.$refs.normalForm.resetFields()
-      if (this.canSearchCollapse) {
+      if (this.hasUnCollapsibleForm) {
         this.$refs.unCollapsibleForm.resetFields()
       }
     },
@@ -108,7 +108,7 @@ export default {
     updateForm(value) {
       formValue = Object.assign(formValue, value)
       this.$refs.normalForm.updateForm(formValue)
-      if (this.canSearchCollapse) {
+      if (this.hasUnCollapsibleForm) {
         this.$refs.unCollapsibleForm.updateForm(formValue)
       }
     },
@@ -119,7 +119,7 @@ export default {
 
     setOptions(id, options) {
       this.$refs.normalForm.setOptions(id, options)
-      if (this.canSearchCollapse) {
+      if (this.hasUnCollapsibleForm) {
         this.$refs.unCollapsibleForm.setOptions(id, options)
       }
     }
