@@ -5,7 +5,13 @@
       <slot name="no-data"></slot>
     </template>
     <template v-else>
-      <search-form ref="searchForm" v-if="hasSearchForm">
+      <search-form
+        v-if="hasSearchForm"
+        ref="searchForm"
+        :search-form="searchForm"
+        :can-search-collapse="canSearchCollapse"
+        :is-search-collapse="isSearchCollapse"
+      >
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
         <el-form-item>
@@ -266,12 +272,6 @@ export default {
     TextButton,
     TheDialog,
     SearchForm
-  },
-
-  provide() {
-    return {
-      $table: this
-    }
   },
 
   props: {

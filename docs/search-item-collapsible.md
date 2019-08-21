@@ -19,7 +19,7 @@ export default {
           type: 'input',
           id: 'name',
           label: '您的用户名',
-          alwaysDisplay: true,
+          collapsible: false,
           el: {placeholder: '请输入用户名'}
         },
         {

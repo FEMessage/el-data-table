@@ -8,18 +8,18 @@
       v-show="!isSearchCollapse"
       ref="normalForm"
       inline
-      :content="$table.searchForm"
+      :content="searchForm"
       @submit.native.prevent
     >
       <slot />
     </el-form-renderer>
 
     <el-form-renderer
-      v-if="canSearchCollapse"
+      v-if="unCollapsibleForm"
       v-show="isSearchCollapse"
       ref="alwaysDisplayForm"
       inline
-      :content="alwaysDisplayContent"
+      :content="unCollapsibleContent"
       @submit.native.prevent
     >
       <slot />
@@ -35,19 +35,26 @@ let unwatchAlwaysDisplayForm
 export default {
   name: 'SearchForm',
 
-  inject: ['$table'],
+  props: {
+    searchForm: {
+      type: Array
+    },
+    canSearchCollapse: {
+      type: Boolean
+    },
+    isSearchCollapse: {
+      type: Boolean
+    }
+  },
 
   computed: {
-    alwaysDisplayContent() {
-      return this.$table.searchForm.filter(item => item.alwaysDisplay)
+    unCollapsibleContent() {
+      return this.searchForm.filter(item => item.collapsible !== undefined || item.collapsible === false)
     },
-    canSearchCollapse() {
+    unCollapsibleForm() {
       return (
-        this.$table.canSearchCollapse && this.alwaysDisplayContent.length > 0
+        this.canSearchCollapse && this.unCollapsibleContent.length > 0
       )
-    },
-    isSearchCollapse() {
-      return this.$table.isSearchCollapse
     },
     currentForm() {
       return this.isSearchCollapse ? 'alwaysDisplayForm' : 'normalForm'
