@@ -61,7 +61,7 @@ export default {
     isSearchCollapse(collapse) {
       this.syncFormValue(
         this.currentForm,
-        !collapse ? 'unCollapsibleForm' : 'normalForm'
+        collapse ? 'normalForm' : 'unCollapsibleForm'
       )
     }
   },
