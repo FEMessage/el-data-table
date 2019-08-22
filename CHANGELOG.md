@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/FEMessage/el-data-table/compare/v1.7.3...v1.8.0) (2019-08-22)
+
+
+### Features
+
+* searchForm 内容支持属性 collapsible=false，在搜索区域折叠后仍可见 ([e654fed](https://github.com/FEMessage/el-data-table/commit/e654fed))
+* 支持设置对话框属性 dialogAttrs ([dd71f7b](https://github.com/FEMessage/el-data-table/commit/dd71f7b))
+
+
+
 ### [1.7.3](https://github.com/FEMessage/el-data-table/compare/v1.7.2...v1.7.3) (2019-08-07)
 
 
