@@ -95,10 +95,10 @@ export default {
       return this.$refs.normalForm.getFormValue()
     },
 
-    syncFormValue(activeForm, inactiveForm) {
+    syncFormValue(target, source) {
       if (this.hasUnCollapsibleForm) {
-        this.$refs[activeForm].updateForm(
-          this.$refs[inactiveForm].getFormValue()
+        this.$refs[target].updateForm(
+          this.$refs[source].getFormValue()
         )
       }
     },
