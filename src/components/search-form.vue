@@ -1,9 +1,5 @@
 <template>
   <div v-show="hasUnCollapsibleForm || !isSearchCollapse">
-    <!-- 搜索字段 -->
-    <!-- @submit.native.prevent -->
-    <!-- 阻止表单提交的默认行为 -->
-    <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
     <el-form-renderer
       class="inline"
       v-show="!isSearchCollapse"
@@ -21,6 +17,10 @@
       :content="unCollapsibleContent"
     />
 
+    <!-- 搜索字段 -->
+    <!-- @submit.native.prevent -->
+    <!-- 阻止表单提交的默认行为 -->
+    <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
     <el-form
       inline
       class="inline"
