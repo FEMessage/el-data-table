@@ -59,9 +59,9 @@ export default {
 
   watch: {
     isSearchCollapse(collapse) {
-      this.updateFormValue(
+      this.syncFormValue(
         this.currentForm,
-        !this.isSearchCollapse ? 'unCollapsibleForm' : 'normalForm'
+        !collapse ? 'unCollapsibleForm' : 'normalForm'
       )
     }
   },
@@ -95,7 +95,7 @@ export default {
       return this.$refs.normalForm.getFormValue()
     },
 
-    updateFormValue(activeForm, inactiveForm) {
+    syncFormValue(activeForm, inactiveForm) {
       if (this.hasUnCollapsibleForm) {
         this.$refs[activeForm].updateForm(
           this.$refs[inactiveForm].getFormValue()
