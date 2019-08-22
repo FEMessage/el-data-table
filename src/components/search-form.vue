@@ -1,29 +1,33 @@
 <template>
-  <div>
+  <div v-show="hasUnCollapsibleForm || !isSearchCollapse">
     <!-- 搜索字段 -->
     <!-- @submit.native.prevent -->
     <!-- 阻止表单提交的默认行为 -->
     <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
     <el-form-renderer
+      class="inline"
       v-show="!isSearchCollapse"
       ref="normalForm"
       inline
       :content="searchForm"
-      @submit.native.prevent
-    >
-      <slot />
-    </el-form-renderer>
+    />
 
     <el-form-renderer
+      class="inline"
       v-if="hasUnCollapsibleForm"
       v-show="isSearchCollapse"
       ref="unCollapsibleForm"
       inline
       :content="unCollapsibleContent"
+    />
+
+    <el-form
+      inline
+      class="inline"
       @submit.native.prevent
     >
       <slot />
-    </el-form-renderer>
+    </el-form>
   </div>
 </template>
 
@@ -112,3 +116,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.inline {
+  display: inline;
+}
+</style>
