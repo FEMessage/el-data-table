@@ -32,7 +32,7 @@ export default {
         {prop: 'type', label: '账户类型'},
         {prop: 'html_url', label: '主页地址'}
       ],
-      extraQuery: {rate: 2},
+      extraQuery: {rate: null},
       searchForm: [
         {
           type: 'input',

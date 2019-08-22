@@ -52,6 +52,9 @@
     "glob": "^7.1.3",
     "husky": "1.3.1",
     "jest": "^24.8.0",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
+    "lint-staged": "^8.1.0",
     "minimist": "^1.2.0",
     "prettier": "1.18.2",
     "rollup": "^1.9.0",
@@ -60,16 +63,13 @@
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-vue": "^4.7.2",
     "standard-version": "^6.0.1",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2",
+    "stylelint": "^9.10.0",
+    "stylelint-config-standard": "^18.2.0",
     "vue": "^2.6.10",
     "vue-loader": "^15.7.1",
     "vue-styleguidist": "^3.16.3",
     "vue-template-compiler": "^2.5.16",
-    "webpack": "^4.29.6",
-    "lint-staged": "^8.1.0",
-    "stylelint": "^9.10.0",
-    "stylelint-config-standard": "^18.2.0"
+    "webpack": "^4.29.6"
   },
   "publishConfig": {
     "access": "public"
@@ -86,7 +86,7 @@
     }
   },
   "lint-staged": {
-    "*.(js|md)": [
+    "*.(js|md|json)": [
       "prettier --write",
       "git add"
     ],

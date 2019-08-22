@@ -5,17 +5,12 @@
       <slot name="no-data"></slot>
     </template>
     <template v-else>
-      <!-- @submit.native.prevent -->
-      <!-- 阻止表单提交的默认行为 -->
-      <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
-      <!--搜索字段-->
-      <el-form-renderer
+      <search-form
         v-if="hasSearchForm"
-        v-show="!isSearchCollapse"
-        inline
-        :content="searchForm"
         ref="searchForm"
-        @submit.native.prevent
+        :search-form="searchForm"
+        :can-search-collapse="canSearchCollapse"
+        :is-search-collapse="isSearchCollapse"
       >
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
@@ -30,7 +25,7 @@
           >
           <el-button @click="resetSearch" size="small">重置</el-button>
         </el-form-item>
-      </el-form-renderer>
+      </search-form>
 
       <el-form v-if="hasHeader">
         <el-form-item>
@@ -229,6 +224,7 @@
         :viewTitle="dialogViewTitle"
         :form="form"
         :formAttrs="formAttrs"
+        :dialogAttrs="dialogAttrs"
         ref="dialog"
         @confirm="onConfirm"
       >
@@ -243,6 +239,7 @@ import _get from 'lodash.get'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TextButton from './components/text-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
+import SearchForm from './components/search-form.vue'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 
@@ -274,8 +271,10 @@ export default {
   components: {
     SelfLoadingButton,
     TextButton,
-    TheDialog
+    TheDialog,
+    SearchForm
   },
+
   props: {
     /**
      * 请求url, 如果为空, 则不会发送请求; 改变url, 则table会重新发送请求
@@ -615,6 +614,16 @@ export default {
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/form#form-attributes
      */
     formAttrs: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    /**
+     * 对话框属性设置, 详情配置参考element-ui官网
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/dialog#attributes
+     */
+    dialogAttrs: {
       type: Object,
       default() {
         return {}
@@ -986,63 +995,40 @@ export default {
       this.$confirm('确认删除吗', '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
-        beforeClose: (action, instance, done) => {
-          if (action == 'confirm') {
-            instance.confirmButtonLoading = true
+        beforeClose: async (action, instance, done) => {
+          if (action !== 'confirm') return done()
 
+          instance.confirmButtonLoading = true
+
+          try {
             if (this.onDelete) {
-              this.onDelete(
-                this.hasSelect
-                  ? !this.single
-                    ? this.selected
-                    : this.selected[0]
-                  : row
-              )
-                .then(resp => {
-                  this.showMessage(true)
-                  done()
-                  this.clearSelection()
-                  this.getList()
-                })
-                .catch(e => {})
-                .finally(e => {
-                  instance.confirmButtonLoading = false
-                })
-              return
-            }
-
-            // 默认删除逻辑
-            // 单个删除
-            if (!this.hasSelect) {
-              this.$axios
-                .delete(this.url + '/' + row[this.id])
-                .then(resp => {
-                  instance.confirmButtonLoading = false
-                  done()
-                  this.showMessage(true)
-                  this.getList()
-                })
-                .catch(er => {
-                  instance.confirmButtonLoading = false
-                })
-            } else {
-              // 多选模式
-              this.$axios
-                .delete(
-                  this.url + '/' + this.selected.map(v => v[this.id]).toString()
+              // 自定义删除逻辑
+              if (this.hasSelect) {
+                await this.onDelete(
+                  this.single ? this.selected[0] : this.selected
                 )
-                .then(resp => {
-                  instance.confirmButtonLoading = false
-                  done()
-                  this.showMessage(true)
-                  this.clearSelection()
-                  this.getList()
-                })
-                .catch(er => {
-                  instance.confirmButtonLoading = false
-                })
+                this.clearSelection()
+              } else {
+                await this.onDelete(row)
+              }
+            } else if (this.hasSelect) {
+              // 多选模式
+              await this.$axios.delete(
+                this.url + '/' + this.selected.map(v => v[this.id]).join(',')
+              )
+              this.clearSelection()
+            } else {
+              // 单个删除
+              await this.$axios.delete(this.url + '/' + row[this.id])
             }
-          } else done()
+            done()
+            this.showMessage(true)
+            this.getList()
+          } catch (error) {
+            // do nothing
+          } finally {
+            instance.confirmButtonLoading = false
+          }
         }
       }).catch(er => {
         /*取消*/
@@ -1112,10 +1098,11 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
+<style lang="less">
 .el-data-table {
-  color-blue = #2196F3
-  space-width = 18px
+  @color-blue: #2196f3;
+  @space-width: 18px;
+
   .ms-tree-space {
     position: relative;
     top: 1px;
@@ -1123,7 +1110,7 @@ export default {
     font-style: normal;
     font-weight: 400;
     line-height: 1;
-    width: space-width;
+    width: @space-width;
     height: 14px;
 
     &::before {
@@ -1134,7 +1121,7 @@ export default {
   .tree-ctrl {
     position: relative;
     cursor: pointer;
-    color: color-blue;
+    color: @color-blue;
   }
 
   @keyframes treeTableShow {
