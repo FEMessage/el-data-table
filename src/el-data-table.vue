@@ -945,15 +945,25 @@ export default {
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
+    checkHasDialog() {
+      if (!this.hasDialog) {
+        throw Error(
+          'ElDataTable: 当 hasNew 或 hasEdit 或 hasView 设置为 true 时， hasDialog 不能为 false'
+        )
+      }
+    },
     onDefaultNew(row = {}) {
+      this.checkHasDialog()
       this.row = row
       this.$refs.dialog.show(dialogModes.new)
     },
     onDefaultView(row) {
+      this.checkHasDialog()
       this.row = row
       this.$refs.dialog.show(dialogModes.view, row)
     },
     onDefaultEdit(row) {
+      this.checkHasDialog()
       this.row = row
       this.$refs.dialog.show(dialogModes.edit, row)
     },
