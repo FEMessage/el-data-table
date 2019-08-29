@@ -948,7 +948,7 @@ export default {
     checkHasDialog() {
       if (!this.hasDialog) {
         throw Error(
-          'ElDataTable: 当 hasNew 或 hasEdit 或 hasView 设置为 true 时， hasDialog 不能为 false'
+          'ElDataTable: 当 hasNew 或 hasEdit 或 hasView 设置为 true 时， hasDialog 不能设置为 false'
         )
       }
     },
