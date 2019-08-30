@@ -566,13 +566,6 @@ export default {
       }
     },
     /**
-     * 是否有弹窗, 用于不需要弹窗时想减少DOM渲染的场景
-     */
-    hasDialog: {
-      type: Boolean,
-      default: true
-    },
-    /**
      * 新增弹窗的标题，默认为newText的值
      */
     dialogNewTitle: {
@@ -724,6 +717,9 @@ export default {
         this.headerButtons.length ||
         this.canSearchCollapse
       )
+    },
+    hasDialog() {
+      return this.hasNew || this.hasEdit || this.hasView
     },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
@@ -945,25 +941,15 @@ export default {
     },
     // 弹窗相关
     // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
-    checkHasDialog() {
-      if (!this.hasDialog) {
-        throw Error(
-          'ElDataTable: 当 hasNew 或 hasEdit 或 hasView 设置为 true 时， hasDialog 不能设置为 false'
-        )
-      }
-    },
     onDefaultNew(row = {}) {
-      this.checkHasDialog()
       this.row = row
       this.$refs.dialog.show(dialogModes.new)
     },
     onDefaultView(row) {
-      this.checkHasDialog()
       this.row = row
       this.$refs.dialog.show(dialogModes.view, row)
     },
     onDefaultEdit(row) {
-      this.checkHasDialog()
       this.row = row
       this.$refs.dialog.show(dialogModes.edit, row)
     },
