@@ -14,7 +14,7 @@
       :disabled="isView"
     >
       <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用，参考：https://femessage.github.io/el-form-renderer/#/Demo?id=slot -->
-      <slot></slot>
+      <slot :row="slotData" />
     </el-form-renderer>
 
     <div slot="footer" v-show="!isView">
@@ -68,7 +68,8 @@ export default {
     return {
       mode: dialogModes.new,
       visible: false,
-      confirmLoading: false
+      confirmLoading: false,
+      slotData: null
     }
   },
   computed: {
@@ -98,6 +99,7 @@ export default {
         // $nextTick 有时也拿不到 form ，这样是稳妥的做法
         this.$refs.dialog.$once('opened', () => {
           this.$refs.form.updateForm(formValue)
+          this.slotData = formValue
         })
       }
     },
@@ -116,6 +118,7 @@ export default {
     },
     resetFields() {
       this.$refs.form.resetFields()
+      this.slotData = null
     }
   }
 }
