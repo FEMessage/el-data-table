@@ -229,6 +229,7 @@
         @confirm="onConfirm"
       >
         <template v-slot="{row}">
+          <!-- @slot 表单作用域插槽。当编辑、查看时传入row；新增时row=null -->
           <slot name="form" :row="row" />
         </template>
       </the-dialog>
