@@ -228,7 +228,10 @@
         ref="dialog"
         @confirm="onConfirm"
       >
-        <slot name="form"></slot>
+        <template v-slot="{row}">
+          <!-- @slot 表单作用域插槽。当编辑、查看时传入row；新增时row=null -->
+          <slot name="form" :row="row" />
+        </template>
       </the-dialog>
     </template>
   </div>
@@ -940,8 +943,8 @@ export default {
       return this.selectStrategy.clearSelection()
     },
     // 弹窗相关
-    // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
-    onDefaultNew(row = {}) {
+    // 除非树形结构在操作列点击新增, 否则 row 是 MouseEvent
+    onDefaultNew(row) {
       this.row = row
       this.$refs.dialog.show(dialogModes.new)
     },
