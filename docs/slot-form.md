@@ -3,8 +3,8 @@ form插槽用法
 ```vue
 <template>
   <el-data-table v-bind="$data">
-    <template v-slot:form>
-      <el-input value="我是form插槽" />
+    <template v-slot:form="{row}">
+      <el-input :value="row ? row.alias : '新增场景无数据'" />
     </template>
   </el-data-table>
 </template>
