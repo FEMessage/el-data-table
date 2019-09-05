@@ -566,13 +566,6 @@ export default {
       }
     },
     /**
-     * 是否有弹窗, 用于不需要弹窗时想减少DOM渲染的场景
-     */
-    hasDialog: {
-      type: Boolean,
-      default: true
-    },
-    /**
      * 新增弹窗的标题，默认为newText的值
      */
     dialogNewTitle: {
@@ -724,6 +717,9 @@ export default {
         this.headerButtons.length ||
         this.canSearchCollapse
       )
+    },
+    hasDialog() {
+      return this.hasNew || this.hasEdit || this.hasView
     },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
