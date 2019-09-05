@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/FEMessage/el-data-table/compare/v1.8.0...v1.9.0) (2019-09-05)
+
+
+### Bug Fixes
+
+* 使用需要弹窗的功能并把 hasDialog 设置为 false 时, 将会报错 ([#211](https://github.com/FEMessage/el-data-table/issues/211)) ([b5fad7f](https://github.com/FEMessage/el-data-table/commit/b5fad7f))
+
+
+### Features
+
+* slot-form增加作用域数据 ([#212](https://github.com/FEMessage/el-data-table/issues/212)) ([c173954](https://github.com/FEMessage/el-data-table/commit/c173954))
+
+
+
 ## [1.8.0](https://github.com/FEMessage/el-data-table/compare/v1.7.3...v1.8.0) (2019-08-22)
 
 
