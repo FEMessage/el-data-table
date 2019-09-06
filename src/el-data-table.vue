@@ -13,12 +13,12 @@
         :is-search-collapse="isSearchCollapse"
         :located-slot-keys="searchLocatedSlotKeys"
       >
-        <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot
           v-for="slot in searchLocatedSlotKeys"
           :name="slot"
           :slot="slot"
         />
+        <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
         <el-form-item>
           <!--https://github.com/ElemeFE/element/pull/5920-->
