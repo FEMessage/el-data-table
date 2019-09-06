@@ -8,8 +8,8 @@ search插槽
       <el-rate v-model="extraQuery.rate" style="display: inline-block"></el-rate>
     </template>
     <template slot="search:q">
-      <el-tag slot="label">slot=search:q</el-tag>
       <el-form-item>
+        <el-tag slot="label">slot=search:q</el-tag>
         <el-input></el-input>
       </el-form-item>
     </template>
