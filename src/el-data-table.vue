@@ -11,8 +11,14 @@
         :search-form="searchForm"
         :can-search-collapse="canSearchCollapse"
         :is-search-collapse="isSearchCollapse"
+        :located-slot-keys="searchLocatedSlotKeys"
       >
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
+        <slot
+          v-for="slot in searchLocatedSlotKeys"
+          :name="slot"
+          :slot="slot"
+        />
         <slot name="search"></slot>
         <el-form-item>
           <!--https://github.com/ElemeFE/element/pull/5920-->
@@ -245,6 +251,7 @@ import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
+import getLocatedSlotKeys from './utils/extract-keys'
 
 // 默认返回的数据格式如下
 //          {
@@ -732,6 +739,9 @@ export default {
     },
     selectStrategy() {
       return getSelectStrategy(this)
+    },
+    searchLocatedSlotKeys() {
+      return getLocatedSlotKeys(this.$slots, 'search:')
     }
   },
   watch: {
