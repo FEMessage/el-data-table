@@ -218,7 +218,6 @@
       ></el-pagination>
 
       <the-dialog
-        v-if="hasDialog"
         :newTitle="dialogNewTitle"
         :editTitle="dialogEditTitle"
         :viewTitle="dialogViewTitle"
@@ -720,9 +719,6 @@ export default {
         this.headerButtons.length ||
         this.canSearchCollapse
       )
-    },
-    hasDialog() {
-      return this.hasNew || this.hasEdit || this.hasView
     },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
