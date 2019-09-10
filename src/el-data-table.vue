@@ -11,7 +11,13 @@
         :search-form="searchForm"
         :can-search-collapse="canSearchCollapse"
         :is-search-collapse="isSearchCollapse"
+        :located-slot-keys="searchLocatedSlotKeys"
       >
+        <slot
+          v-for="slot in searchLocatedSlotKeys"
+          :name="slot"
+          :slot="slot"
+        />
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
         <el-form-item>
@@ -218,7 +224,6 @@
       ></el-pagination>
 
       <the-dialog
-        v-if="hasDialog"
         :newTitle="dialogNewTitle"
         :editTitle="dialogEditTitle"
         :viewTitle="dialogViewTitle"
@@ -245,6 +250,7 @@ import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
+import getLocatedSlotKeys from './utils/extract-keys'
 
 // 默认返回的数据格式如下
 //          {
@@ -721,9 +727,6 @@ export default {
         this.canSearchCollapse
       )
     },
-    hasDialog() {
-      return this.hasNew || this.hasEdit || this.hasView
-    },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
     },
@@ -732,6 +735,9 @@ export default {
     },
     selectStrategy() {
       return getSelectStrategy(this)
+    },
+    searchLocatedSlotKeys() {
+      return getLocatedSlotKeys(this.$slots, 'search:')
     }
   },
   watch: {
