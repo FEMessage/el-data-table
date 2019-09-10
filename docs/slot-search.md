@@ -7,10 +7,12 @@ search插槽
       <el-tag>slot=search</el-tag>
       <el-rate v-model="extraQuery.rate" style="display: inline-block"></el-rate>
     </template>
+
+    <!-- 定位插入 `q` 的前面 -->
     <template slot="search:q">
       <el-form-item>
         <el-tag slot="label">slot=search:q</el-tag>
-        <el-input></el-input>
+        <el-input value="定位插入在 `q` 的前面"></el-input>
       </el-form-item>
     </template>
   </el-data-table>
