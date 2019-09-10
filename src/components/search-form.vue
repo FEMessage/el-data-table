@@ -11,6 +11,11 @@
       :content="searchForm"
       @submit.native.prevent
     >
+      <slot
+        v-for="slot in locatedSlotKeys"
+        :name="slot"
+        :slot="replaceToId(slot)"
+      />
       <slot />
     </el-form-renderer>
 
@@ -22,6 +27,11 @@
       :content="unCollapsibleContent"
       @submit.native.prevent
     >
+      <slot
+        v-for="slot in locatedSlotKeys"
+        :name="slot"
+        :slot="replaceToId(slot)"
+      />
       <slot />
     </el-form-renderer>
   </div>
@@ -40,6 +50,9 @@ export default {
     },
     isSearchCollapse: {
       type: Boolean
+    },
+    locatedSlotKeys: {
+      type: Array
     }
   },
 
@@ -108,6 +121,10 @@ export default {
       if (this.hasUnCollapsibleForm) {
         this.$refs.unCollapsibleForm.setOptions(id, options)
       }
+    },
+
+    replaceToId(key) {
+      return key.replace('search:', 'id:')
     }
   }
 }
