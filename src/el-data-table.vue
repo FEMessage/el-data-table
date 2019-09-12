@@ -13,11 +13,7 @@
         :is-search-collapse="isSearchCollapse"
         :located-slot-keys="searchLocatedSlotKeys"
       >
-        <slot
-          v-for="slot in searchLocatedSlotKeys"
-          :name="slot"
-          :slot="slot"
-        />
+        <slot v-for="slot in searchLocatedSlotKeys" :name="slot" :slot="slot" />
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
         <el-form-item>
@@ -905,10 +901,6 @@ export default {
         history.replaceState(history.state, '', newUrl)
       }
 
-      this.$nextTick(() => {
-        this.getList()
-      })
-
       /**
        * 按下重置按钮后触发
        */
@@ -916,6 +908,10 @@ export default {
 
       this.$emit('update:customQuery', JSON.parse(this.initExtraQuery))
       this.$emit('update:extraQuery', JSON.parse(this.initExtraQuery))
+
+      this.$nextTick(() => {
+        this.getList()
+      })
     },
     handleSizeChange(val) {
       if (this.size === val) return
