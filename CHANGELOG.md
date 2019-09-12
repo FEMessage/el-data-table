@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.11.0](https://github.com/FEMessage/el-data-table/compare/v1.10.0...v1.11.0) (2019-09-12)
+
+
+### Bug Fixes
+
+* `extraQuery` 重置问题 ([4d1079a](https://github.com/FEMessage/el-data-table/commit/4d1079a))
+
+
+### Features
+
+* 搜索表单支持定位插槽 ([#215](https://github.com/FEMessage/el-data-table/issues/215)) ([4d3bbc4](https://github.com/FEMessage/el-data-table/commit/4d3bbc4))
+
+
+
 ## [1.10.0](https://github.com/FEMessage/el-data-table/compare/v1.9.0...v1.10.0) (2019-09-10)
 
 
