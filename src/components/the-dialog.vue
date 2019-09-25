@@ -18,12 +18,12 @@
     </el-form-renderer>
 
     <div slot="footer" v-show="!isView">
-      <el-button @click="visible = false" size="small">取 消</el-button>
+      <el-button @click="visible = false" :size="buttonSize">取 消</el-button>
       <el-button
         type="primary"
         @click="confirm"
         :loading="confirmLoading"
-        size="small"
+        :size="buttonSize"
         >确 定</el-button
       >
     </div>
@@ -62,7 +62,8 @@ export default {
     dialogAttrs: {
       type: Object,
       required: true
-    }
+    },
+    buttonSize: String
   },
   data() {
     return {

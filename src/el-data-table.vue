@@ -22,10 +22,10 @@
             native-type="submit"
             type="primary"
             @click="search"
-            size="small"
+            :size="buttonSize"
             >查询</el-button
           >
-          <el-button @click="resetSearch" size="small">重置</el-button>
+          <el-button @click="resetSearch" :size="buttonSize">重置</el-button>
         </el-form-item>
       </search-form>
 
@@ -34,7 +34,7 @@
           <el-button
             v-if="hasNew"
             type="primary"
-            size="small"
+            :size="buttonSize"
             @click="onDefaultNew"
             >{{ newText }}</el-button
           >
@@ -45,16 +45,16 @@
             :click="btn.atClick"
             :params="selected"
             :callback="getList"
+            :size="buttonSize"
             v-bind="btn"
             :key="i"
-            size="small"
           >
             {{ typeof btn.text === 'function' ? btn.text(selected) : btn.text }}
           </self-loading-button>
           <el-button
             v-if="hasSelect && hasDelete"
             type="danger"
-            size="small"
+            :size="buttonSize"
             @click="onDefaultDelete($event)"
             :disabled="
               single
@@ -66,7 +66,7 @@
           <el-button
             v-if="canSearchCollapse"
             type="default"
-            size="small"
+            :size="buttonSize"
             :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
             @click="isSearchCollapse = !isSearchCollapse"
             >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button
@@ -226,6 +226,7 @@
         :form="form"
         :formAttrs="formAttrs"
         :dialogAttrs="dialogAttrs"
+        :buttonSize="buttonSize"
         ref="dialog"
         @confirm="onConfirm"
       >
@@ -682,6 +683,14 @@ export default {
     saveQuery: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 设置 `按钮` 大小
+     * @see https://element.eleme.cn/#/zh-CN/component/button#bu-tong-chi-cun
+     */
+    buttonSize: {
+      type: String,
+      default: 'small'
     }
   },
   data() {
