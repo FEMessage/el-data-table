@@ -169,37 +169,56 @@
           v-bind="operationAttrs"
         >
           <template slot-scope="scope">
-            <text-button
+            <self-loading-button
               v-if="isTree && hasNew"
+              type="primary"
+              :size="columnButtonType === 'text' ? '' : 'small'"
+              :is-text="columnButtonType === 'text'"
               @click="onDefaultNew(scope.row)"
-              >{{ newText }}</text-button
             >
-            <text-button v-if="hasEdit" @click="onDefaultEdit(scope.row)">{{
-              editText
-            }}</text-button>
-            <text-button v-if="hasView" @click="onDefaultView(scope.row)">{{
-              viewText
-            }}</text-button>
+              {{ newText }}
+            </self-loading-button>
+            <self-loading-button
+              v-if="hasEdit"
+              type="primary"
+              :size="columnButtonType === 'text' ? '' : 'small'"
+              :is-text="columnButtonType === 'text'"
+              @click="onDefaultEdit(scope.row)"
+            >
+              {{ editText }}
+            </self-loading-button>
+            <self-loading-button
+              v-if="hasView"
+              type="primary"
+              :size="columnButtonType === 'text' ? '' : 'small'"
+              :is-text="columnButtonType === 'text'"
+              @click="onDefaultView(scope.row)"
+            >
+              {{ viewText }}
+            </self-loading-button>
             <self-loading-button
               v-for="(btn, i) in extraButtons"
               v-if="'show' in btn ? btn.show(scope.row) : true"
+              :is-text="columnButtonType === 'text'"
               v-bind="btn"
               :click="btn.atClick"
               :params="scope.row"
               :callback="getList"
               :key="i"
-              is-text
             >
               {{
                 typeof btn.text === 'function' ? btn.text(scope.row) : btn.text
               }}
             </self-loading-button>
-            <text-button
+            <self-loading-button
               v-if="!hasSelect && hasDelete && canDelete(scope.row)"
               type="danger"
+              :size="columnButtonType === 'text' ? '' : 'small'"
+              :is-text="columnButtonType === 'text'"
               @click="onDefaultDelete(scope.row)"
-              >删除</text-button
             >
+              删除
+            </self-loading-button>
           </template>
         </el-table-column>
 
@@ -682,6 +701,14 @@ export default {
     saveQuery: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 操作栏按钮风格
+     * `text` 为文本按钮, `button` 为普通按钮
+     */
+    columnButtonType: {
+      type: String,
+      default: 'text'
     }
   },
   data() {
