@@ -260,7 +260,6 @@
 <script>
 import _get from 'lodash.get'
 import SelfLoadingButton from './components/self-loading-button.vue'
-import TextButton from './components/text-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
 import * as queryUtil from './utils/query'
@@ -294,7 +293,6 @@ export default {
   name: 'ElDataTable',
   components: {
     SelfLoadingButton,
-    TextButton,
     TheDialog,
     SearchForm
   },
