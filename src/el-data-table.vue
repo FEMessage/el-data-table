@@ -172,7 +172,7 @@
             <self-loading-button
               v-if="isTree && hasNew"
               type="primary"
-              :size="operationButtonType === 'text' ? '' : 'small'"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
               :is-text="operationButtonType === 'text'"
               @click="onDefaultNew(scope.row)"
             >
@@ -181,7 +181,7 @@
             <self-loading-button
               v-if="hasEdit"
               type="primary"
-              :size="operationButtonType === 'text' ? '' : 'small'"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
               :is-text="operationButtonType === 'text'"
               @click="onDefaultEdit(scope.row)"
             >
@@ -190,7 +190,7 @@
             <self-loading-button
               v-if="hasView"
               type="primary"
-              :size="operationButtonType === 'text' ? '' : 'small'"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
               :is-text="operationButtonType === 'text'"
               @click="onDefaultView(scope.row)"
             >
@@ -213,7 +213,7 @@
             <self-loading-button
               v-if="!hasSelect && hasDelete && canDelete(scope.row)"
               type="danger"
-              :size="operationButtonType === 'text' ? '' : 'small'"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
               :is-text="operationButtonType === 'text'"
               @click="onDefaultDelete(scope.row)"
             >
