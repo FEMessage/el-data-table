@@ -22,10 +22,10 @@
             native-type="submit"
             type="primary"
             @click="search"
-            size="small"
+            :size="buttonSize"
             >查询</el-button
           >
-          <el-button @click="resetSearch" size="small">重置</el-button>
+          <el-button @click="resetSearch" :size="buttonSize">重置</el-button>
         </el-form-item>
       </search-form>
 
@@ -34,7 +34,7 @@
           <el-button
             v-if="hasNew"
             type="primary"
-            size="small"
+            :size="buttonSize"
             @click="onDefaultNew"
             >{{ newText }}</el-button
           >
@@ -45,16 +45,16 @@
             :click="btn.atClick"
             :params="selected"
             :callback="getList"
+            :size="buttonSize"
             v-bind="btn"
             :key="i"
-            size="small"
           >
             {{ typeof btn.text === 'function' ? btn.text(selected) : btn.text }}
           </self-loading-button>
           <el-button
             v-if="hasSelect && hasDelete"
             type="danger"
-            size="small"
+            :size="buttonSize"
             @click="onDefaultDelete($event)"
             :disabled="
               single
@@ -66,7 +66,7 @@
           <el-button
             v-if="canSearchCollapse"
             type="default"
-            size="small"
+            :size="buttonSize"
             :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
             @click="isSearchCollapse = !isSearchCollapse"
             >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button
@@ -169,37 +169,56 @@
           v-bind="operationAttrs"
         >
           <template slot-scope="scope">
-            <text-button
+            <self-loading-button
               v-if="isTree && hasNew"
+              type="primary"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
+              :is-text="operationButtonType === 'text'"
               @click="onDefaultNew(scope.row)"
-              >{{ newText }}</text-button
             >
-            <text-button v-if="hasEdit" @click="onDefaultEdit(scope.row)">{{
-              editText
-            }}</text-button>
-            <text-button v-if="hasView" @click="onDefaultView(scope.row)">{{
-              viewText
-            }}</text-button>
+              {{ newText }}
+            </self-loading-button>
+            <self-loading-button
+              v-if="hasEdit"
+              type="primary"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
+              :is-text="operationButtonType === 'text'"
+              @click="onDefaultEdit(scope.row)"
+            >
+              {{ editText }}
+            </self-loading-button>
+            <self-loading-button
+              v-if="hasView"
+              type="primary"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
+              :is-text="operationButtonType === 'text'"
+              @click="onDefaultView(scope.row)"
+            >
+              {{ viewText }}
+            </self-loading-button>
             <self-loading-button
               v-for="(btn, i) in extraButtons"
               v-if="'show' in btn ? btn.show(scope.row) : true"
+              :is-text="operationButtonType === 'text'"
               v-bind="btn"
               :click="btn.atClick"
               :params="scope.row"
               :callback="getList"
               :key="i"
-              is-text
             >
               {{
                 typeof btn.text === 'function' ? btn.text(scope.row) : btn.text
               }}
             </self-loading-button>
-            <text-button
+            <self-loading-button
               v-if="!hasSelect && hasDelete && canDelete(scope.row)"
               type="danger"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
+              :is-text="operationButtonType === 'text'"
               @click="onDefaultDelete(scope.row)"
-              >删除</text-button
             >
+              删除
+            </self-loading-button>
           </template>
         </el-table-column>
 
@@ -226,6 +245,7 @@
         :form="form"
         :formAttrs="formAttrs"
         :dialogAttrs="dialogAttrs"
+        :buttonSize="buttonSize"
         ref="dialog"
         @confirm="onConfirm"
       >
@@ -241,7 +261,6 @@
 <script>
 import _get from 'lodash.get'
 import SelfLoadingButton from './components/self-loading-button.vue'
-import TextButton from './components/text-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
 import * as queryUtil from './utils/query'
@@ -275,7 +294,6 @@ export default {
   name: 'ElDataTable',
   components: {
     SelfLoadingButton,
-    TextButton,
     TheDialog,
     SearchForm
   },
@@ -682,6 +700,22 @@ export default {
     saveQuery: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 操作栏按钮类型
+     * `text` 为文本按钮, `button` 为普通按钮
+     */
+    operationButtonType: {
+      type: String,
+      default: 'text'
+    },
+    /**
+     * 设置 `按钮` 大小
+     * @see https://element.eleme.cn/#/zh-CN/component/button#bu-tong-chi-cun
+     */
+    buttonSize: {
+      type: String,
+      default: 'small'
     }
   },
   data() {
