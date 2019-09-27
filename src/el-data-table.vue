@@ -701,7 +701,7 @@ export default {
       default: true
     },
     /**
-     * 操作栏按钮风格
+     * 操作栏按钮类型
      * `text` 为文本按钮, `button` 为普通按钮
      */
     operationButtonType: {
