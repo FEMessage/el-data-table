@@ -172,8 +172,8 @@
             <self-loading-button
               v-if="isTree && hasNew"
               type="primary"
-              :size="columnButtonType === 'text' ? '' : 'small'"
-              :is-text="columnButtonType === 'text'"
+              :size="operationButtonType === 'text' ? '' : 'small'"
+              :is-text="operationButtonType === 'text'"
               @click="onDefaultNew(scope.row)"
             >
               {{ newText }}
@@ -181,8 +181,8 @@
             <self-loading-button
               v-if="hasEdit"
               type="primary"
-              :size="columnButtonType === 'text' ? '' : 'small'"
-              :is-text="columnButtonType === 'text'"
+              :size="operationButtonType === 'text' ? '' : 'small'"
+              :is-text="operationButtonType === 'text'"
               @click="onDefaultEdit(scope.row)"
             >
               {{ editText }}
@@ -190,8 +190,8 @@
             <self-loading-button
               v-if="hasView"
               type="primary"
-              :size="columnButtonType === 'text' ? '' : 'small'"
-              :is-text="columnButtonType === 'text'"
+              :size="operationButtonType === 'text' ? '' : 'small'"
+              :is-text="operationButtonType === 'text'"
               @click="onDefaultView(scope.row)"
             >
               {{ viewText }}
@@ -199,7 +199,7 @@
             <self-loading-button
               v-for="(btn, i) in extraButtons"
               v-if="'show' in btn ? btn.show(scope.row) : true"
-              :is-text="columnButtonType === 'text'"
+              :is-text="operationButtonType === 'text'"
               v-bind="btn"
               :click="btn.atClick"
               :params="scope.row"
@@ -213,8 +213,8 @@
             <self-loading-button
               v-if="!hasSelect && hasDelete && canDelete(scope.row)"
               type="danger"
-              :size="columnButtonType === 'text' ? '' : 'small'"
-              :is-text="columnButtonType === 'text'"
+              :size="operationButtonType === 'text' ? '' : 'small'"
+              :is-text="operationButtonType === 'text'"
               @click="onDefaultDelete(scope.row)"
             >
               删除
@@ -704,7 +704,7 @@ export default {
      * 操作栏按钮风格
      * `text` 为文本按钮, `button` 为普通按钮
      */
-    columnButtonType: {
+    operationButtonType: {
       type: String,
       default: 'text'
     }
