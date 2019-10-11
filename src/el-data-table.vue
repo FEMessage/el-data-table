@@ -717,14 +717,6 @@ export default {
     buttonSize: {
       type: String,
       default: 'small'
-    },
-    /**
-     * 搜索表单项变更时立即搜索
-     * `input` 不会触发
-     */
-    searchImmediately: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -779,11 +771,7 @@ export default {
       return getLocatedSlotKeys(this.$slots, 'search:')
     },
     _searchForm() {
-      if (this.searchImmediately) {
-        return transformSearchImmediatelyItem(this.searchForm, this)
-      }
-
-      return this.searchForm
+      return transformSearchImmediatelyItem(this.searchForm, this)
     }
   },
   watch: {
