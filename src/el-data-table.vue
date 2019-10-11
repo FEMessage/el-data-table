@@ -720,7 +720,7 @@ export default {
     },
     /**
      * 搜索表单项变更时立即搜索
-     * `input` 和 自定义组件不会触发
+     * `input` 不会触发
      */
     searchImmediately: {
       type: Boolean,
