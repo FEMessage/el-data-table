@@ -11,9 +11,8 @@ export default function(content, vm) {
         input: (...args) => {
           if (typeof origOnInput === 'function') {
             origOnInput.call(item, ...args)
-
-            vm.search()
           }
+          vm.search()
         }
       })
     })
