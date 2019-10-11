@@ -8,7 +8,7 @@
       <search-form
         v-if="hasSearchForm"
         ref="searchForm"
-        :search-form="searchForm"
+        :search-form="_searchForm"
         :can-search-collapse="canSearchCollapse"
         :is-search-collapse="isSearchCollapse"
         :located-slot-keys="searchLocatedSlotKeys"
@@ -266,6 +266,7 @@ import SearchForm from './components/search-form.vue'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
+import transformSearchImmediatelyItem from './utils/search-immediately-item'
 
 // 默认返回的数据格式如下
 //          {
@@ -768,6 +769,9 @@ export default {
     },
     searchLocatedSlotKeys() {
       return getLocatedSlotKeys(this.$slots, 'search:')
+    },
+    _searchForm() {
+      return transformSearchImmediatelyItem(this.searchForm, this)
     }
   },
   watch: {

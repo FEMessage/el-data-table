@@ -1,16 +1,10 @@
 // Import vue component
 import component from './el-data-table.vue'
 
-// install function executed by Vue.use()
-export function install(Vue) {
-  if (install.installed) return
-  install.installed = true
-  Vue.component('ElDataTable', component)
-}
-
-// Create module definition for Vue.use()
-const plugin = {
-  install
+// `Vue.use` automatically prevents you from using the same plugin more than once,
+// so calling it multiple times on the same plugin will install the plugin only once
+component.install = Vue => {
+  Vue.component(component.name, component)
 }
 
 // To auto-install when vue is found
@@ -21,7 +15,7 @@ if (typeof window !== 'undefined') {
   GlobalVue = global.Vue
 }
 if (GlobalVue) {
-  GlobalVue.use(plugin)
+  GlobalVue.use(component)
 }
 
 // To allow use as module (npm/webpack/etc.) export component
