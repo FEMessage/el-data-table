@@ -2,7 +2,7 @@ export default function(content, vm) {
   return content.map(item => {
     const origOnInput = item.on && item.on.input
 
-    if (item.component || item.type === 'input') {
+    if (item.type === 'input') {
       return item
     }
 
