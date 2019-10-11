@@ -14,3 +14,16 @@ const content = [
   }
 ]
 ```
+
+当开启 `canSearchCollapse` 折叠表单的时候, 可以设置特定表单项不可折叠(无论折叠与否, 始终显示).
+
+```diff
+const content = [
+  {
+    id: 'name',
+    type: 'input',
+    label: 'name',
++   collapsible: false
+  }
+]
+```
