@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://github.com/FEMessage/el-data-table/compare/v1.12.0...v1.13.0) (2019-10-12)
+
+
+### Features
+
+* 支持统一定制按钮大小 ([#220](https://github.com/FEMessage/el-data-table/issues/220)) ([f9edea6](https://github.com/FEMessage/el-data-table/commit/f9edea6))
+* **searchImmediately:** 支持搜索表单项变更时自动搜索 ([#222](https://github.com/FEMessage/el-data-table/issues/222)) ([8c73ebe](https://github.com/FEMessage/el-data-table/commit/8c73ebe))
+
+
+
 ## [1.12.0](https://github.com/FEMessage/el-data-table/compare/v1.11.0...v1.12.0) (2019-09-27)
 
 
