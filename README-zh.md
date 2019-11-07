@@ -11,8 +11,6 @@
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343957982-beab6082-6ed2-48c3-9342-d7a81875e5fb.jpeg#align=left&display=inline&height=761&originHeight=761&originWidth=1611&size=0&status=done&width=1611)
 
-[English](./README-en.md)
-
 ## Table of Contents
 
 - [Introduction](#introduction)
