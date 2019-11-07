@@ -11,6 +11,8 @@ Auto requesting by `axios`, supports pagination, tree data structure, custom se
 
 ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026827-d2ba00dd-0e93-4e4f-a7da-247fbcd67333.jpeg#align=left&display=inline&height=761&originHeight=761&originWidth=1611&size=0&status=done&width=1611)
 
+[中文文档](./README-zh.md)
+
 ## Table of Contents
 
 - [Introduction](#introduction)
