@@ -2,9 +2,9 @@
   <component
     :is="isText ? 'text-button' : 'el-button'"
     v-bind="$attrs"
-    v-on="$listeners"
     :loading="loading"
     :type="type"
+    v-on="$listeners"
     @click="handleClick"
   >
     <slot></slot>
@@ -27,17 +27,26 @@ export default {
     /**
      * 如果没有这个props，则通过attrs传`type`时，会导致el-button的`native-type`也被改变
      */
-    type: String,
+    type: {
+      type: String,
+      required: true
+    },
     /**
      * 点击按钮绑定的函数
      */
     click: {
-      type: Function
+      type: Function,
+      required: true
     },
     /**
      * click函数的参数
      */
-    params: {},
+    params: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
     /**
      * 点击事件的回调函数
      */
@@ -63,10 +72,7 @@ export default {
           // 调用父组件中的数据刷新方法
           this.callback()
         })
-        .catch(e => {})
-        .finally(e => {
-          this.loading = false
-        })
+        .finally(() => (this.loading = false))
     }
   }
 }

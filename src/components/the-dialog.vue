@@ -1,15 +1,15 @@
 <template>
   <el-dialog
+    ref="dialog"
     :title="title"
     :visible.sync="visible"
-    ref="dialog"
     v-bind="dialogAttrs"
     @close="resetFields"
   >
     <!--https://github.com/FEMessage/el-form-renderer-->
     <el-form-renderer
-      :content="form"
       ref="form"
+      :content="form"
       v-bind="formAttrs"
       :disabled="isView"
     >
@@ -17,13 +17,13 @@
       <slot :row="slotData" />
     </el-form-renderer>
 
-    <div slot="footer" v-show="!isView">
-      <el-button @click="visible = false" :size="buttonSize">取 消</el-button>
+    <div v-show="!isView" slot="footer">
+      <el-button :size="buttonSize" @click="visible = false">取 消</el-button>
       <el-button
         type="primary"
-        @click="confirm"
         :loading="confirmLoading"
         :size="buttonSize"
+        @click="confirm"
         >确 定</el-button
       >
     </div>
@@ -63,7 +63,10 @@ export default {
       type: Object,
       required: true
     },
-    buttonSize: String
+    buttonSize: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {

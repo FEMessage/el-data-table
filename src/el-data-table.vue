@@ -13,7 +13,7 @@
         :is-search-collapse="isSearchCollapse"
         :located-slot-keys="searchLocatedSlotKeys"
       >
-        <slot v-for="slot in searchLocatedSlotKeys" :name="slot" :slot="slot" />
+        <slot v-for="slot in searchLocatedSlotKeys" :slot="slot" :name="slot" />
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
         <el-form-item>
@@ -21,11 +21,11 @@
           <el-button
             native-type="submit"
             type="primary"
-            @click="search"
             :size="buttonSize"
+            @click="search"
             >查询</el-button
           >
-          <el-button @click="resetSearch" :size="buttonSize">重置</el-button>
+          <el-button :size="buttonSize" @click="resetSearch">重置</el-button>
         </el-form-item>
       </search-form>
 
@@ -38,29 +38,32 @@
             @click="onDefaultNew"
             >{{ newText }}</el-button
           >
-          <self-loading-button
-            v-for="(btn, i) in headerButtons"
-            v-if="'show' in btn ? btn.show(selected) : true"
-            :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-            :click="btn.atClick"
-            :params="selected"
-            :callback="getList"
-            :size="buttonSize"
-            v-bind="btn"
-            :key="i"
-          >
-            {{ typeof btn.text === 'function' ? btn.text(selected) : btn.text }}
-          </self-loading-button>
+          <template v-for="(btn, i) in headerButtons">
+            <self-loading-button
+              v-if="'show' in btn ? btn.show(selected) : true"
+              :key="i"
+              :disabled="'disabled' in btn ? btn.disabled(selected) : false"
+              :click="btn.atClick"
+              :params="selected"
+              :callback="getList"
+              :size="buttonSize"
+              v-bind="btn"
+            >
+              {{
+                typeof btn.text === 'function' ? btn.text(selected) : btn.text
+              }}
+            </self-loading-button>
+          </template>
           <el-button
             v-if="hasSelect && hasDelete"
             type="danger"
             :size="buttonSize"
-            @click="onDefaultDelete($event)"
             :disabled="
               single
                 ? !selected.length || selected.length > 1
                 : !selected.length
             "
+            @click="onDefaultDelete($event)"
             >删除</el-button
           >
           <el-button
@@ -78,10 +81,10 @@
 
       <el-table
         ref="table"
+        v-loading="loading"
         v-bind="tableAttrs"
         :data="data"
         :row-class-name="showRow"
-        v-loading="loading"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
         @select-all="selectStrategy.onSelectAll"
@@ -97,19 +100,16 @@
 
             <el-table-column key="tree-ctrl" v-bind="columns[1]">
               <template slot-scope="scope">
-                <span
-                  v-if="isTree"
-                  v-for="space in scope.row._level"
-                  class="ms-tree-space"
-                  :key="space"
-                ></span>
+                <template v-for="space in scope.row._level">
+                  <span v-if="isTree" :key="space" class="ms-tree-space" />
+                </template>
                 <span
                   v-if="isTree && iconShow(scope.$index, scope.row)"
                   class="tree-ctrl"
                   @click="toggleExpanded(scope.$index)"
                 >
-                  <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
-                  <i v-else class="el-icon-minus"></i>
+                  <i v-if="!scope.row._expanded" class="el-icon-plus" />
+                  <i v-else class="el-icon-minus" />
                 </span>
                 {{ scope.row[columns[1].prop] }}
               </template>
@@ -127,12 +127,9 @@
             <!--展开这列, 丢失 el-table-column属性-->
             <el-table-column key="tree-ctrl" v-bind="columns[0]">
               <template slot-scope="scope">
-                <span
-                  v-if="isTree"
-                  v-for="space in scope.row._level"
-                  class="ms-tree-space"
-                  :key="space"
-                ></span>
+                <template v-for="space in scope.row._level">
+                  <span v-if="isTree" :key="space" class="ms-tree-space" />
+                </template>
                 <span
                   v-if="isTree && iconShow(scope.$index, scope.row)"
                   class="tree-ctrl"
@@ -164,8 +161,8 @@
 
         <!--默认操作列-->
         <el-table-column
-          label="操作"
           v-if="hasOperation"
+          label="操作"
           v-bind="operationAttrs"
         >
           <template slot-scope="scope">
@@ -196,20 +193,23 @@
             >
               {{ viewText }}
             </self-loading-button>
-            <self-loading-button
-              v-for="(btn, i) in extraButtons"
-              v-if="'show' in btn ? btn.show(scope.row) : true"
-              :is-text="operationButtonType === 'text'"
-              v-bind="btn"
-              :click="btn.atClick"
-              :params="scope.row"
-              :callback="getList"
-              :key="i"
-            >
-              {{
-                typeof btn.text === 'function' ? btn.text(scope.row) : btn.text
-              }}
-            </self-loading-button>
+            <template v-for="(btn, i) in extraButtons">
+              <self-loading-button
+                v-if="'show' in btn ? btn.show(scope.row) : true"
+                :key="i"
+                :is-text="operationButtonType === 'text'"
+                v-bind="btn"
+                :click="btn.atClick"
+                :params="scope.row"
+                :callback="getList"
+              >
+                {{
+                  typeof btn.text === 'function'
+                    ? btn.text(scope.row)
+                    : btn.text
+                }}
+              </self-loading-button>
+            </template>
             <self-loading-button
               v-if="!hasSelect && hasDelete && canDelete(scope.row)"
               type="danger"
@@ -228,30 +228,30 @@
 
       <el-pagination
         v-if="hasPagination"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
         :current-page="page"
         :page-sizes="paginationSizes"
         :page-size="size"
         :total="total"
         style="text-align: right; padding: 10px 0;"
         :layout="paginationLayout"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       ></el-pagination>
 
       <the-dialog
-        :newTitle="dialogNewTitle"
-        :editTitle="dialogEditTitle"
-        :viewTitle="dialogViewTitle"
-        :form="form"
-        :formAttrs="formAttrs"
-        :dialogAttrs="dialogAttrs"
-        :buttonSize="buttonSize"
         ref="dialog"
+        :new-title="dialogNewTitle"
+        :edit-title="dialogEditTitle"
+        :view-title="dialogViewTitle"
+        :form="form"
+        :form-attrs="formAttrs"
+        :dialog-attrs="dialogAttrs"
+        :button-size="buttonSize"
         @confirm="onConfirm"
       >
-        <template v-slot="{row}">
+        <template v-slot="scope">
           <!-- @slot 表单作用域插槽。当编辑、查看时传入row；新增时row=null -->
-          <slot name="form" :row="row" />
+          <slot name="form" :row="scope.row" />
         </template>
       </the-dialog>
     </template>
@@ -478,21 +478,24 @@ export default {
      * 参数(data, row) data 是form表单的数据, row 是当前行的数据, 只有isTree为true时, 点击操作列的新增按钮才会有值
      */
     onNew: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     /**
      * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用, 需要返回promise
      * 参数(data, row) data 是form表单的数据, row 是当前行的数据
      */
     onEdit: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     /**
      * 点击删除按钮时的方法, 当默认删除方法不满足需求时使用, 需要返回promise
      * 多选时, 参数为selected, 代表选中的行组成的数组; 非多选时参数为row, 代表单行的数据
      */
     onDelete: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     /**
      * 是否分页。如果不分页，则请求传参page=-1
@@ -1069,8 +1072,6 @@ export default {
             instance.confirmButtonLoading = false
           }
         }
-      }).catch(er => {
-        /*取消*/
       })
     },
     // 树形table相关

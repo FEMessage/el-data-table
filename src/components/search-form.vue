@@ -13,8 +13,8 @@
     >
       <slot
         v-for="slot in locatedSlotKeys"
-        :name="slot"
         :slot="replaceToId(slot)"
+        :name="slot"
       />
       <slot />
     </el-form-renderer>
@@ -29,8 +29,8 @@
     >
       <slot
         v-for="slot in locatedSlotKeys"
-        :name="slot"
         :slot="replaceToId(slot)"
+        :name="slot"
       />
       <slot />
     </el-form-renderer>
@@ -43,16 +43,20 @@ export default {
 
   props: {
     searchForm: {
-      type: Array
+      type: Array,
+      required: true
     },
     canSearchCollapse: {
-      type: Boolean
+      type: Boolean,
+      required: true
     },
     isSearchCollapse: {
-      type: Boolean
+      type: Boolean,
+      required: true
     },
     locatedSlotKeys: {
-      type: Array
+      type: Array,
+      required: true
     }
   },
 
@@ -80,10 +84,16 @@ export default {
   },
 
   methods: {
+    /**
+     * @public
+     */
     validate(fn) {
       return this.$refs[this.currentForm].validate(fn)
     },
 
+    /**
+     * @public
+     */
     resetFields() {
       this.$refs.normalForm.resetFields()
       if (this.hasUnCollapsibleForm) {
@@ -91,6 +101,9 @@ export default {
       }
     },
 
+    /**
+     * @public
+     */
     updateForm(value) {
       this.$refs.normalForm.updateForm(value)
       if (this.hasUnCollapsibleForm) {
@@ -98,6 +111,9 @@ export default {
       }
     },
 
+    /**
+     * @public
+     */
     getFormValue() {
       if (this.hasUnCollapsibleForm) {
         this.$refs.normalForm.updateForm(
@@ -110,9 +126,7 @@ export default {
 
     syncFormValue(target, source) {
       if (this.hasUnCollapsibleForm) {
-        this.$refs[target].updateForm(
-          this.$refs[source].getFormValue()
-        )
+        this.$refs[target].updateForm(this.$refs[source].getFormValue())
       }
     },
 
