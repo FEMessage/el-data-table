@@ -271,7 +271,6 @@ import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
 import transformSearchImmediatelyItem from './utils/search-immediately-item'
-import needToGoPrev from './utils/need-to-go-prev'
 
 // 默认返回的数据格式如下
 //          {
@@ -1073,13 +1072,12 @@ export default {
               deleteCount = this.selected.length
               this.clearSelection()
             }
+            const remain = this.data.length - deleteCount
+            const lastPage = Math.ceil(this.total / this.size)
             if (
-              needToGoPrev(
-                this.data.length - deleteCount,
-                this.page,
-                this.size,
-                this.total
-              )
+              remain === 0 &&
+              this.page === lastPage &&
+              this.page > defaultFirstPage
             )
               this.page--
             this.getList()
