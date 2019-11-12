@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.1](https://github.com/FEMessage/el-data-table/compare/v1.13.0...v1.13.1) (2019-11-12)
+
+
+### Bug Fixes
+
+* 删完最后一页后页码不正确的问题 ([#228](https://github.com/FEMessage/el-data-table/issues/228)) ([2dbdde6](https://github.com/FEMessage/el-data-table/commit/2dbdde6))
+
+
+
 ## [1.13.0](https://github.com/FEMessage/el-data-table/compare/v1.12.0...v1.13.0) (2019-10-12)
 
 
