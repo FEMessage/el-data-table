@@ -7,17 +7,15 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-data-table/pulls)
 [![Automated Release Notes by gren](https://img.shields.io/badge/%F0%9F%A4%96-release%20notes-00B2EE.svg)](https://github-tools.github.io/github-release-notes/)
 
-Auto requesting by `axios`, supports pagination, tree data structure, custom search, custom operation column, which makes rest api easily👏
+使用`axios`自动发送请求，支持树形结构，支持分页，支持自定义查询, 自定义操作列, 让 RESTful 风格的 CRUD 更简单 👏
 
-![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026827-d2ba00dd-0e93-4e4f-a7da-247fbcd67333.jpeg#align=left&display=inline&height=761&originHeight=761&originWidth=1611&size=0&status=done&width=1611)
-
-[中文文档](./README-zh.md)
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343957982-beab6082-6ed2-48c3-9342-d7a81875e5fb.jpeg#align=left&display=inline&height=761&originHeight=761&originWidth=1611&size=0&status=done&width=1611)
 
 ## Table of Contents
 
 - [Introduction](#introduction)
   - [CRUD](#crud)
-  - [Data Driven](#data-driven)
+  - [数据驱动](#数据驱动)
   - [Why](#why)
 - [Feature](#feature)
 - [Links](#links)
@@ -34,47 +32,49 @@ Auto requesting by `axios`, supports pagination, tree data structure, custom se
 
 ### CRUD
 
-el-data-table is created to solve business problems, so CRUD logic is set inside.<br /> For example, to develop `user` api, suppose its relative path like this:
+el-data-table 就是为了解决业务问题而生的，故而封装了 CRUD 的逻辑在里面。
 
-```javascript
+以用户接口示例，设其相对路径为:
+
+```sh
 /api/v1/users
 ```
 
-The restful CRUD api should be:
+则其 restful CRUD 接口如下：
 
-- Retrieve
+- 查询
 
-```javascript
+```sh
 GET /api/v1/users?page=1&size=10
 ```
 
-- Create
+- 新增
 
-```javascript
-POST / api / v1 / users
+```sh
+POST /api/v1/users
 ```
 
-- Update
+- 修改(编辑)
 
-```javascript
+```sh
 PUT /api/v1/users/:id
 ```
 
-- Delete
+- 删除
 
-```javascript
+```sh
 DELETE /api/v1/users/:id
 ```
 
-Then only need to use the following code to complete CRUD functions
+则只需要使用以下代码，即可完成 CRUD 功能
 
-```html
+```vue
 <template>
   <el-data-table v-bind="tableConfig"></el-data-table>
 </template>
 ```
 
-```javascript
+```js
 <script>
 export default {
   data() {
@@ -121,66 +121,75 @@ export default {
 </script>
 ```
 
-The results are as follows:
+效果如下：
 
-- Retrieve
-  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026830-1aa50e0b-8ae2-46b3-8722-816f19e62498.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026867-b3ecaa0b-043e-48e7-aacd-590ec99ebeb4.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
+- 查询
 
-- Create
-  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026834-0b8f4bf4-0b60-48e2-8602-0184d42d2b73.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343957765-301a3072-46f0-43b2-b660-d87fb45a846b.jpeg#align=left&display=inline&height=784&originHeight=784&originWidth=1950&size=0&status=done&width=1950)
 
-- Update
-  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026856-1e2c48bc-b934-46bb-88ec-90a2e7887be0.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343957835-08c31670-621f-4572-a3fc-ea277648ddde.jpeg#align=left&display=inline&height=954&originHeight=954&originWidth=2558&size=0&status=done&width=2558)
 
-- Delete
-  ![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026855-9c30f12f-523d-4a29-bce9-3c91835dbbfc.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)
+- 新增
 
-[⬆Back to Top](#table-of-contents)
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343956003-84c809b6-73c2-428e-89c8-64cb12d89b52.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=2558&size=0&status=done&width=2558)
 
-### Data Driven
+- 修改
 
-Moving the content of the template to the script means that the template can be reduced and js can be extracted to another file to reuse.
-At the same time, the data in js is actually a piece of json, this means code generation tool can help.
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343956268-32e63e31-117d-475f-91ac-03b0ffc98455.jpeg#align=left&display=inline&height=948&originHeight=948&originWidth=2554&size=0&status=done&width=2554)
 
-Beside, herer uses the component [@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer) to render form.
+- 删除
 
-![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026838-0fb2ab84-2934-4c6b-91d9-e3d706520f38.jpeg#align=left&display=inline&height=689&originHeight=689&originWidth=1539&size=0&status=done&width=1539)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026890-51418c24-b277-42dd-a6a8-c98a5291e922.jpeg#align=left&display=inline&height=577&originHeight=577&originWidth=1543&size=0&status=done&width=1543)<br />![](https://cdn.nlark.com/yuque/0/2019/jpeg/224563/1561703026831-0d1a339b-dbde-4eeb-9d68-89850b9449fb.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=1515&size=0&status=done&width=1515)
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343955968-f7147279-ee7c-4eef-bac7-5277a7316eb9.jpeg#align=left&display=inline&height=942&originHeight=942&originWidth=2558&size=0&status=done&width=2558)
 
-[⬆Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents)
+
+### 数据驱动
+
+把 template 的内容移动到 script 中, 意味着 template 可以精简，js 可以抽取出来，方便复用；同时，js 里的数据其实就是一段 json，这也让代码生成工具有了用武之地。
+
+其中表单的渲染使用到了组件[@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer)
+
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343956092-670c71a3-94dd-40db-ba92-871be4766974.jpeg#align=left&display=inline&height=689&originHeight=689&originWidth=1539&size=0&status=done&width=1539)
+
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343955949-1aaa4d8c-3e81-4587-a115-dca0f21485e8.jpeg#align=left&display=inline&height=577&originHeight=577&originWidth=1543&size=0&status=done&width=1543)
+
+![](https://cdn.nlark.com/yuque/0/2019/jpeg/304775/1563343956078-568c4274-7608-467a-8d21-9d44e22f244d.jpeg#align=left&display=inline&height=912&originHeight=912&originWidth=1515&size=0&status=done&width=1515)
+
+[⬆ Back to Top](#table-of-contents)
 
 ### Why
 
-Why do you create el-data-table based on el-table of element-ui?
+为什么要在 element-ui 的 el-table 的基础上封装一个 el-data-table?
 
-I often hear the following sounds:
+我常听到有以下几种声音：
 
-1.  el-table can cover most scenarios without extended requirements
-2.  wrap up so many things, it's heavy and high coupling
-3.  bound with too many business logic, it's not flexible; business logic should handle by developers
+1.  el-table 已可以覆盖大部分场景，暂无扩展需求
+2.  封装了这么多东西，耦合太严重了
+3.  涉及过多的业务逻辑，有点僵化，业务操作还是交给开发者去处理
 
-First of all, I have to say, el-table is really flexible, but when implementing paging requests, only el-table is not enough, and the el-pagination component needs to be combined. Most of the content of paging processing is repeated. Without a high level business component, we get duplicate code everywhere.
+首先 el-table 的确很灵活，只不过，在实现分页请求的时候，仅有 el-table 还不够，还需要组合 el-pagination 组件来实现。而分页处理的内容大多都是重复的，如果不封装，只会产生冗余的代码。
 
-In fact, in the admin or dashboard web app, there are many CRUD operations, using restful API. It is possible to use only one url to make a component to complete CRUD functions.
+而中后台太多都是 CRUD 的操作，结合 restful API，使用得只传一个 url 让组件做 CRUD 成为了可能。
 
-Secondly, many experienced developers think that components are the more flexible the better.
+其次，很多有经验的“老手”觉得组件越灵活越好。
 
-However, for the "newbees" who lack of experience, they are not familiar with common business scenarios. Some basic operations, like form validation, space filtering, adding loading, exception handling, they may forget, which result in bugs.
+但对于经验尚浅的“新手”，他们并不熟悉常见的业务场景，对一些基本操作，如果表单校验，空格过滤，添加 loading，异常处理，他们只会漏掉，而这正是产生 bug 的源头。
 
-For front-line business developers, in the face of endless developing task, in fact, they don't want to deal with repeated business logic. they just want to free their hands and get off work early.
+对于一线的业务开发人员而言，面对做不完的业务，其实他们并不想去处理重复的业务逻辑，他们只想解放双手，早点下班。
 
-In such situation, el-data-table was born.
+正是在这样的背景下，产生了 el-data-table。
 
-[⬆Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Feature
 
-- Use configuration to call restful api to complete CRUD functions
-- Support table display tree structure data
-- Bound with pagination logic
-- Support custom column buttons, and custom operation functions
-- Support saving query on url, which can resotre search status after history.go(-1) or location.reload()
+- 只需进行 json 配置，即可实现 restful 风格的 CRUD 四个接口的对接
+- 支持表格内展示树形结构数据(该功能 element-ui 官方是不支持的)
+- 自带分页逻辑
+- 可扩展自定义列按钮，以及自定义操作函数
+- 支持分页查询后，点击详情再返回，恢复上一次的查询状态
 
-[⬆Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Links
 
@@ -191,22 +200,27 @@ In such situation, el-data-table was born.
 
 ## Install
 
-Encourage using [Yarn](https://yarnpkg.com/en/docs/install#mac-stable) to install
+encourage using [yarn](https://yarnpkg.com/en/docs/install#mac-stable) to install
 
 ```sh
 yarn add @femessage/el-data-table
 ```
 
-[⬆Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Quick Start
 
 ### Global Register Component
 
-This is for minification reason: in this way building your app, webpack or other bundler just bundle the dependencies into one vendor for all pages which using this component, instead of one vendor for one page
+this is for minification reason: in this way building your app,
 
-```javascript
+webpack or other bundler just bundle the dependencies into one vendor for all pages which using this component,
+
+instead of one vendor for one page
+
+```js
 import Vue from 'vue'
+
 // register component and loading directive
 import ElDataTable from '@femessage/el-data-table'
 import ElFormRenderer from '@femessage/el-form-renderer'
@@ -222,6 +236,7 @@ import {
   Message,
   MessageBox
 } from 'element-ui'
+
 Vue.use(Button)
 Vue.use(Dialog)
 Vue.use(Form)
@@ -232,10 +247,13 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.component('el-form-renderer', ElFormRenderer)
 Vue.component('el-data-table', ElDataTable)
+
 // to show confirm before delete
 Vue.prototype.$confirm = MessageBox.confirm
+
 // show tips
 Vue.prototype.$message = Message
+
 // if the table component cannot access `this.$axios`, it cannot send request
 import axios from 'axios'
 Vue.prototype.$axios = axios
@@ -249,21 +267,21 @@ Vue.prototype.$axios = axios
 </template>
 ```
 
-[⬆Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Reference
 
-- [form rules detail see asynchronc-veriator](https://github.com/yiminghe/async-validator)
-- [ll-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
+- [form rules detail see async-validator](https://github.com/yiminghe/async-validator)
+- [el-input enter to submit](https://github.com/ElemeFE/element/pull/5920)
 - [html spec form submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
-- [what_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
-- [history_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+- [What_is_a_URL](https://developer.mozilla.org/zh-CN/docs/Learn/Common_questions/What_is_a_URL)
+- [History_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
 - [encodeURIComponent](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent)
-- [regExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
-- [routing implementations details in vue-router](https://zhuanlan.zhihu.com/p/27588422)
+- [RegExp](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+- [从 vue-router 看前端路由的两种实现](https://zhuanlan.zhihu.com/p/27588422)
 - [peer-dependencies](https://nodejs.org/en/blog/npm/peer-dependencies/)
 
-[⬆Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents)
 
 ## Contributing
 
@@ -286,13 +304,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- prettier-ignore -->
 <table><tr><td align="center"><a href="http://levy.work"><img src="https://avatars3.githubusercontent.com/u/9384365?v=4" width="100px;" alt="levy"/><br /><sub><b>levy</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=levy9527" title="Code">💻</a> <a href="#review-levy9527" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=levy9527" title="Documentation">📖</a> <a href="#infra-levy9527" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#ideas-levy9527" title="Ideas, Planning, & Feedback">🤔</a></td><td align="center"><a href="https://donaldshen.github.io/portfolio"><img src="https://avatars3.githubusercontent.com/u/19591950?v=4" width="100px;" alt="Donald Shen"/><br /><sub><b>Donald Shen</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=donaldshen" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=donaldshen" title="Tests">⚠️</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=donaldshen" title="Documentation">📖</a></td><td align="center"><a href="https://github.com/MiffyCooper"><img src="https://avatars1.githubusercontent.com/u/20179564?v=4" width="100px;" alt="MiffyCooper"/><br /><sub><b>MiffyCooper</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=MiffyCooper" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=MiffyCooper" title="Documentation">📖</a></td><td align="center"><a href="https://github.com/prisbre"><img src="https://avatars1.githubusercontent.com/u/13557397?v=4" width="100px;" alt="Huanfeng Chen"/><br /><sub><b>Huanfeng Chen</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=prisbre" title="Code">💻</a></td><td align="center"><a href="https://evila.me"><img src="https://avatars3.githubusercontent.com/u/19513289?v=4" width="100px;" alt="EVILLT"/><br /><sub><b>EVILLT</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=evillt" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Aevillt" title="Bug reports">🐛</a></td><td align="center"><a href="https://github.com/Alvin-Liu"><img src="https://avatars0.githubusercontent.com/u/11909145?v=4" width="100px;" alt="Alvin"/><br /><sub><b>Alvin</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=Alvin-Liu" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/issues?q=author%3AAlvin-Liu" title="Bug reports">🐛</a></td><td align="center"><a href="https://github.com/lianghx-319"><img src="https://avatars2.githubusercontent.com/u/27187946?v=4" width="100px;" alt="Han"/><br /><sub><b>Han</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=lianghx-319" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Alianghx-319" title="Bug reports">🐛</a></td></tr><tr><td align="center"><a href="https://github.com/kunzhijia"><img src="https://avatars2.githubusercontent.com/u/4848041?v=4" width="100px;" alt="kunzhijia"/><br /><sub><b>kunzhijia</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=kunzhijia" title="Code">💻</a> <a href="#tool-kunzhijia" title="Tools">🔧</a> <a href="#example-kunzhijia" title="Examples">💡</a></td><td align="center"><a href="https://github.com/chenEdgar"><img src="https://avatars3.githubusercontent.com/u/12596622?v=4" width="100px;" alt="Edgar"/><br /><sub><b>Edgar</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=chenEdgar" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/issues?q=author%3AchenEdgar" title="Bug reports">🐛</a></td><td align="center"><a href="https://github.com/Barretem"><img src="https://avatars2.githubusercontent.com/u/47966933?v=4" width="100px;" alt="Barretem"/><br /><sub><b>Barretem</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=Barretem" title="Code">💻</a></td><td align="center"><a href="https://github.com/GaryHjy"><img src="https://avatars1.githubusercontent.com/u/32995274?v=4" width="100px;" alt="阿禹。"/><br /><sub><b>阿禹。</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=GaryHjy" title="Documentation">📖</a></td><td align="center"><a href="https://github.com/lujunwei"><img src="https://avatars0.githubusercontent.com/u/7427200?v=4" width="100px;" alt="lujunwei"/><br /><sub><b>lujunwei</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=lujunwei" title="Code">💻</a></td><td align="center"><a href="http://www.ccc1996.cn"><img src="https://avatars1.githubusercontent.com/u/20502762?v=4" width="100px;" alt="cjf"/><br /><sub><b>cjf</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Acjfff" title="Bug reports">🐛</a></td><td align="center"><a href="https://github.com/Jack-rainbow"><img src="https://avatars1.githubusercontent.com/u/20368037?v=4" width="100px;" alt="Jack-rainbow"/><br /><sub><b>Jack-rainbow</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3AJack-rainbow" title="Bug reports">🐛</a></td></tr><tr><td align="center"><a href="https://colmugx.github.io"><img src="https://avatars1.githubusercontent.com/u/21327913?v=4" width="100px;" alt="ColMugX"/><br /><sub><b>ColMugX</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=colmugx" title="Code">💻</a></td><td align="center"><a href="https://github.com/snowlocked"><img src="https://avatars0.githubusercontent.com/u/19562649?v=4" width="100px;" alt="snowlocked"/><br /><sub><b>snowlocked</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=snowlocked" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=snowlocked" title="Documentation">📖</a></td></tr></table>
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## License
 
-[MIT](https://www.yuque.com/deepexi-serverless/onx52o/LICENSE)
+[MIT](./LICENSE)
 
-[⬆Back to Top](#table-of-contents)
+[⬆ Back to Top](#table-of-contents)
