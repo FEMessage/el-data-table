@@ -8,11 +8,11 @@ search表单折叠并且设置部分总是可见
 export default {
   data() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=1',
+      url: 'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic',
       columns: [
-        {prop: 'name', label: '用户名'},
-        {prop: 'createdBy', label: '创建人'},
-        {prop: 'userInfo.createTime', label: '创建时间'}
+        {prop: 'date', label: '日期'},
+        {prop: 'name', label: '姓名'},
+        {prop: 'address', label: '地址'},
       ],
       searchForm: [
         {

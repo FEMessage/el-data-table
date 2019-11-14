@@ -25,44 +25,49 @@ export default {
   name: 'on-new-edit-delete',
   data() {
     return {
-      url:
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-get',
+      url: 'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic',
       columns: [
-        {type: 'selection'},
-        {prop: 'name', label: '用户名'},
-        {prop: 'createdBy', label: '创建人'},
-        {prop: 'userInfo.createTime', label: '创建时间'}
+        {prop: 'date', label: '日期'},
+        {prop: 'name', label: '姓名'},
+        {prop: 'address', label: '地址'},
       ],
       form: [
         {
           type: 'input',
           id: 'name',
-          label: '用户名',
-          el: {placeholder: '请输入用户名'},
-          rules: [{required: true, trigger: 'blur', whitespace: true}]
-        }
-      ]
+          label: '姓名',
+          rules: [
+            {
+              required: true,
+              message: '请输入姓名',
+              trigger: 'blur',
+              transform: v => v && v.trim()
+            }
+          ],
+          el: {placeholder: '请输入姓名'}
+        },
+      ],
     }
   },
   methods: {
     onNew(data, row) {
       console.log('onNew')
       return this.$axios.post(
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-new',
+        'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic/on-new',
         data
       )
     },
     onEdit(data, row) {
       console.log('onEdit')
       return this.$axios.put(
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-edit',
+        'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic/on-edit',
         data
       )
     },
     onDelete(selected) {
       console.log('onDelete')
       return this.$axios.delete(
-        'https://www.easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/on-delete',
+        'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic/on-delete',
         {
           data: {
             rows: selected.id || selected.map(v => v.id)
