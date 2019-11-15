@@ -6,22 +6,16 @@
     v-bind="$data"
   >
     <el-table-column type="expand" fixed="left">
-      <template slot-scope="props">
+      <template slot-scope="{row}">
         <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item label="客户名称">
-            <span>{{ props.row.memberName }}</span>
+          <el-form-item label="日期">
+            <span>{{ row.date }}</span>
           </el-form-item>
-          <el-form-item label="客户ID">
-            <span>{{ props.row.id }}</span>
+          <el-form-item label="姓名">
+            <span>{{ row.name }}</span>
           </el-form-item>
-          <el-form-item label="预约时间段">
-            <span>{{ props.row.period }}</span>
-          </el-form-item>
-          <el-form-item label="预估时长">
-            <span>{{ props.row.maintenanceTime }}</span>
-          </el-form-item>
-          <el-form-item label="预约事项">
-            <span>{{ props.row.subscribeItem }}</span>
+          <el-form-item label="地址">
+            <span>{{ row.address }}</span>
           </el-form-item>
         </el-form>
       </template>
@@ -32,13 +26,11 @@
 export default {
   data() {
     return {
-      url:
-        'https://easy-mock.com/mock/5bbefdf6faedce31cd6a5261/example/reservation',
+      url: 'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic',
       columns: [
-        {prop: 'memberName', label: '客户姓名'},
-        {prop: 'memberAddress', label: '客户所在地'},
-        {prop: 'period', label: '预约时间段'},
-        {prop: 'maintenanceTime', label: '预约时长'}
+        {prop: 'date', label: '日期'},
+        {prop: 'name', label: '姓名'},
+        {prop: 'address', label: '地址'},
       ],
       hasNew: false,
       hasEdit: false,

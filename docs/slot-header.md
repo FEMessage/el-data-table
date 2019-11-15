@@ -26,17 +26,11 @@ header插槽，作用域传入selected数组
 export default {
   data() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=slotheader',
+      url: 'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic',
       columns: [
-        {type: 'selection'},
-        {prop: 'code', label: '品牌编号'},
-        {prop: 'name', label: '品牌名称'},
-        {prop: 'alias', label: '品牌别名'},
-        {
-          prop: 'status',
-          label: '状态',
-          formatter: row => (row.status === 'normal' ? '启用' : '禁用')
-        }
+        {prop: 'date', label: '日期'},
+        {prop: 'name', label: '姓名'},
+        {prop: 'address', label: '地址'},
       ],
     }
   }
