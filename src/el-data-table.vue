@@ -264,6 +264,8 @@
 
 <script>
 import _get from 'lodash.get'
+import values from 'lodash/values'
+import isEmpty from 'lodash/isEmpty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
@@ -745,9 +747,7 @@ export default {
       // JSON.stringify是为了后面深拷贝作准备
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false,
-      showNoData: false,
-      // 是否请求过flag
-      hasRequest: false
+      showNoData: false
     }
   },
   computed: {
@@ -830,8 +830,11 @@ export default {
 
       // 构造query对象
       let query = {}
+      let formValue = {}
+      const filterValues = ['', undefined, null]
       if (this.$refs.searchForm) {
-        Object.assign(query, this.$refs.searchForm.getFormValue())
+        formValue = this.$refs.searchForm.getFormValue()
+        Object.assign(query, formValue)
       }
       Object.assign(query, this._extraQuery)
 
@@ -843,7 +846,7 @@ export default {
 
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
-        .filter(k => ['', undefined, null].indexOf(query[k]) === -1)
+        .filter(k => filterValues.indexOf(query[k]) === -1)
         .reduce((obj, k) => {
           obj[k] = query[k].toString().trim()
           return obj
@@ -888,11 +891,11 @@ export default {
             this.data = this.tree2Array(data, this.expandAll)
           }
 
-          // 没有请求过
-          if (!this.hasRequest) {
-            this.showNoData = this.$slots['no-data'] && this.total === 0
-            this.hasRequest = true
-          }
+          this.showNoData =
+            this.$slots['no-data'] &&
+            this.total === 0 &&
+            (isEmpty(formValue) ||
+              values(formValue).every(x => filterValues.indexOf(x) > -1))
 
           this.loading = false
           /**
