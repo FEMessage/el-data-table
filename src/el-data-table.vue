@@ -264,8 +264,8 @@
 
 <script>
 import _get from 'lodash.get'
-import values from 'lodash.values'
-import isEmpty from 'lodash.isempty'
+import _values from 'lodash.values'
+import _isEmpty from 'lodash.isempty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
@@ -273,6 +273,7 @@ import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
 import transformSearchImmediatelyItem from './utils/search-immediately-item'
+import isFalsey from './utils/is-falsey'
 
 // 默认返回的数据格式如下
 //          {
@@ -831,7 +832,6 @@ export default {
       // 构造query对象
       let query = {}
       let formValue = {}
-      const filterValues = ['', undefined, null]
       if (this.$refs.searchForm) {
         formValue = this.$refs.searchForm.getFormValue()
         Object.assign(query, formValue)
@@ -846,7 +846,7 @@ export default {
 
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
-        .filter(k => filterValues.indexOf(query[k]) === -1)
+        .filter(k => !isFalsey(query[k]))
         .reduce((obj, k) => {
           obj[k] = query[k].toString().trim()
           return obj
@@ -894,8 +894,7 @@ export default {
           this.showNoData =
             this.$slots['no-data'] &&
             this.total === 0 &&
-            (isEmpty(formValue) ||
-              values(formValue).every(x => filterValues.indexOf(x) > -1))
+            (_isEmpty(formValue) || _values(formValue).every(isFalsey))
 
           this.loading = false
           /**
