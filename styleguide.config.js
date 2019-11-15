@@ -2,25 +2,24 @@ const {VueLoaderPlugin} = require('vue-loader')
 const path = require('path')
 const glob = require('glob')
 
-const demos = ['docs/basic.md', ...glob.sync('docs/!(basic|faq).md')].map(
-  filePath => ({
-    name: path.basename(filePath, '.md'),
-    content: filePath
+const sections = (() => {
+  const docs = glob
+    .sync('docs/*.md')
+    .map(p => ({name: path.basename(p, '.md'), content: p}))
+  const demos = []
+  let faq = '' // 约定至多只有一个faq.md
+  const guides = []
+  docs.forEach(d => {
+    if (/^faq$/i.test(d.name)) {
+      d.name = d.name.toUpperCase()
+      faq = d
+    } else if (/^guide-/.test(d.name)) {
+      guides.push(d)
+    } else {
+      demos.push(d)
+    }
   })
-)
-
-module.exports = {
-  styleguideDir: 'docs',
-  pagePerSection: true,
-  ribbon: {
-    url: 'https://github.com/FEMessage/el-data-table'
-  },
-  require: [
-    './styleguide/element.js',
-    './styleguide/axios.js',
-    './styleguide/el-form-renderer.js'
-  ],
-  sections: [
+  return [
     {
       name: 'Components',
       components: 'src/el-data-table.vue',
@@ -28,12 +27,25 @@ module.exports = {
     },
     {
       name: 'Demo',
-      sections: demos
+      sections: demos,
+      sectionDepth: 2
     },
-    {
-      name: 'FAQ',
-      content: 'docs/faq.md'
-    }
+    ...(faq ? [faq] : []),
+    ...(guides.length ? [{name: 'Guide', sections: guides}] : [])
+  ]
+})()
+
+module.exports = {
+  styleguideDir: 'docs',
+  pagePerSection: true,
+  ribbon: {
+    url: 'https://github.com/FEMessage/el-data-table'
+  },
+  sections,
+  require: [
+    './styleguide/element.js',
+    './styleguide/axios.js',
+    './styleguide/el-form-renderer.js'
   ],
   webpackConfig: {
     module: {
@@ -52,8 +64,8 @@ module.exports = {
           loaders: ['style-loader', 'css-loader']
         },
         {
-          test: /\.styl(us)?$/,
-          loaders: ['vue-style-loader', 'css-loader', 'stylus-loader']
+          test: /\.less$/,
+          loaders: ['vue-style-loader', 'css-loader', 'less-loader']
         },
         {
           test: /\.(woff2?|eot|[ot]tf)(\?.*)?$/,

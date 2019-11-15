@@ -95,3 +95,34 @@ cancelRelation() {
 ```
 ### 原始issue
 [https://github.com/FEMessage/el-data-table/issues/119](https://github.com/FEMessage/el-data-table/issues/119)
+
+## 点击 el-form 内部按钮触发页面刷新
+
+### 场景
+
+el-form 包裹 el-data-table 时，点击 el-data-table 的操作列按钮会触发 form submit 的默认行为，导致页面刷新一次。
+
+```html
+<el-form>
+  <el-data-table :extraButtons="extraButtons">
+</el-form>
+```
+
+### 解决方案
+
+在 el-form 上增加一个禁用 submit 默认行为的事件。
+
+```html
+<el-form
+  @submit.native.prevent
+>
+  <el-data-table :extraButtons="extraButtons">
+</el-form>
+```
+
+### 参考链接
+[W3C Form Submission](https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2)
+
+[element-ui el-form 文档](https://element.eleme.cn/#/zh-CN/component/form)
+
+[issue #224](https://github.com/FEMessage/el-data-table/issues/224)

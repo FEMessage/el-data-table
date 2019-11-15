@@ -1,208 +1,276 @@
 <template>
   <div class="el-data-table">
-    <!-- @submit.native.prevent -->
-    <!-- 阻止表单提交的默认行为 -->
-    <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
-    <!--搜索字段-->
-    <el-form-renderer
-      v-if="hasSearchForm"
-      v-show="!isSearchCollapse"
-      inline
-      :content="searchForm"
-      ref="searchForm"
-      @submit.native.prevent
-    >
-      <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
-      <slot name="search"></slot>
-      <el-form-item>
-        <!--https://github.com/ElemeFE/element/pull/5920-->
-        <el-button native-type="submit" type="primary" @click="search" size="small">查询</el-button>
-        <el-button @click="resetSearch" size="small">重置</el-button>
-      </el-form-item>
-    </el-form-renderer>
-
-    <el-form v-if="hasNew || hasDelete || headerButtons.length > 0 || canSearchCollapse">
-      <el-form-item>
-        <el-button v-if="hasNew" type="primary" size="small" @click="onDefaultNew">{{ newText }}</el-button>
-        <self-loading-button
-          v-for="(btn, i) in headerButtons"
-          v-if="'show' in btn ? btn.show(selected) : true"
-          :disabled="'disabled' in btn ? btn.disabled(selected) : false"
-          :click="btn.atClick"
-          :params="selected"
-          :callback="getList"
-          v-bind="btn"
-          :key="i"
-          size="small"
-        >
-          {{typeof btn.text === 'function' ? btn.text(selected) : btn.text}}
-        </self-loading-button>
-        <el-button
-          v-if="hasSelect && hasDelete"
-          type="danger"
-          size="small"
-          @click="onDefaultDelete($event)"
-          :disabled="single ? (!selected.length || selected.length > 1) : !selected.length"
-        >删除</el-button>
-        <el-button
-          v-if="canSearchCollapse"
-          type="default"
-          size="small"
-          :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
-          @click="isSearchCollapse = !isSearchCollapse"
-        >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-table
-      ref="table"
-      v-bind="tableAttrs"
-      :data="data"
-      :row-style="showRow"
-      v-loading="loading"
-      @selection-change="selectStrategy.onSelectionChange"
-      @select="selectStrategy.onSelect"
-      @select-all="selectStrategy.onSelectAll"
-    >
-      <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
-      <template v-if="isTree">
-        <!--有多选-->
-        <template v-if="hasSelect">
-          <el-table-column key="selection-key" v-bind="columns[0]"></el-table-column>
-
-          <el-table-column key="tree-ctrl" v-bind="columns[1]">
-            <template slot-scope="scope">
-              <span
-                v-if="isTree"
-                v-for="space in scope.row._level"
-                class="ms-tree-space"
-                :key="space"
-              ></span>
-              <span
-                v-if="isTree && iconShow(scope.$index, scope.row)"
-                class="tree-ctrl"
-                @click="toggleExpanded(scope.$index)"
-              >
-                <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
-                <i v-else class="el-icon-minus"></i>
-              </span>
-              {{scope.row[columns[1].prop]}}
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            v-for="(col) in columns.filter((c, i) => i !== 0 && i !== 1)"
-            :key="col.prop"
-            v-bind="col"
-          ></el-table-column>
-        </template>
-
-        <!--无选择-->
-        <template v-else>
-          <!--展开这列, 丢失 el-table-column属性-->
-          <el-table-column key="tree-ctrl" v-bind="columns[0]">
-            <template slot-scope="scope">
-              <span
-                v-if="isTree"
-                v-for="space in scope.row._level"
-                class="ms-tree-space"
-                :key="space"
-              ></span>
-              <span
-                v-if="isTree && iconShow(scope.$index, scope.row)"
-                class="tree-ctrl"
-                @click="toggleExpanded(scope.$index)"
-              >
-                <i v-if="!scope.row._expanded" class="el-icon-plus"></i>
-                <i v-else class="el-icon-minus"></i>
-              </span>
-              {{scope.row[columns[0].prop]}}
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            v-for="(col) in columns.filter((c, i) => i !== 0)"
-            :key="col.prop"
-            v-bind="col"
-          ></el-table-column>
-        </template>
-      </template>
-
-      <!--非树-->
-      <template v-else>
-        <el-table-column v-for="(col) in columns" :key="col.prop" v-bind="col"></el-table-column>
-      </template>
-
-      <!--默认操作列-->
-      <el-table-column label="操作" v-if="hasOperation" v-bind="operationAttrs">
-        <template slot-scope="scope">
-          <text-button
-            v-if="isTree && hasNew"
-            @click="onDefaultNew(scope.row)"
-          >{{ newText }}</text-button>
-          <text-button
-            v-if="hasEdit"
-            @click="onDefaultEdit(scope.row)"
-          >{{ editText }}</text-button>
-          <text-button
-            v-if="hasView"
-            @click="onDefaultView(scope.row)"
-          >{{ viewText }}</text-button>
-          <self-loading-button
-            v-for="(btn, i) in extraButtons"
-            v-if="'show' in btn ? btn.show(scope.row) : true"
-            v-bind="btn"
-            :click="btn.atClick"
-            :params="scope.row"
-            :callback="getList"
-            :key="i"
-            is-text
+    <template v-if="showNoData">
+      <!--@slot 获取数据为空时的内容-->
+      <slot name="no-data"></slot>
+    </template>
+    <template v-else>
+      <search-form
+        v-if="hasSearchForm"
+        ref="searchForm"
+        :search-form="_searchForm"
+        :can-search-collapse="canSearchCollapse"
+        :is-search-collapse="isSearchCollapse"
+        :located-slot-keys="searchLocatedSlotKeys"
+      >
+        <slot v-for="slot in searchLocatedSlotKeys" :slot="slot" :name="slot" />
+        <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
+        <slot name="search"></slot>
+        <el-form-item>
+          <!--https://github.com/ElemeFE/element/pull/5920-->
+          <el-button
+            native-type="submit"
+            type="primary"
+            :size="buttonSize"
+            @click="search"
+            >查询</el-button
           >
-            {{typeof btn.text === 'function' ? btn.text(scope.row) : btn.text}}
-          </self-loading-button>
-          <text-button
-            v-if="!hasSelect && hasDelete && canDelete(scope.row)"
+          <el-button :size="buttonSize" @click="resetSearch">重置</el-button>
+        </el-form-item>
+      </search-form>
+
+      <el-form v-if="hasHeader">
+        <el-form-item>
+          <el-button
+            v-if="hasNew"
+            type="primary"
+            :size="buttonSize"
+            @click="onDefaultNew"
+            >{{ newText }}</el-button
+          >
+          <template v-for="(btn, i) in headerButtons">
+            <self-loading-button
+              v-if="'show' in btn ? btn.show(selected) : true"
+              :key="i"
+              :disabled="'disabled' in btn ? btn.disabled(selected) : false"
+              :click="btn.atClick"
+              :params="selected"
+              :callback="getList"
+              :size="buttonSize"
+              v-bind="btn"
+            >
+              {{
+                typeof btn.text === 'function' ? btn.text(selected) : btn.text
+              }}
+            </self-loading-button>
+          </template>
+          <el-button
+            v-if="hasSelect && hasDelete"
             type="danger"
-            @click="onDefaultDelete(scope.row)"
-          >删除</text-button>
+            :size="buttonSize"
+            :disabled="
+              single
+                ? !selected.length || selected.length > 1
+                : !selected.length
+            "
+            @click="onDefaultDelete($event)"
+            >删除</el-button
+          >
+          <el-button
+            v-if="canSearchCollapse"
+            type="default"
+            :size="buttonSize"
+            :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
+            @click="isSearchCollapse = !isSearchCollapse"
+            >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button
+          >
+          <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，作用域传入selected -->
+          <slot name="header" :selected="selected" />
+        </el-form-item>
+      </el-form>
+
+      <el-table
+        ref="table"
+        v-loading="loading"
+        v-bind="tableAttrs"
+        :data="data"
+        :row-class-name="showRow"
+        @selection-change="selectStrategy.onSelectionChange"
+        @select="selectStrategy.onSelect"
+        @select-all="selectStrategy.onSelectAll"
+      >
+        <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
+        <template v-if="isTree">
+          <!--有多选-->
+          <template v-if="hasSelect">
+            <el-table-column key="selection-key" v-bind="columns[0]" />
+
+            <el-table-column key="tree-ctrl" v-bind="columns[1]">
+              <template slot-scope="scope">
+                <span
+                  v-for="space in scope.row._level"
+                  :key="space"
+                  class="ms-tree-space"
+                />
+                <span
+                  v-if="iconShow(scope.$index, scope.row)"
+                  class="tree-ctrl"
+                  @click="toggleExpanded(scope.$index)"
+                >
+                  <i
+                    :class="`el-icon-${scope.row._expanded ? 'minus' : 'plus'}`"
+                  />
+                </span>
+                {{ scope.row[columns[1].prop] }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              v-for="col in columns.filter((c, i) => i !== 0 && i !== 1)"
+              :key="col.prop"
+              v-bind="col"
+            />
+          </template>
+
+          <!--无选择-->
+          <template v-else>
+            <!--展开这列, 丢失 el-table-column属性-->
+            <el-table-column key="tree-ctrl" v-bind="columns[0]">
+              <template slot-scope="scope">
+                <span
+                  v-for="space in scope.row._level"
+                  :key="space"
+                  class="ms-tree-space"
+                />
+
+                <span
+                  v-if="iconShow(scope.$index, scope.row)"
+                  class="tree-ctrl"
+                  @click="toggleExpanded(scope.$index)"
+                >
+                  <i
+                    :class="`el-icon-${scope.row._expanded ? 'minus' : 'plus'}`"
+                  />
+                </span>
+                {{ scope.row[columns[0].prop] }}
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              v-for="col in columns.filter((c, i) => i !== 0)"
+              :key="col.prop"
+              v-bind="col"
+            />
+          </template>
         </template>
-      </el-table-column>
 
-      <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
-      <slot></slot>
-    </el-table>
-    <el-pagination
-      v-if="hasPagination"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="page"
-      :page-sizes="paginationSizes"
-      :page-size="size"
-      :total="total"
-      style="text-align: right; padding: 10px 0"
-      :layout="paginationLayout"
-    ></el-pagination>
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" v-if="hasDialog">
-      <!--https://github.com/FEMessage/el-form-renderer-->
-      <el-form-renderer :content="form" ref="dialogForm" v-bind="formAttrs" :disabled="isView">
-        <!--@slot 额外的弹窗表单内容, 当form不满足需求时可以使用，参考：https://femessage.github.io/el-form-renderer/#/Demo?id=slot -->
-        <slot name="form"></slot>
-      </el-form-renderer>
+        <!--非树-->
+        <template v-else>
+          <el-table-column
+            v-for="col in columns"
+            :key="col.prop"
+            v-bind="col"
+          />
+        </template>
 
-      <div slot="footer" v-show="!isView">
-        <el-button @click="cancel" size="small">取 消</el-button>
-        <el-button type="primary" @click="confirm" :loading="confirmLoading" size="small">确 定</el-button>
-      </div>
-    </el-dialog>
+        <!--默认操作列-->
+        <el-table-column
+          v-if="hasOperation"
+          label="操作"
+          v-bind="operationAttrs"
+        >
+          <template slot-scope="scope">
+            <self-loading-button
+              v-if="isTree && hasNew"
+              type="primary"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
+              :is-text="operationButtonType === 'text'"
+              @click="onDefaultNew(scope.row)"
+            >
+              {{ newText }}
+            </self-loading-button>
+            <self-loading-button
+              v-if="hasEdit"
+              type="primary"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
+              :is-text="operationButtonType === 'text'"
+              @click="onDefaultEdit(scope.row)"
+            >
+              {{ editText }}
+            </self-loading-button>
+            <self-loading-button
+              v-if="hasView"
+              type="primary"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
+              :is-text="operationButtonType === 'text'"
+              @click="onDefaultView(scope.row)"
+            >
+              {{ viewText }}
+            </self-loading-button>
+            <template v-for="(btn, i) in extraButtons">
+              <self-loading-button
+                v-if="'show' in btn ? btn.show(scope.row) : true"
+                :key="i"
+                :is-text="operationButtonType === 'text'"
+                v-bind="btn"
+                :click="btn.atClick"
+                :params="scope.row"
+                :callback="getList"
+              >
+                {{
+                  typeof btn.text === 'function'
+                    ? btn.text(scope.row)
+                    : btn.text
+                }}
+              </self-loading-button>
+            </template>
+            <self-loading-button
+              v-if="!hasSelect && hasDelete && canDelete(scope.row)"
+              type="danger"
+              :size="operationButtonType === 'text' ? '' : buttonSize"
+              :is-text="operationButtonType === 'text'"
+              @click="onDefaultDelete(scope.row)"
+            >
+              删除
+            </self-loading-button>
+          </template>
+        </el-table-column>
+
+        <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
+        <slot />
+      </el-table>
+
+      <el-pagination
+        v-if="hasPagination"
+        :current-page="page"
+        :page-sizes="paginationSizes"
+        :page-size="size"
+        :total="total"
+        style="text-align: right; padding: 10px 0;"
+        :layout="paginationLayout"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+
+      <the-dialog
+        ref="dialog"
+        :new-title="dialogNewTitle"
+        :edit-title="dialogEditTitle"
+        :view-title="dialogViewTitle"
+        :form="form"
+        :form-attrs="formAttrs"
+        :dialog-attrs="dialogAttrs"
+        :button-size="buttonSize"
+        @confirm="onConfirm"
+      >
+        <template v-slot="scope">
+          <!-- @slot 表单作用域插槽。当编辑、查看时传入row；新增时row=null -->
+          <slot name="form" :row="scope.row" />
+        </template>
+      </the-dialog>
+    </template>
   </div>
 </template>
 
 <script>
 import _get from 'lodash.get'
-import SelfLoadingButton from './self-loading-button.vue'
-import TextButton from './text-button.vue'
+import SelfLoadingButton from './components/self-loading-button.vue'
+import TheDialog, {dialogModes} from './components/the-dialog.vue'
+import SearchForm from './components/search-form.vue'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
+import getLocatedSlotKeys from './utils/extract-keys'
+import transformSearchImmediatelyItem from './utils/search-immediately-item'
 
 // 默认返回的数据格式如下
 //          {
@@ -227,14 +295,14 @@ const treeParentKey = 'parentId'
 const treeParentValue = 'id'
 const defaultId = 'id'
 
-const dialogForm = 'dialogForm'
-
 export default {
   name: 'ElDataTable',
   components: {
     SelfLoadingButton,
-    TextButton
+    TheDialog,
+    SearchForm
   },
+
   props: {
     /**
      * 请求url, 如果为空, 则不会发送请求; 改变url, 则table会重新发送请求
@@ -414,21 +482,24 @@ export default {
      * 参数(data, row) data 是form表单的数据, row 是当前行的数据, 只有isTree为true时, 点击操作列的新增按钮才会有值
      */
     onNew: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     /**
      * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用, 需要返回promise
      * 参数(data, row) data 是form表单的数据, row 是当前行的数据
      */
     onEdit: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     /**
      * 点击删除按钮时的方法, 当默认删除方法不满足需求时使用, 需要返回promise
      * 多选时, 参数为selected, 代表选中的行组成的数组; 非多选时参数为row, 代表单行的数据
      */
     onDelete: {
-      type: Function
+      type: Function,
+      default: undefined
     },
     /**
      * 是否分页。如果不分页，则请求传参page=-1
@@ -526,13 +597,6 @@ export default {
       }
     },
     /**
-     * 是否有弹窗, 用于不需要弹窗时想减少DOM渲染的场景
-     */
-    hasDialog: {
-      type: Boolean,
-      default: true
-    },
-    /**
      * 新增弹窗的标题，默认为newText的值
      */
     dialogNewTitle: {
@@ -574,6 +638,16 @@ export default {
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/form#form-attributes
      */
     formAttrs: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    /**
+     * 对话框属性设置, 详情配置参考element-ui官网
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/dialog#attributes
+     */
+    dialogAttrs: {
       type: Object,
       default() {
         return {}
@@ -634,6 +708,22 @@ export default {
     saveQuery: {
       type: Boolean,
       default: true
+    },
+    /**
+     * 操作栏按钮类型
+     * `text` 为文本按钮, `button` 为普通按钮
+     */
+    operationButtonType: {
+      type: String,
+      default: 'text'
+    },
+    /**
+     * 设置 `按钮` 大小
+     * @see https://element.eleme.cn/#/zh-CN/component/button#bu-tong-chi-cun
+     */
+    buttonSize: {
+      type: String,
+      default: 'small'
     }
   },
   data() {
@@ -648,20 +738,16 @@ export default {
       // 多选项的数组
       selected: [],
 
-      //弹窗
-      dialogTitle: this.dialogNewTitle,
-      dialogVisible: false,
-      isNew: true,
-      isEdit: false,
-      isView: false,
-      confirmLoading: false,
       // 要修改的那一行
       row: {},
 
       // 初始的extraQuery值, 重置查询时, 会用到
       // JSON.stringify是为了后面深拷贝作准备
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
-      isSearchCollapse: false
+      isSearchCollapse: false,
+      showNoData: false,
+      // 是否请求过flag
+      hasRequest: false
     }
   },
   computed: {
@@ -671,6 +757,14 @@ export default {
     hasSearchForm() {
       return this.searchForm.length || this.$slots.search
     },
+    hasHeader() {
+      return (
+        this.hasNew ||
+        (this.hasSelect && this.hasDelete) ||
+        this.headerButtons.length ||
+        this.canSearchCollapse
+      )
+    },
     _extraBody() {
       return this.extraBody || this.extraParams || {}
     },
@@ -679,22 +773,23 @@ export default {
     },
     selectStrategy() {
       return getSelectStrategy(this)
+    },
+    searchLocatedSlotKeys() {
+      return getLocatedSlotKeys(this.$slots, 'search:')
+    },
+    _searchForm() {
+      return transformSearchImmediatelyItem(this.searchForm, this)
     }
   },
   watch: {
-    url: function(val, old) {
-      this.page = defaultFirstPage
-      this.getList()
-    },
-    dialogVisible: function(val, old) {
-      if (!val) {
-        this.isNew = false
-        this.isEdit = false
-        this.isView = false
-        this.confirmLoading = false
-
-        this.$refs[dialogForm].resetFields()
-      }
+    url: {
+      handler(val) {
+        if (!val) return
+        this.page = defaultFirstPage
+        // mounted处有updateForm的行为，所以至少在初始执行时要等到nextTick
+        this.$nextTick(this.getList)
+      },
+      immediate: true
     },
     selected(val) {
       /**
@@ -718,10 +813,6 @@ export default {
         }
       }
     }
-
-    this.$nextTick(() => {
-      this.getList()
-    })
   },
   methods: {
     /**
@@ -729,7 +820,7 @@ export default {
      * @public
      * @param {boolean} saveQuery - 是否保存query到路由上
      */
-    getList(saveQuery) {
+    getList() {
       const {url} = this
 
       if (!url) {
@@ -765,6 +856,14 @@ export default {
       // 请求开始
       this.loading = true
 
+      // 存储query记录, 便于后面恢复
+      if (this.saveQuery) {
+        // 存储的page是table的页码，无需偏移
+        query.page = this.page
+        const newUrl = queryUtil.set(location.href, query, this.routerMode)
+        history.replaceState(history.state, 'el-data-table search', newUrl)
+      }
+
       this.$axios
         .get(url + queryStr)
         .then(({data: resp}) => {
@@ -776,6 +875,7 @@ export default {
               _get(resp, this.dataPath) ||
               _get(resp, noPaginationDataPath) ||
               []
+            this.total = data.length
           } else {
             data = _get(resp, this.dataPath) || []
             this.total = _get(resp, this.totalPath)
@@ -786,6 +886,12 @@ export default {
           // 树形结构逻辑
           if (this.isTree) {
             this.data = this.tree2Array(data, this.expandAll)
+          }
+
+          // 没有请求过
+          if (!this.hasRequest) {
+            this.showNoData = this.$slots['no-data'] && this.total === 0
+            this.hasRequest = true
           }
 
           this.loading = false
@@ -809,14 +915,6 @@ export default {
           this.$emit('error', err)
           this.loading = false
         })
-
-      // 存储query记录, 便于后面恢复
-      if (saveQuery) {
-        // 存储的page是table的页码，无需偏移
-        query.page = this.page
-        const newUrl = queryUtil.set(location.href, query, this.routerMode)
-        history.pushState(history.state, 'el-data-table search', newUrl)
-      }
     },
     search() {
       this.$refs.searchForm.validate(valid => {
@@ -825,13 +923,18 @@ export default {
         this.beforeSearch()
           .then(() => {
             this.page = defaultFirstPage
-            this.getList(this.saveQuery)
+            this.getList()
           })
           .catch(err => {
             this.$emit('error', err)
           })
       })
     },
+    /**
+     * 重置查询，相当于点击「重置」按钮
+     *
+     * @public
+     */
     resetSearch() {
       // reset后, form里的值会变成 undefined, 在下一次查询会赋值给query
       this.$refs.searchForm.resetFields()
@@ -843,10 +946,6 @@ export default {
         history.replaceState(history.state, '', newUrl)
       }
 
-      this.$nextTick(() => {
-        this.getList()
-      })
-
       /**
        * 按下重置按钮后触发
        */
@@ -854,19 +953,23 @@ export default {
 
       this.$emit('update:customQuery', JSON.parse(this.initExtraQuery))
       this.$emit('update:extraQuery', JSON.parse(this.initExtraQuery))
+
+      this.$nextTick(() => {
+        this.getList()
+      })
     },
     handleSizeChange(val) {
       if (this.size === val) return
 
       this.page = defaultFirstPage
       this.size = val
-      this.getList(this.saveQuery)
+      this.getList()
     },
     handleCurrentChange(val) {
       if (this.page === val) return
 
       this.page = val
-      this.getList(this.saveQuery)
+      this.getList()
     },
     /**
      * 切换某一行的选中状态，如果使用了第二个参数，则是设置这一行选中与否
@@ -887,173 +990,104 @@ export default {
       return this.selectStrategy.clearSelection()
     },
     // 弹窗相关
-    // 除非树形结构在操作列点击新增, 否则 row 都是 undefined
-    onDefaultNew(row = {}) {
+    // 除非树形结构在操作列点击新增, 否则 row 是 MouseEvent
+    onDefaultNew(row) {
       this.row = row
-      this.isNew = true
-      this.isEdit = false
-      this.isView = false
-      this.dialogTitle = this.dialogNewTitle
-      this.dialogVisible = true
+      this.$refs.dialog.show(dialogModes.new)
     },
     onDefaultView(row) {
       this.row = row
-      this.isView = true
-      this.isNew = false
-      this.isEdit = false
-      this.dialogTitle = this.dialogViewTitle
-      this.dialogVisible = true
-
-      // 给表单填充值
-      this.$nextTick(() => {
-        this.$refs[dialogForm].updateForm(row)
-      })
+      this.$refs.dialog.show(dialogModes.view, row)
     },
     onDefaultEdit(row) {
       this.row = row
-      this.isEdit = true
-      this.isNew = false
-      this.isView = false
-      this.dialogTitle = this.dialogEditTitle
-      this.dialogVisible = true
-
-      // 给表单填充值
-      this.$nextTick(() => {
-        this.$refs[dialogForm].updateForm(row)
-      })
+      this.$refs.dialog.show(dialogModes.edit, row)
     },
-    cancel() {
-      this.dialogVisible = false
-    },
-    confirm() {
-      if (this.isView) {
-        this.cancel()
-        return
+    async onConfirm(isNew, formValue, done) {
+      const data = {
+        ...formValue,
+        ...this._extraBody
       }
 
-      this.$refs[dialogForm].validate(valid => {
-        if (!valid) return false
+      if (this.isTree) {
+        data[this.treeParentKey] = isNew
+          ? this.row[this.treeParentValue]
+          : this.row[this.treeParentKey]
+      }
 
-        let data = Object.assign(
-          {},
-          this.$refs[dialogForm].getFormValue(),
-          this._extraBody
-        )
+      try {
+        await this.beforeConfirm(data, isNew)
+        const customMethod = isNew ? 'onNew' : 'onEdit'
 
-        if (this.isTree) {
-          if (this.isNew)
-            data[this.treeParentKey] = this.row[this.treeParentValue]
-          else data[this.treeParentKey] = this.row[this.treeParentKey]
+        if (this[customMethod]) {
+          await this[customMethod](data, this.row)
+        } else {
+          // 默认新增/修改逻辑
+          const [method, url] = isNew
+            ? ['post', this.url]
+            : ['put', `${this.url}/${this.row[this.id]}`]
+
+          await this.$axios[method](url, data)
         }
-
-        this.beforeConfirm(data, this.isNew)
-          .then(resp => {
-            let condiction = 'isNew'
-            let customMethod = 'onNew'
-
-            if (this.isEdit) {
-              condiction = 'isEdit'
-              customMethod = 'onEdit'
-            }
-
-            if (this[condiction] && this[customMethod]) {
-              this[customMethod](data, this.row)
-                .then(resp => {
-                  this.getList()
-                  this.showMessage(true)
-                  this.cancel()
-                })
-                .catch(e => {})
-              return
-            }
-
-            // 默认新增/修改逻辑
-            let method = 'post'
-            let url = this.url + ''
-
-            if (this.isEdit) {
-              method = 'put'
-              url += `/${this.row[this.id]}`
-            }
-
-            this.confirmLoading = true
-
-            this.$axios[method](url, data)
-              .then(resp => {
-                this.getList()
-                this.showMessage(true)
-                this.cancel()
-              })
-              .catch(err => {
-                this.confirmLoading = false
-              })
-          })
-          .catch(e => {})
-      })
+        this.getList()
+        this.showMessage(true)
+        done()
+      } catch (e) {
+        // 出错则不关闭dialog
+        done(false)
+      }
     },
     onDefaultDelete(row) {
       this.$confirm('确认删除吗', '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
-        beforeClose: (action, instance, done) => {
-          if (action == 'confirm') {
-            instance.confirmButtonLoading = true
+        beforeClose: async (action, instance, done) => {
+          if (action !== 'confirm') return done()
 
+          instance.confirmButtonLoading = true
+
+          try {
             if (this.onDelete) {
-              this.onDelete(
-                this.hasSelect
-                  ? !this.single
-                    ? this.selected
-                    : this.selected[0]
-                  : row
-              )
-                .then(resp => {
-                  this.showMessage(true)
-                  done()
-                  this.clearSelection()
-                  this.getList()
-                })
-                .catch(e => {})
-                .finally(e => {
-                  instance.confirmButtonLoading = false
-                })
-              return
-            }
-
-            // 默认删除逻辑
-            // 单个删除
-            if (!this.hasSelect) {
-              this.$axios
-                .delete(this.url + '/' + row[this.id])
-                .then(resp => {
-                  instance.confirmButtonLoading = false
-                  done()
-                  this.showMessage(true)
-                  this.getList()
-                })
-                .catch(er => {
-                  instance.confirmButtonLoading = false
-                })
-            } else {
-              // 多选模式
-              this.$axios
-                .delete(
-                  this.url + '/' + this.selected.map(v => v[this.id]).toString()
+              // 自定义删除逻辑
+              if (this.hasSelect) {
+                await this.onDelete(
+                  this.single ? this.selected[0] : this.selected
                 )
-                .then(resp => {
-                  instance.confirmButtonLoading = false
-                  done()
-                  this.showMessage(true)
-                  this.clearSelection()
-                  this.getList()
-                })
-                .catch(er => {
-                  instance.confirmButtonLoading = false
-                })
+              } else {
+                await this.onDelete(row)
+              }
+            } else if (this.hasSelect) {
+              // 多选模式
+              await this.$axios.delete(
+                this.url + '/' + this.selected.map(v => v[this.id]).join(',')
+              )
+            } else {
+              // 单个删除
+              await this.$axios.delete(this.url + '/' + row[this.id])
             }
-          } else done()
+            done()
+            this.showMessage(true)
+            let deleteCount = 1
+            if (this.hasSelect) {
+              deleteCount = this.selected.length
+              this.clearSelection()
+            }
+            const remain = this.data.length - deleteCount
+            const lastPage = Math.ceil(this.total / this.size)
+            if (
+              remain === 0 &&
+              this.page === lastPage &&
+              this.page > defaultFirstPage
+            )
+              this.page--
+            this.getList()
+          } catch (error) {
+            // do nothing
+          } finally {
+            instance.confirmButtonLoading = false
+          }
         }
-      }).catch(er => {
+      }).catch(() => {
         /*取消*/
       })
     },
@@ -1093,9 +1127,7 @@ export default {
         ? row.row.parent._expanded && row.row.parent._show
         : true
       row.row._show = show
-      return show
-        ? 'animation:treeTableShow 1s-webkit-animation:treeTableShow 1s'
-        : 'display:none'
+      return show ? 'row-show' : 'row-hide'
     },
     // 切换下级是否展开
     toggleExpanded(trIndex) {
@@ -1123,10 +1155,10 @@ export default {
   }
 }
 </script>
-<style lang="stylus">
+<style lang="less">
 .el-data-table {
-  color-blue = #2196F3;
-  space-width = 18px;
+  @color-blue: #2196f3;
+  @space-width: 18px;
 
   .ms-tree-space {
     position: relative;
@@ -1135,7 +1167,7 @@ export default {
     font-style: normal;
     font-weight: 400;
     line-height: 1;
-    width: space-width;
+    width: @space-width;
     height: 14px;
 
     &::before {
@@ -1146,7 +1178,7 @@ export default {
   .tree-ctrl {
     position: relative;
     cursor: pointer;
-    color: color-blue;
+    color: @color-blue;
   }
 
   @keyframes treeTableShow {
@@ -1157,6 +1189,14 @@ export default {
     to {
       opacity: 1;
     }
+  }
+
+  .row-show {
+    animation: treeTableShow 1s;
+  }
+
+  .row-hide {
+    display: none;
   }
 }
 </style>

@@ -157,6 +157,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "snowlocked",
+      "name": "snowlocked",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/19562649?v=4",
+      "profile": "https://github.com/snowlocked",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7

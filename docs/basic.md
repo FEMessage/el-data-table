@@ -8,41 +8,37 @@
 export default {
   data() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/img?a=1',
+      url: 'https://mockapi.eolinker.com/LEcMEAs713a1b6dfad35518033b046ca69b4cffb478dc4d/el-data-table?q=basic',
       columns: [
-        {prop: 'code', label: '品牌编号'},
-        {prop: 'name', label: '品牌名称'},
-        {prop: 'alias', label: '品牌别名'},
-        {
-          prop: 'status',
-          label: '状态',
-          formatter: row => (row.status === 'normal' ? '启用' : '禁用')
-        }
+        {prop: 'date', label: '日期'},
+        {prop: 'name', label: '姓名'},
+        {prop: 'address', label: '地址'},
       ],
       form: [
         {
           type: 'input',
           id: 'name',
-          label: '品牌名称',
+          label: '姓名',
           rules: [
             {
               required: true,
-              message: '请输入品牌名称',
+              message: '请输入姓名',
               trigger: 'blur',
               transform: v => v && v.trim()
             }
           ],
-          el: {placeholder: '请输入品牌名称'}
+          el: {placeholder: '请输入姓名'}
         },
       ],
       searchForm: [
         {
           el: {placeholder: '请输入'},
-          label: '品牌名称',
+          label: '姓名',
           id: 'name',
           type: 'input'
         }
-      ]
+      ],
+      hasView: true
     }
   }
 }
