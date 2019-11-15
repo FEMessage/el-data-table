@@ -38,7 +38,9 @@
     "release": "gren release --override"
   },
   "dependencies": {
-    "lodash.get": "^4.4.2"
+    "lodash.get": "^4.4.2",
+    "lodash.isempty": "^4.4.0",
+    "lodash.values": "^4.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",

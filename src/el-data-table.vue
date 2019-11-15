@@ -264,8 +264,8 @@
 
 <script>
 import _get from 'lodash.get'
-import values from 'lodash/values'
-import isEmpty from 'lodash/isEmpty'
+import values from 'lodash.values'
+import isEmpty from 'lodash.isempty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
