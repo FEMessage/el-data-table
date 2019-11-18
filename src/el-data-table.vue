@@ -264,6 +264,8 @@
 
 <script>
 import _get from 'lodash.get'
+import _values from 'lodash.values'
+import _isEmpty from 'lodash.isempty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
@@ -271,6 +273,7 @@ import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
 import transformSearchImmediatelyItem from './utils/search-immediately-item'
+import isFalsey from './utils/is-falsey'
 
 // 默认返回的数据格式如下
 //          {
@@ -745,9 +748,7 @@ export default {
       // JSON.stringify是为了后面深拷贝作准备
       initExtraQuery: JSON.stringify(this.extraQuery || this.customQuery || {}),
       isSearchCollapse: false,
-      showNoData: false,
-      // 是否请求过flag
-      hasRequest: false
+      showNoData: false
     }
   },
   computed: {
@@ -830,8 +831,10 @@ export default {
 
       // 构造query对象
       let query = {}
+      let formValue = {}
       if (this.$refs.searchForm) {
-        Object.assign(query, this.$refs.searchForm.getFormValue())
+        formValue = this.$refs.searchForm.getFormValue()
+        Object.assign(query, formValue)
       }
       Object.assign(query, this._extraQuery)
 
@@ -843,7 +846,7 @@ export default {
 
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
-        .filter(k => ['', undefined, null].indexOf(query[k]) === -1)
+        .filter(k => !isFalsey(query[k]))
         .reduce((obj, k) => {
           obj[k] = query[k].toString().trim()
           return obj
@@ -888,11 +891,10 @@ export default {
             this.data = this.tree2Array(data, this.expandAll)
           }
 
-          // 没有请求过
-          if (!this.hasRequest) {
-            this.showNoData = this.$slots['no-data'] && this.total === 0
-            this.hasRequest = true
-          }
+          this.showNoData =
+            this.$slots['no-data'] &&
+            this.total === 0 &&
+            (_isEmpty(formValue) || _values(formValue).every(isFalsey))
 
           this.loading = false
           /**
