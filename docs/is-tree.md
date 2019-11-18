@@ -9,33 +9,27 @@
 export default {
   data: function() {
     return {
-      url: 'https://easy-mock.com/mock/5b586c9dfce1393a862d034d/example/tree',
+      url: 'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=tree',
       columns: [
-        {prop: 'name', label: '分类名称', minWidth: '140px'},
-        {prop: 'description', label: '分类说明', minWidth: '140px'},
-        {prop: 'icon', label: '图标', minWidth: '140px'}
+        {prop: 'date', label: '日期'},
+        {prop: 'name', label: '姓名'},
+        {prop: 'address', label: '地址'},
       ],
       form: [
         {
           type: 'input',
           id: 'name',
-          label: '分类名称',
-          rules: [{required: true, message: '请输入分类名称', trigger: 'blur'}]
-        },
-        {
-          type: 'input',
-          id: 'description',
-          label: '分类说明',
-          rules: [{required: true, message: '请输入名称说明', trigger: 'blur'}]
-        },
-        {
-          type: 'input',
-          id: 'icon',
-          label: '图标',
+          label: '姓名',
           rules: [
-            {required: true, message: '请输入iconfont class', trigger: 'blur'}
-          ]
-        }
+            {
+              required: true,
+              message: '请输入姓名',
+              trigger: 'blur',
+              transform: v => v && v.trim()
+            }
+          ],
+          el: {placeholder: '请输入姓名'}
+        },
       ],
       hasPagination: false,
       isTree: true,
