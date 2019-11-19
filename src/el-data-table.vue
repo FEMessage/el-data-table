@@ -1108,7 +1108,10 @@ export default {
         this.$set(record, '_level', _level)
         // 如果有父元素
         if (parent) {
-          this.$set(record, 'parent', parent)
+          Object.defineProperty(record, 'parent', {
+            value: parent,
+            enumerable: false
+          })
         }
         tmp.push(record)
 
@@ -1124,11 +1127,11 @@ export default {
       })
       return tmp
     },
-    showRow(row) {
-      const show = row.row.parent
-        ? row.row.parent._expanded && row.row.parent._show
+    showRow({row}) {
+      const show = row.parent
+        ? row.parent._expanded && row.parent._show
         : true
-      row.row._show = show
+      row._show = show
       return show ? 'row-show' : 'row-hide'
     },
     // 切换下级是否展开
