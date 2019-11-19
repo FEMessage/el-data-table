@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.13.3](https://github.com/FEMessage/el-data-table/compare/v1.13.2...v1.13.3) (2019-11-19)
+
+
+### Bug Fixes
+
+* 修复树形表数据无法直接stringify的问题 ([#235](https://github.com/FEMessage/el-data-table/issues/235)) ([53e9969](https://github.com/FEMessage/el-data-table/commit/53e9969))
+
+
+
 ### [1.13.2](https://github.com/FEMessage/el-data-table/compare/v1.13.1...v1.13.2) (2019-11-18)
 
 
