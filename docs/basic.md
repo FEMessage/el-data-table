@@ -13,6 +13,11 @@ export default {
         {prop: 'date', label: '日期'},
         {prop: 'name', label: '姓名'},
         {prop: 'address', label: '地址'},
+        {
+          prop: 'status',
+          label: '状态',
+          formatter: row => (row.date === '2016-05-02' ? '启用' : '禁用')
+        }
       ],
       form: [
         {
