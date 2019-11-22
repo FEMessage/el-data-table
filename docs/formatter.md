@@ -26,7 +26,12 @@ formatter 可以返回 jsx 渲染功能更丰富的单元格
 <script>
 export default {
   data() {
+    /**
+     * 如果 babel-plugins-transform-vue-jsx 版本低于 3.4.0，jsx 作用域中需要如下定义 h 
+     * @see: https://cn.vuejs.org/v2/guide/render-function.html#JSX
+    */
     const h = this.$createElement
+
     return {
       url: 'https://api.github.com/search/users',
       dataPath: 'items',
