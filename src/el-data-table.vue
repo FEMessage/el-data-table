@@ -1123,7 +1123,7 @@ export default {
       return tmp
     },
     showRow({row}) {
-      const show = row.parent ? row.parent._expanded && row.parent._show : true
+      const show = !row.parent || (row.parent._expanded && row.parent._show)
       row._show = show
       return show ? 'row-show' : 'row-hide'
     },
