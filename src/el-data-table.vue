@@ -502,7 +502,12 @@ export default {
      */
     onDelete: {
       type: Function,
-      default: undefined
+      default(data) {
+        const ids = Array.isArray(data)
+          ? data.map(v => v[this.id]).join(',')
+          : data[this.id]
+        return this.$axios.delete(this.url + '/' + ids)
+      }
     },
     /**
      * 是否分页。如果不分页，则请求传参page=-1
@@ -1049,23 +1054,12 @@ export default {
           instance.confirmButtonLoading = true
 
           try {
-            if (this.onDelete) {
-              // 自定义删除逻辑
-              if (this.hasSelect) {
-                await this.onDelete(
-                  this.single ? this.selected[0] : this.selected
-                )
-              } else {
-                await this.onDelete(row)
-              }
-            } else if (this.hasSelect) {
-              // 多选模式
-              await this.$axios.delete(
-                this.url + '/' + this.selected.map(v => v[this.id]).join(',')
+            if (this.hasSelect) {
+              await this.onDelete(
+                this.single ? this.selected[0] : this.selected
               )
             } else {
-              // 单个删除
-              await this.$axios.delete(this.url + '/' + row[this.id])
+              await this.onDelete(row)
             }
             done()
             this.showMessage(true)
@@ -1084,7 +1078,8 @@ export default {
               this.page--
             this.getList()
           } catch (error) {
-            // do nothing
+            console.warn(error.message)
+            throw error
           } finally {
             instance.confirmButtonLoading = false
           }
@@ -1128,9 +1123,7 @@ export default {
       return tmp
     },
     showRow({row}) {
-      const show = row.parent
-        ? row.parent._expanded && row.parent._show
-        : true
+      const show = !row.parent || (row.parent._expanded && row.parent._show)
       row._show = show
       return show ? 'row-show' : 'row-hide'
     },
