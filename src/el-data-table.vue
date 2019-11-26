@@ -824,9 +824,9 @@ export default {
     /**
      * 手动刷新列表数据
      * @public
-     * @param {boolean} saveQuery - 是否保存query到路由上
+     * @param {boolean} shouldLoading - 刷新列表时，是否显示 loading
      */
-    getList() {
+    getList(shouldLoading = true) {
       const {url} = this
 
       if (!url) {
@@ -862,7 +862,7 @@ export default {
         queryUtil.stringify(query, '=', '&')
 
       // 请求开始
-      this.loading = true
+      this.loading = shouldLoading
 
       // 存储query记录, 便于后面恢复
       if (this.saveQuery) {
