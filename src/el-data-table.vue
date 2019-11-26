@@ -1063,19 +1063,9 @@ export default {
             }
             done()
             this.showMessage(true)
-            let deleteCount = 1
-            if (this.hasSelect) {
-              deleteCount = this.selected.length
-              this.clearSelection()
-            }
-            const remain = this.data.length - deleteCount
-            const lastPage = Math.ceil(this.total / this.size)
-            if (
-              remain === 0 &&
-              this.page === lastPage &&
-              this.page > defaultFirstPage
-            )
-              this.page--
+
+            this.shouldBackPrevPage()
+
             this.getList()
           } catch (error) {
             console.warn(error.message)
@@ -1088,6 +1078,27 @@ export default {
         /*取消*/
       })
     },
+
+    /**
+     * 判断是否返回上一页
+     * @public
+     */
+    shouldBackPrevPage() {
+      let deleteCount = 1
+      if (this.hasSelect) {
+        deleteCount = this.selected.length
+        this.clearSelection()
+      }
+      const remain = this.data.length - deleteCount
+      const lastPage = Math.ceil(this.total / this.size)
+      if (
+        remain === 0 &&
+        this.page === lastPage &&
+        this.page > defaultFirstPage
+      )
+        this.page--
+    },
+
     // 树形table相关
     // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/components/TreeTable
     tree2Array(data, expandAll, parent = null, level = null) {
