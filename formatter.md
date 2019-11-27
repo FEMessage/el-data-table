@@ -19,9 +19,12 @@ export default {
   data() {
     /**
      * 如果 babel-plugins-transform-vue-jsx 版本低于 3.4.0，jsx 作用域中需要如下定义 h 
+     * 下面的代码可确保在 CI 环境不报错！
      * @see: https://cn.vuejs.org/v2/guide/render-function.html#JSX
     */
-    const h = this.$createElement
+    if (typeof h === 'undefined') {
+      h = this.$createElement
+    }
 
     return {
       url: 'https://api.github.com/search/users',
