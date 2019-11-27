@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.14.0](https://github.com/FEMessage/el-data-table/compare/v1.13.4...v1.14.0) (2019-11-27)
+
+
+### Features
+
+* 刷新列表时提供一个 flag 判断是否显示 loading ([#246](https://github.com/FEMessage/el-data-table/issues/246)) ([44e2161](https://github.com/FEMessage/el-data-table/commit/44e2161))
+* 暴露 correctPage API ([#245](https://github.com/FEMessage/el-data-table/issues/245)) ([1f5fccc](https://github.com/FEMessage/el-data-table/commit/1f5fccc))
+
+
+
 ### [1.13.4](https://github.com/FEMessage/el-data-table/compare/v1.13.3...v1.13.4) (2019-11-23)
 
 
