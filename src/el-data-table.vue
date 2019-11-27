@@ -822,11 +822,11 @@ export default {
   },
   methods: {
     /**
-     * 手动刷新列表数据
+     * 手动刷新列表数据，选项的默认值为: { loading: true }
      * @public
-     * @param {boolean} saveQuery - 是否保存query到路由上
+     * @param {object} options 方法选项
      */
-    getList() {
+    getList({loading = true} = {}) {
       const {url} = this
 
       if (!url) {
@@ -862,7 +862,7 @@ export default {
         queryUtil.stringify(query, '=', '&')
 
       // 请求开始
-      this.loading = true
+      this.loading = loading
 
       // 存储query记录, 便于后面恢复
       if (this.saveQuery) {
