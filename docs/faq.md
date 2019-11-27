@@ -19,7 +19,7 @@ export default {
 this.$refs.dataTable.getList()
 ```
 
-## 自己实现 delete 操作，同时实现删除最后一页时，返回上一页
+## 自己实现 delete 操作，同时实现删除最后一页时，返回正确的最后一页
 
 ### 场景
 1. 因为业务需求，data-table 默认的删除确认框不满足需求
@@ -28,7 +28,7 @@ this.$refs.dataTable.getList()
 
 ### 解决方案
 1. 自己实现删除操作
-2. 调用 correctPage 判断是否返回上一页
+2. 调用 correctPage 判断是否返回正确的最后一页
 3. 调用 getList 刷新列表
 ```html
 <template>
@@ -47,7 +47,7 @@ export default {
             this.$axios.delete('delete this row', {
               id: row.id
             }).then(() => {
-              // 判断删除后是否需要返回上一页
+              // 判断删除后是否返回正确的最后一页
               this.$refs.dataTable.correctPage()
 
               // 删除后刷新列表
