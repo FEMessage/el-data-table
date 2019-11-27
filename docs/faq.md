@@ -28,7 +28,7 @@ this.$refs.dataTable.getList()
 
 ### 解决方案
 1. 自己实现删除操作
-2. 调用 shouldBackPrevPage 判断是否返回上一页
+2. 调用 correctPage 判断是否返回上一页
 3. 调用 getList 刷新列表
 ```html
 <template>
