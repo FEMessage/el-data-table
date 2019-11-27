@@ -48,7 +48,7 @@ export default {
               id: row.id
             }).then(() => {
               // 判断删除后是否需要返回上一页
-              this.$refs.dataTable.shouldBackPrevPage()
+              this.$refs.dataTable.correctPage()
 
               // 删除后刷新列表
               this.$refs.dataTable.getList()
