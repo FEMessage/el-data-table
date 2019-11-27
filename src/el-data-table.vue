@@ -822,11 +822,11 @@ export default {
   },
   methods: {
     /**
-     * 手动刷新列表数据
+     * 手动刷新列表数据，选项的默认值为: { loading: true }
      * @public
-     * @param {boolean} saveQuery - 是否保存query到路由上
+     * @param {object} options 方法选项
      */
-    getList() {
+    getList({loading = true} = {}) {
       const {url} = this
 
       if (!url) {
@@ -862,7 +862,7 @@ export default {
         queryUtil.stringify(query, '=', '&')
 
       // 请求开始
-      this.loading = true
+      this.loading = loading
 
       // 存储query记录, 便于后面恢复
       if (this.saveQuery) {
@@ -1063,19 +1063,9 @@ export default {
             }
             done()
             this.showMessage(true)
-            let deleteCount = 1
-            if (this.hasSelect) {
-              deleteCount = this.selected.length
-              this.clearSelection()
-            }
-            const remain = this.data.length - deleteCount
-            const lastPage = Math.ceil(this.total / this.size)
-            if (
-              remain === 0 &&
-              this.page === lastPage &&
-              this.page > defaultFirstPage
-            )
-              this.page--
+
+            this.correctPage()
+
             this.getList()
           } catch (error) {
             console.warn(error.message)
@@ -1088,6 +1078,27 @@ export default {
         /*取消*/
       })
     },
+
+    /**
+     * 判断是否返回上一页
+     * @public
+     */
+    correctPage() {
+      let deleteCount = 1
+      if (this.hasSelect) {
+        deleteCount = this.selected.length
+        this.clearSelection()
+      }
+      const remain = this.data.length - deleteCount
+      const lastPage = Math.ceil(this.total / this.size)
+      if (
+        remain === 0 &&
+        this.page === lastPage &&
+        this.page > defaultFirstPage
+      )
+        this.page--
+    },
+
     // 树形table相关
     // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/components/TreeTable
     tree2Array(data, expandAll, parent = null, level = null) {
