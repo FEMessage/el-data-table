@@ -32,7 +32,7 @@ this.$refs.dataTable.getList()
 3. 调用 getList 刷新列表
 ```html
 <template>
-  <el-data-table $refs="dataTable" :extraButtons="extraButtons">
+  <el-data-table ref="dataTable" :extraButtons="extraButtons">
 </template>
 
 <script>

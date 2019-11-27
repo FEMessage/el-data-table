@@ -1064,7 +1064,7 @@ export default {
             done()
             this.showMessage(true)
 
-            this.shouldBackPrevPage()
+            this.correctPage()
 
             this.getList()
           } catch (error) {
@@ -1083,7 +1083,7 @@ export default {
      * 判断是否返回上一页
      * @public
      */
-    shouldBackPrevPage() {
+    correctPage() {
       let deleteCount = 1
       if (this.hasSelect) {
         deleteCount = this.selected.length
