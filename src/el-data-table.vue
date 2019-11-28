@@ -206,6 +206,7 @@
                 :click="btn.atClick"
                 :params="scope.row"
                 :callback="getList"
+                :disabled="'disabled' in btn ? btn.disabled(scope.row) : false"
               >
                 {{
                   typeof btn.text === 'function'
@@ -402,7 +403,7 @@ export default {
     },
     /**
      * 操作列的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
-     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示 }
+     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示, disabled: row => return true时禁用 }
      * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
      */
     extraButtons: {
