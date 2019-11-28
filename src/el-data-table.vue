@@ -206,6 +206,7 @@
                 :click="btn.atClick"
                 :params="scope.row"
                 :callback="getList"
+                :disabled="'disabled' in btn ? btn.disabled(scope.row) : false"
               >
                 {{
                   typeof btn.text === 'function'
