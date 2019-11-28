@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.15.0](https://github.com/FEMessage/el-data-table/compare/v1.14.0...v1.15.0) (2019-11-28)
+
+
+### Features
+
+* extraButton添加函数类型的disabled属性 ([#247](https://github.com/FEMessage/el-data-table/issues/247)) ([4872ca0](https://github.com/FEMessage/el-data-table/commit/4872ca0))
+* 暴露 correctPage API ([#245](https://github.com/FEMessage/el-data-table/issues/245)) ([1f5fccc](https://github.com/FEMessage/el-data-table/commit/1f5fccc))
+
+
+
 ## [1.14.0](https://github.com/FEMessage/el-data-table/compare/v1.13.4...v1.14.0) (2019-11-27)
 
 
