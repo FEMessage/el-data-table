@@ -21,7 +21,18 @@ export default {
           id: 'name',
           type: 'input',
           searchImmediately: true
-        }
+        },
+        {
+          el: {placeholder: '请选择'},
+          label: '性别',
+          id: 'sex',
+          type: 'select',
+          searchImmediately: true,
+          options: [
+            {label: '男', value: 'man'},
+            {label: '女', value: 'woman'},
+          ]
+        },
       ],
       hasNew: false,
       hasView: true
