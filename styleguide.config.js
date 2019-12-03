@@ -38,6 +38,7 @@ const sections = (() => {
 module.exports = {
   styleguideDir: 'docs',
   pagePerSection: true,
+  jsxInExamples: true,
   ribbon: {
     url: 'https://github.com/FEMessage/el-data-table'
   },

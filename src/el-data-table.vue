@@ -206,6 +206,7 @@
                 :click="btn.atClick"
                 :params="scope.row"
                 :callback="getList"
+                :disabled="'disabled' in btn ? btn.disabled(scope.row) : false"
               >
                 {{
                   typeof btn.text === 'function'
@@ -402,7 +403,7 @@ export default {
     },
     /**
      * 操作列的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
-     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示 }
+     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示, disabled: row => return true时禁用 }
      * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
      */
     extraButtons: {
@@ -502,7 +503,12 @@ export default {
      */
     onDelete: {
       type: Function,
-      default: undefined
+      default(data) {
+        const ids = Array.isArray(data)
+          ? data.map(v => v[this.id]).join(',')
+          : data[this.id]
+        return this.$axios.delete(this.url + '/' + ids)
+      }
     },
     /**
      * 是否分页。如果不分页，则请求传参page=-1
@@ -817,11 +823,11 @@ export default {
   },
   methods: {
     /**
-     * 手动刷新列表数据
+     * 手动刷新列表数据，选项的默认值为: { loading: true }
      * @public
-     * @param {boolean} saveQuery - 是否保存query到路由上
+     * @param {object} options 方法选项
      */
-    getList() {
+    getList({loading = true} = {}) {
       const {url} = this
 
       if (!url) {
@@ -857,7 +863,7 @@ export default {
         queryUtil.stringify(query, '=', '&')
 
       // 请求开始
-      this.loading = true
+      this.loading = loading
 
       // 存储query记录, 便于后面恢复
       if (this.saveQuery) {
@@ -881,7 +887,8 @@ export default {
             this.total = data.length
           } else {
             data = _get(resp, this.dataPath) || []
-            this.total = _get(resp, this.totalPath)
+            // 获取不到值得时候返回 undefined, el-pagination 接收一个 null 或者 undefined 会导致没数据但是下一页可点击
+            this.total = _get(resp, this.totalPath) || 0
           }
 
           this.data = data
@@ -1049,42 +1056,22 @@ export default {
           instance.confirmButtonLoading = true
 
           try {
-            if (this.onDelete) {
-              // 自定义删除逻辑
-              if (this.hasSelect) {
-                await this.onDelete(
-                  this.single ? this.selected[0] : this.selected
-                )
-              } else {
-                await this.onDelete(row)
-              }
-            } else if (this.hasSelect) {
-              // 多选模式
-              await this.$axios.delete(
-                this.url + '/' + this.selected.map(v => v[this.id]).join(',')
+            if (this.hasSelect) {
+              await this.onDelete(
+                this.single ? this.selected[0] : this.selected
               )
             } else {
-              // 单个删除
-              await this.$axios.delete(this.url + '/' + row[this.id])
+              await this.onDelete(row)
             }
             done()
             this.showMessage(true)
-            let deleteCount = 1
-            if (this.hasSelect) {
-              deleteCount = this.selected.length
-              this.clearSelection()
-            }
-            const remain = this.data.length - deleteCount
-            const lastPage = Math.ceil(this.total / this.size)
-            if (
-              remain === 0 &&
-              this.page === lastPage &&
-              this.page > defaultFirstPage
-            )
-              this.page--
+
+            this.correctPage()
+
             this.getList()
           } catch (error) {
-            // do nothing
+            console.warn(error.message)
+            throw error
           } finally {
             instance.confirmButtonLoading = false
           }
@@ -1093,6 +1080,27 @@ export default {
         /*取消*/
       })
     },
+
+    /**
+     * 判断是否返回上一页
+     * @public
+     */
+    correctPage() {
+      let deleteCount = 1
+      if (this.hasSelect) {
+        deleteCount = this.selected.length
+        this.clearSelection()
+      }
+      const remain = this.data.length - deleteCount
+      const lastPage = Math.ceil(this.total / this.size)
+      if (
+        remain === 0 &&
+        this.page === lastPage &&
+        this.page > defaultFirstPage
+      )
+        this.page--
+    },
+
     // 树形table相关
     // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/components/TreeTable
     tree2Array(data, expandAll, parent = null, level = null) {
@@ -1108,7 +1116,10 @@ export default {
         this.$set(record, '_level', _level)
         // 如果有父元素
         if (parent) {
-          this.$set(record, 'parent', parent)
+          Object.defineProperty(record, 'parent', {
+            value: parent,
+            enumerable: false
+          })
         }
         tmp.push(record)
 
@@ -1124,11 +1135,9 @@ export default {
       })
       return tmp
     },
-    showRow(row) {
-      const show = row.row.parent
-        ? row.row.parent._expanded && row.row.parent._show
-        : true
-      row.row._show = show
+    showRow({row}) {
+      const show = !row.parent || (row.parent._expanded && row.parent._show)
+      row._show = show
       return show ? 'row-show' : 'row-hide'
     },
     // 切换下级是否展开
