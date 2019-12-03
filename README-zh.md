@@ -9,6 +9,8 @@
 
 使用`axios`自动发送请求，支持树形结构，支持分页，支持自定义查询, 自定义操作列, 让 RESTful 风格的 CRUD 更简单 👏
 
+内置[@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer)用于渲染表单
+
 ![](https://i.loli.net/2019/11/14/KxfWjch5F62lwyR.jpg)
 
 ## Table of Contents
@@ -146,14 +148,6 @@ export default {
 ### 数据驱动
 
 把 template 的内容移动到 script 中, 意味着 template 可以精简，js 可以抽取出来，方便复用；同时，js 里的数据其实就是一段 json，这也让代码生成工具有了用武之地。
-
-其中表单的渲染使用到了组件[@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer)
-
-![](https://i.loli.net/2019/11/14/1jpJdiNMhPHoZmF.jpg)
-
-![](https://i.loli.net/2019/11/14/hfTaURHEOYAkoSr.jpg)
-
-![](https://i.loli.net/2019/11/14/uaNq3mbWRXPk1gs.jpg)
 
 [⬆ Back to Top](#table-of-contents)
 

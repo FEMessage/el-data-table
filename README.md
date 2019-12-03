@@ -9,6 +9,8 @@
 
 Auto requesting by `axios`, supports pagination, tree data structure, custom search, custom operation column, which makes rest api easily👏
 
+The table uses [@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer) to render form.
+
 ![](https://i.loli.net/2019/11/14/KxfWjch5F62lwyR.jpg)
 
 [中文文档](./README-zh.md)
@@ -141,8 +143,6 @@ The results are as follows:
 
 Moving the content of the template to the script means that the template can be reduced and js can be extracted to another file to reuse.
 At the same time, the data in js is actually a piece of json, this means code generation tool can help.
-
-Beside, herer uses the component [@femessage/el-form-renderer](https://github.com/FEMessage/el-form-renderer) to render form.
 
 ![](https://i.loli.net/2019/11/14/1jpJdiNMhPHoZmF.jpg)<br />![](https://i.loli.net/2019/11/14/hfTaURHEOYAkoSr.jpg)<br />![9.jpeg](https://i.loli.net/2019/11/14/uaNq3mbWRXPk1gs.jpg)
 
@@ -313,6 +313,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
