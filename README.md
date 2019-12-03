@@ -307,7 +307,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://colmugx.github.io"><img src="https://avatars1.githubusercontent.com/u/21327913?v=4" width="100px;" alt="ColMugX"/><br /><sub><b>ColMugX</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=colmugx" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/snowlocked"><img src="https://avatars0.githubusercontent.com/u/19562649?v=4" width="100px;" alt="snowlocked"/><br /><sub><b>snowlocked</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=snowlocked" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=snowlocked" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/zcqno1"><img src="https://avatars0.githubusercontent.com/u/11766057?v=4" width="100px;" alt="Sponge"/><br /><sub><b>Sponge</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Azcqno1" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/zcqno1"><img src="https://avatars0.githubusercontent.com/u/11766057?v=4" width="100px;" alt="Sponge"/><br /><sub><b>Sponge</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Azcqno1" title="Bug reports">🐛</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=zcqno1" title="Code">💻</a></td>
   </tr>
 </table>
 
