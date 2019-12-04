@@ -769,7 +769,8 @@ export default {
         this.hasNew ||
         (this.hasSelect && this.hasDelete) ||
         this.headerButtons.length ||
-        this.canSearchCollapse
+        this.canSearchCollapse ||
+        this.$scopedSlots.header
       )
     },
     _extraBody() {
