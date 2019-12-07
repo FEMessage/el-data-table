@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.15.2](https://github.com/FEMessage/el-data-table/compare/v1.15.1...v1.15.2) (2019-12-07)
+
+
+### Bug Fixes
+
+* header 仅有 slot 时，slot 不显示的 bug ([#252](https://github.com/FEMessage/el-data-table/issues/252)) ([e55cae8](https://github.com/FEMessage/el-data-table/commit/e55cae8))
+
+
+
 ### [1.15.1](https://github.com/FEMessage/el-data-table/compare/v1.15.0...v1.15.1) (2019-12-03)
 
 
