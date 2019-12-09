@@ -1,4 +1,4 @@
-只需要在`columns`子项里嵌套`columns`数组，就可以实现多级表头
+只需要在columns子项里嵌套columns数组，就可以实现多级表头
 
 ```vue
 <template>
