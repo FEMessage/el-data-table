@@ -1,4 +1,4 @@
-const defaltAttrs = {
+const defaultAttrs = {
   align: 'center'
 }
 export default {
