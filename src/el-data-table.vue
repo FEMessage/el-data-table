@@ -93,9 +93,9 @@
         <template v-if="isTree">
           <!--有多选-->
           <template v-if="hasSelect">
-            <el-table-column key="selection-key" v-bind="columns[0]" />
+            <el-data-table-column key="selection-key" v-bind="columns[0]" />
 
-            <el-table-column key="tree-ctrl" v-bind="columns[1]">
+            <el-data-table-column key="tree-ctrl" v-bind="columns[1]">
               <template slot-scope="scope">
                 <span
                   v-for="space in scope.row._level"
@@ -113,9 +113,9 @@
                 </span>
                 {{ scope.row[columns[1].prop] }}
               </template>
-            </el-table-column>
+            </el-data-table-column>
 
-            <el-table-column
+            <el-data-table-column
               v-for="col in columns.filter((c, i) => i !== 0 && i !== 1)"
               :key="col.prop"
               v-bind="col"
@@ -124,8 +124,8 @@
 
           <!--无选择-->
           <template v-else>
-            <!--展开这列, 丢失 el-table-column属性-->
-            <el-table-column key="tree-ctrl" v-bind="columns[0]">
+            <!--展开这列, 丢失 el-data-table-column属性-->
+            <el-data-table-column key="tree-ctrl" v-bind="columns[0]">
               <template slot-scope="scope">
                 <span
                   v-for="space in scope.row._level"
@@ -144,9 +144,9 @@
                 </span>
                 {{ scope.row[columns[0].prop] }}
               </template>
-            </el-table-column>
+            </el-data-table-column>
 
-            <el-table-column
+            <el-data-table-column
               v-for="col in columns.filter((c, i) => i !== 0)"
               :key="col.prop"
               v-bind="col"
@@ -156,7 +156,7 @@
 
         <!--非树-->
         <template v-else>
-          <el-table-column
+          <el-data-table-column
             v-for="col in columns"
             :key="col.prop"
             v-bind="col"
@@ -164,7 +164,7 @@
         </template>
 
         <!--默认操作列-->
-        <el-table-column
+        <el-data-table-column
           v-if="hasOperation"
           label="操作"
           v-bind="operationAttrs"
@@ -225,7 +225,7 @@
               删除
             </self-loading-button>
           </template>
-        </el-table-column>
+        </el-data-table-column>
 
         <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
         <slot />
@@ -270,6 +270,7 @@ import _isEmpty from 'lodash.isempty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
+import ElDataTableColumn from './components/el-data-table-column'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
@@ -304,7 +305,8 @@ export default {
   components: {
     SelfLoadingButton,
     TheDialog,
-    SearchForm
+    SearchForm,
+    ElDataTableColumn
   },
 
   props: {
