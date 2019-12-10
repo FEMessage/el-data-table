@@ -14,7 +14,7 @@ export default {
       )
     }
     data.props = {
-      ...defaltAttrs,
+      ...defaultAttrs,
       ...data.props
     }
     return h('el-table-column', data, children)
