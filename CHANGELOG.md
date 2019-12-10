@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.16.0](https://github.com/FEMessage/el-data-table/compare/v1.15.2...v1.16.0) (2019-12-10)
+
+
+### Features
+
+* 支持多级表头 ([#253](https://github.com/FEMessage/el-data-table/issues/253)) ([9bd3147](https://github.com/FEMessage/el-data-table/commit/9bd3147))
+
+
+
 ### [1.15.2](https://github.com/FEMessage/el-data-table/compare/v1.15.1...v1.15.2) (2019-12-07)
 
 
