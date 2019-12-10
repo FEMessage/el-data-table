@@ -8,7 +8,7 @@ export default {
     let children = []
     if (props.columns) {
       children = props.columns.map(column =>
-        h('el-table-column', {
+        h('el-data-table-column', {
           props: Object.assign({}, defaltAttrs, column)
         })
       )
