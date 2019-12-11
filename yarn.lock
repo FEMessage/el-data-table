@@ -791,9 +791,9 @@
     minimist "^1.2.0"
 
 "@femessage/el-form-renderer@^1.6.0":
-  version "1.11.2"
-  resolved "https://registry.npm.taobao.org/@femessage/el-form-renderer/download/@femessage/el-form-renderer-1.11.2.tgz#bcd209fa3f9057de6463d91aa71b052219764eaa"
-  integrity sha1-vNIJ+j+QV95kY9kapxsFIhl2Tqo=
+  version "1.12.1"
+  resolved "https://registry.npm.taobao.org/@femessage/el-form-renderer/download/@femessage/el-form-renderer-1.12.1.tgz#07c021f56ad25b11040d605bccf9d369af9a1861"
+  integrity sha1-B8Ah9WrSWxEEDWBbzPnTaa+aGGE=
   dependencies:
     lodash.get "^4.4.2"
     lodash.set "^4.3.2"
