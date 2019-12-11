@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.16.1](https://github.com/FEMessage/el-data-table/compare/v1.16.0...v1.16.1) (2019-12-11)
+
+
+### Bug Fixes
+
+* getList 出错时设置 total = 0 ([#255](https://github.com/FEMessage/el-data-table/issues/255)) ([7773639](https://github.com/FEMessage/el-data-table/commit/7773639))
+
+
+
 ## [1.16.0](https://github.com/FEMessage/el-data-table/compare/v1.15.2...v1.16.0) (2019-12-10)
 
 
