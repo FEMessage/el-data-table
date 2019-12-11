@@ -925,6 +925,7 @@ export default {
            * @event error
            */
           this.$emit('error', err)
+          this.total = 0
           this.loading = false
         })
     },
