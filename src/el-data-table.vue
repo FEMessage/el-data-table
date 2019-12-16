@@ -794,7 +794,10 @@ export default {
   watch: {
     url: {
       handler(val) {
-        if (!val) return
+        if(!val) {
+          this.data = [];
+          return;
+        }
         this.page = defaultFirstPage
         // mounted处有updateForm的行为，所以至少在初始执行时要等到nextTick
         this.$nextTick(this.getList)
