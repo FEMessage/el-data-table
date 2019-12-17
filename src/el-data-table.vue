@@ -277,18 +277,6 @@ import getLocatedSlotKeys from './utils/extract-keys'
 import transformSearchImmediatelyItem from './utils/search-immediately-item'
 import isFalsey from './utils/is-falsey'
 
-// 默认返回的数据格式如下
-//          {
-//            "code":0,
-//            "msg":"ok",
-//            "payload":{
-//              "content":[], // 数组
-//              "totalElements":2, // 总数
-//            }
-//          }
-// 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
-// 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
-
 const defaultFirstPage = 1
 
 const dataPath = 'payload.content'

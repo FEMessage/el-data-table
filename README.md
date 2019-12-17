@@ -50,6 +50,23 @@ The restful CRUD api should be:
 GET /api/v1/users?page=1&size=10
 ```
 
+default data structure
+
+```js
+{
+  "code":0,
+  "msg":"ok",
+  "payload":{
+    "content":[], // dataPath
+    "totalElements":2, // totalPath
+  }
+}
+```
+
+You can customize dataPath/totalPath.
+
+If `hasPagination=false`, default dataPath is `payload`
+
 - Create
 
 ```javascript
@@ -314,6 +331,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
