@@ -38,7 +38,7 @@ export default {
       deleteText: '移除',
       deleteMessage(data) {
         // 开启多选且 single = false（default）时 data 为数组，其他情况下为行数据对象。数据和传给 onDelete 的是一样
-        const name = Array.isArray(data) ? data.map(r => r.name).join(',') : data.name
+        const name = data.map(r => r.name).join(',')
         return `确认移除 ${name} 吗？`
       }
     }
