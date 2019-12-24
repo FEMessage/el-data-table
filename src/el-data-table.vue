@@ -470,7 +470,7 @@ export default {
       default: '删除'
     },
     /**
-     * 删除提示语，接受行数据 row，返回字符串
+     * 删除提示语，接受要删除的数据（单选时为 row，多选时为 row 的数组），返回字符串
      */
     deleteMessage: {
       type: Function,
@@ -1055,7 +1055,12 @@ export default {
       }
     },
     onDefaultDelete(row) {
-      this.$confirm(this.deleteMessage(row), '提示', {
+      const data = this.hasSelect
+        ? this.single
+          ? this.selected[0]
+          : this.selected
+        : row
+      this.$confirm(this.deleteMessage(data), '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
         beforeClose: async (action, instance, done) => {
@@ -1064,13 +1069,7 @@ export default {
           instance.confirmButtonLoading = true
 
           try {
-            if (this.hasSelect) {
-              await this.onDelete(
-                this.single ? this.selected[0] : this.selected
-              )
-            } else {
-              await this.onDelete(row)
-            }
+            await this.onDelete(data)
             done()
             this.showMessage(true)
 

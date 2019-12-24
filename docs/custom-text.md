@@ -10,6 +10,7 @@ export default {
     return {
       url: 'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic',
       columns: [
+        {type: 'selection'},
         {prop: 'date', label: '日期'},
         {prop: 'name', label: '姓名'},
         {prop: 'address', label: '地址'},
@@ -35,8 +36,9 @@ export default {
       editText: '编辑',
       viewText: '详情',
       deleteText: '移除',
-      deleteMessage(row) {
-        return `确认移除 ${row.name} 吗？`
+      deleteMessage(data) {
+        const name = Array.isArray(data) ? data.map(r => r.name).join(',') : data.name
+        return `确认移除 ${name} 吗？`
       }
     }
   }
