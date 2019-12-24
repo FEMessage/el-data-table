@@ -497,7 +497,7 @@ export default {
         const ids = Array.isArray(data)
           ? data.map(v => v[this.id]).join(',')
           : data[this.id]
-        return this.$axios.delete(this.url + '/' + ids, this.extraConfig)
+        return this.$axios.delete(this.url + '/' + ids, this.axiosConfig)
       }
     },
     /**
@@ -727,7 +727,7 @@ export default {
     /**
      * 设置axios的config参数
      */
-    extraConfig: {
+    axiosConfig: {
       type: Object,
       default() {
         return {}
@@ -874,7 +874,7 @@ export default {
       }
 
       this.$axios
-        .get(url + queryStr, this.extraConfig)
+        .get(url + queryStr, this.axiosConfig)
         .then(({data: resp}) => {
           let data = []
 
@@ -1037,7 +1037,7 @@ export default {
             ? ['post', this.url]
             : ['put', `${this.url}/${this.row[this.id]}`]
 
-          await this.$axios[method](url, data, this.extraConfig)
+          await this.$axios[method](url, data, this.axiosConfig)
         }
         this.getList()
         this.showMessage(true)
