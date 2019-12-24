@@ -475,7 +475,7 @@ export default {
     deleteMessage: {
       type: Function,
       default() {
-        return `确认${this.deleteText}吗`
+        return `确认${this.deleteText}吗?`
       }
     },
     /**
