@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/FEMessage/el-data-table/compare/v1.16.1...v1.17.0) (2019-12-24)
+
+
+### Features
+
+* 支持配置axios的config ([#265](https://github.com/FEMessage/el-data-table/issues/265)) ([6f4d773](https://github.com/FEMessage/el-data-table/commit/6f4d773))
+* 自定义删除弹窗文案 ([#266](https://github.com/FEMessage/el-data-table/issues/266)) ([79e278d](https://github.com/FEMessage/el-data-table/commit/79e278d))
+
+
+
 ### [1.16.1](https://github.com/FEMessage/el-data-table/compare/v1.16.0...v1.16.1) (2019-12-11)
 
 
