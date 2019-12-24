@@ -37,6 +37,7 @@ export default {
       viewText: '详情',
       deleteText: '移除',
       deleteMessage(data) {
+        // 只有在开启多选且选中两项或以上时，data 为数组。数据和传给 onDelete 的是一样
         const name = Array.isArray(data) ? data.map(r => r.name).join(',') : data.name
         return `确认移除 ${name} 吗？`
       }
