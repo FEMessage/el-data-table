@@ -5,7 +5,7 @@ language: node_js
 node_js:
 - lts/*
 git:
-  depth: 3
+  depth: 15
 install:
 - yarn --frozen-lockfile
 - yarn test
