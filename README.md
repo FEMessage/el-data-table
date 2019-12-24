@@ -326,12 +326,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/snowlocked"><img src="https://avatars0.githubusercontent.com/u/19562649?v=4" width="100px;" alt=""/><br /><sub><b>snowlocked</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=snowlocked" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=snowlocked" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/zcqno1"><img src="https://avatars0.githubusercontent.com/u/11766057?v=4" width="100px;" alt=""/><br /><sub><b>Sponge</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Azcqno1" title="Bug reports">🐛</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=zcqno1" title="Code">💻</a></td>
     <td align="center"><a href="https://4ark.me"><img src="https://avatars0.githubusercontent.com/u/27952659?v=4" width="100px;" alt=""/><br /><sub><b>4Ark</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=gd4Ark" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=gd4Ark" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/Htongbing"><img src="https://avatars2.githubusercontent.com/u/36433396?v=4" width="100px;" alt=""/><br /><sub><b>Htongbing</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=Htongbing" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
