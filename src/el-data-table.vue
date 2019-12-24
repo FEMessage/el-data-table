@@ -64,7 +64,7 @@
                 : !selected.length
             "
             @click="onDefaultDelete($event)"
-            >删除</el-button
+            >{{ deleteText }}</el-button
           >
           <el-button
             v-if="canSearchCollapse"
@@ -222,7 +222,7 @@
               :is-text="operationButtonType === 'text'"
               @click="onDefaultDelete(scope.row)"
             >
-              删除
+              {{ deleteText }}
             </self-loading-button>
           </template>
         </el-data-table-column>
@@ -276,18 +276,6 @@ import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
 import transformSearchImmediatelyItem from './utils/search-immediately-item'
 import isFalsey from './utils/is-falsey'
-
-// 默认返回的数据格式如下
-//          {
-//            "code":0,
-//            "msg":"ok",
-//            "payload":{
-//              "content":[], // 数组
-//              "totalElements":2, // 总数
-//            }
-//          }
-// 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
-// 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
 
 const defaultFirstPage = 1
 
@@ -475,6 +463,22 @@ export default {
       default: '查看'
     },
     /**
+     * 删除按钮文案
+     */
+    deleteText: {
+      type: String,
+      default: '删除'
+    },
+    /**
+     * 删除提示语，接受要删除的数据（单选时为 row，多选时为 row 的数组），返回字符串
+     */
+    deleteMessage: {
+      type: Function,
+      default() {
+        return `确认${this.deleteText}吗?`
+      }
+    },
+    /**
      * 某行数据是否可以删除, 返回true表示可以, 控制的是单选时单行的删除按钮
      */
     canDelete: {
@@ -509,7 +513,7 @@ export default {
         const ids = Array.isArray(data)
           ? data.map(v => v[this.id]).join(',')
           : data[this.id]
-        return this.$axios.delete(this.url + '/' + ids)
+        return this.$axios.delete(this.url + '/' + ids, this.axiosConfig)
       }
     },
     /**
@@ -735,6 +739,15 @@ export default {
     buttonSize: {
       type: String,
       default: 'small'
+    },
+    /**
+     * 设置axios的config参数
+     */
+    axiosConfig: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   data() {
@@ -877,7 +890,7 @@ export default {
       }
 
       this.$axios
-        .get(url + queryStr)
+        .get(url + queryStr, this.axiosConfig)
         .then(({data: resp}) => {
           let data = []
 
@@ -1040,7 +1053,7 @@ export default {
             ? ['post', this.url]
             : ['put', `${this.url}/${this.row[this.id]}`]
 
-          await this.$axios[method](url, data)
+          await this.$axios[method](url, data, this.axiosConfig)
         }
         this.getList()
         this.showMessage(true)
@@ -1051,7 +1064,12 @@ export default {
       }
     },
     onDefaultDelete(row) {
-      this.$confirm('确认删除吗', '提示', {
+      const data = this.hasSelect
+        ? this.single
+          ? this.selected[0]
+          : this.selected
+        : row
+      this.$confirm(this.deleteMessage(data), '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
         beforeClose: async (action, instance, done) => {
@@ -1060,13 +1078,7 @@ export default {
           instance.confirmButtonLoading = true
 
           try {
-            if (this.hasSelect) {
-              await this.onDelete(
-                this.single ? this.selected[0] : this.selected
-              )
-            } else {
-              await this.onDelete(row)
-            }
+            await this.onDelete(data)
             done()
             this.showMessage(true)
 

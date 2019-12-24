@@ -50,6 +50,22 @@ el-data-table 就是为了解决业务问题而生的，故而封装了 CRUD 的
 GET /api/v1/users?page=1&size=10
 ```
 
+默认数据结构
+
+```js
+{
+  "code":0,
+  "msg":"ok",
+  "payload":{
+    "content":[], // dataPath
+    "totalElements":2, // totalPath
+  }
+}
+```
+
+可根据实际情况设置 dataPath/totalPath 两个字段的路径
+如果接口不分页, 则传 hasPagination=false, 此时默认 dataPath 为 payload, 当然此时仍可以自定义
+
 - 新增
 
 ```sh
