@@ -188,6 +188,15 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "Htongbing",
+      "name": "Htongbing",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/36433396?v=4",
+      "profile": "https://github.com/Htongbing",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
