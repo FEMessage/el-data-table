@@ -497,7 +497,7 @@ export default {
         const ids = Array.isArray(data)
           ? data.map(v => v[this.id]).join(',')
           : data[this.id]
-        return this.$axios.delete(this.url + '/' + ids)
+        return this.$axios.delete(this.url + '/' + ids, this.extraConfig)
       }
     },
     /**
@@ -723,6 +723,15 @@ export default {
     buttonSize: {
       type: String,
       default: 'small'
+    },
+    /**
+     * 设置axios的config参数
+     */
+    extraConfig: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   data() {
@@ -865,7 +874,7 @@ export default {
       }
 
       this.$axios
-        .get(url + queryStr)
+        .get(url + queryStr, this.extraConfig)
         .then(({data: resp}) => {
           let data = []
 
@@ -1028,7 +1037,7 @@ export default {
             ? ['post', this.url]
             : ['put', `${this.url}/${this.row[this.id]}`]
 
-          await this.$axios[method](url, data)
+          await this.$axios[method](url, data, this.extraConfig)
         }
         this.getList()
         this.showMessage(true)
