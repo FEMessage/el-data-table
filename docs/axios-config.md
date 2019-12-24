@@ -1,4 +1,4 @@
-axiosConfig 示例代码
+axiosConfig 示例代码，打开控制台，可以看到请求中带上了自定义的头
 
 ```vue
 <template>
