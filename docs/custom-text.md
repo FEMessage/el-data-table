@@ -1,4 +1,4 @@
-通过prop自定义新增、修改、删除等按钮的文案
+自定义新增、修改、删除按钮以及删除提示框的文案
 
 ```vue
 <template>
@@ -31,10 +31,13 @@ export default {
         },
       ],
       hasView: true,
-      hasDelete: false,
       newText: '创建',
       editText: '编辑',
       viewText: '详情',
+      deleteText: '移除',
+      deleteMessage(row) {
+        return `确认移除 ${row.name} 吗？`
+      }
     }
   }
 }

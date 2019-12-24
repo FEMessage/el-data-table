@@ -64,7 +64,7 @@
                 : !selected.length
             "
             @click="onDefaultDelete($event)"
-            >删除</el-button
+            >{{ deleteText }}</el-button
           >
           <el-button
             v-if="canSearchCollapse"
@@ -222,7 +222,7 @@
               :is-text="operationButtonType === 'text'"
               @click="onDefaultDelete(scope.row)"
             >
-              删除
+              {{ deleteText }}
             </self-loading-button>
           </template>
         </el-data-table-column>
@@ -461,6 +461,22 @@ export default {
     viewText: {
       type: String,
       default: '查看'
+    },
+    /**
+     * 删除按钮文案
+     */
+    deleteText: {
+      type: String,
+      default: '删除'
+    },
+    /**
+     * 删除提示语，接受行数据 row，返回字符串
+     */
+    deleteMessage: {
+      type: Function,
+      default() {
+        return `确认${this.deleteText}吗`
+      }
     },
     /**
      * 某行数据是否可以删除, 返回true表示可以, 控制的是单选时单行的删除按钮
@@ -1039,7 +1055,7 @@ export default {
       }
     },
     onDefaultDelete(row) {
-      this.$confirm('确认删除吗', '提示', {
+      this.$confirm(this.deleteMessage(row), '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
         beforeClose: async (action, instance, done) => {
