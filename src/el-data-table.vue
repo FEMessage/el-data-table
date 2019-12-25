@@ -517,6 +517,18 @@ export default {
       }
     },
     /**
+     * crud 操作成功后会调用的函数，默认是 this.$message.success('操作成功')
+     * 接受两个参数：
+     * type，操作的类型，可能的值有 new | edit | delete；
+     * data，操作的数据对象
+     */
+    onSuccess: {
+      type: Function,
+      default() {
+        return this.$message.success('操作成功')
+      }
+    },
+    /**
      * 是否分页。如果不分页，则请求传参page=-1
      */
     hasPagination: {
@@ -1056,7 +1068,7 @@ export default {
           await this.$axios[method](url, data, this.axiosConfig)
         }
         this.getList()
-        this.showMessage(true)
+        this.onSuccess(isNew ? 'new' : 'edit', data)
         done()
       } catch (e) {
         // 出错则不关闭dialog
@@ -1080,10 +1092,9 @@ export default {
           try {
             await this.onDelete(data)
             done()
-            this.showMessage(true)
+            this.onSuccess('delete', data)
 
             this.correctPage()
-
             this.getList()
           } catch (error) {
             console.warn(error.message)
@@ -1165,19 +1176,6 @@ export default {
     iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
       return record[this.treeChildKey] && record[this.treeChildKey].length > 0
-    },
-    showMessage(isSuccess = true) {
-      if (isSuccess) {
-        this.$message({
-          type: 'success',
-          message: '操作成功'
-        })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '操作失败'
-        })
-      }
     }
   }
 }
