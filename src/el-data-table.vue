@@ -335,6 +335,20 @@ export default {
       default: totalPath
     },
     /**
+     * 请求的时候如果接口需要的页码的查询 key 不同的时候可以指定
+     */
+    pageKey: {
+      type: String,
+      default: 'page'
+    },
+    /**
+     * 请求的时候如果接口需要的分页数量的查询 key 不同的时候可以指定
+     */
+    pageSizeKey: {
+      type: String,
+      default: 'size'
+    },
+    /**
      * 列属性设置, 详情见element-ui官网
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-column-attributes
      */
@@ -826,12 +840,12 @@ export default {
     if (this.saveQuery) {
       const query = queryUtil.get(location.href)
       if (query) {
-        this.page = parseInt(query.page)
-        this.size = parseInt(query.size)
+        this.page = parseInt(query[this.pageKey])
+        this.size = parseInt(query[this.pageSizeKey])
         // 恢复查询条件，但对slot=search无效
         if (this.$refs.searchForm) {
-          delete query.page
-          delete query.size
+          delete query[this.pageKey]
+          delete query[this.pageSizeKey]
           this.$refs.searchForm.updateForm(query)
         }
       }
@@ -860,11 +874,13 @@ export default {
       }
       Object.assign(query, this._extraQuery)
 
-      query.size = this.hasPagination ? this.size : this.noPaginationSize
+      query[this.pageSizeKey] = this.hasPagination
+        ? this.size
+        : this.noPaginationSize
 
       // 根据偏移值计算接口正确的页数
       const pageOffset = this.firstPage - defaultFirstPage
-      query.page = this.hasPagination ? this.page + pageOffset : -1
+      query[this.pageKey] = this.hasPagination ? this.page + pageOffset : -1
 
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
@@ -884,7 +900,7 @@ export default {
       // 存储query记录, 便于后面恢复
       if (this.saveQuery) {
         // 存储的page是table的页码，无需偏移
-        query.page = this.page
+        query[this.pageKey] = this.page
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.replaceState(history.state, 'el-data-table search', newUrl)
       }
