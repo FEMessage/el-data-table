@@ -15,8 +15,12 @@ export default {
         {prop: 'address', label: '地址'},
       ],
       onSuccess: (type, data) => {
-        if (type === 'new') this.$message.success(`新增 ${data.name} 成功`)
-        else this.$message.success(`操作成功`)
+        const oper = {
+          new: '新增',
+          edit: '编辑',
+          delete: '删除',
+        }[type]
+        this.$message.success(`${oper} ${data.name} 成功`)
       },
       form: [
         {
