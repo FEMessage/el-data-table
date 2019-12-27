@@ -93,9 +93,17 @@
         <template v-if="isTree">
           <!--有多选-->
           <template v-if="hasSelect">
-            <el-data-table-column key="selection-key" v-bind="columns[0]" />
+            <el-data-table-column
+              key="selection-key"
+              v-bind="columns[0]"
+              :align="columnsAlign"
+            />
 
-            <el-data-table-column key="tree-ctrl" v-bind="columns[1]">
+            <el-data-table-column
+              key="tree-ctrl"
+              v-bind="columns[1]"
+              :align="columnsAlign"
+            >
               <template slot-scope="scope">
                 <span
                   v-for="space in scope.row._level"
@@ -119,13 +127,18 @@
               v-for="col in columns.filter((c, i) => i !== 0 && i !== 1)"
               :key="col.prop"
               v-bind="col"
+              :align="columnsAlign"
             />
           </template>
 
           <!--无选择-->
           <template v-else>
             <!--展开这列, 丢失 el-data-table-column属性-->
-            <el-data-table-column key="tree-ctrl" v-bind="columns[0]">
+            <el-data-table-column
+              key="tree-ctrl"
+              v-bind="columns[0]"
+              :align="columnsAlign"
+            >
               <template slot-scope="scope">
                 <span
                   v-for="space in scope.row._level"
@@ -150,6 +163,7 @@
               v-for="col in columns.filter((c, i) => i !== 0)"
               :key="col.prop"
               v-bind="col"
+              :align="columnsAlign"
             />
           </template>
         </template>
@@ -160,6 +174,7 @@
             v-for="col in columns"
             :key="col.prop"
             v-bind="col"
+            :align="columnsAlign"
           />
         </template>
 
@@ -168,6 +183,7 @@
           v-if="hasOperation"
           label="操作"
           v-bind="operationAttrs"
+          :align="columnsAlign"
         >
           <template slot-scope="scope">
             <self-loading-button
@@ -753,7 +769,6 @@ export default {
   data() {
     return {
       data: [],
-      hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
       page: defaultFirstPage,
       // https://github.com/ElemeFE/element/issues/1153
@@ -773,6 +788,16 @@ export default {
     }
   },
   computed: {
+    hasSelect() {
+      return this.columns.length && this.columns[0].type == 'selection'
+    },
+    columnsAlign() {
+      if (this.columns.some(col => col.columns && col.columns.length)) {
+        return 'center'
+      } else {
+        return ''
+      }
+    },
     routerMode() {
       return this.$router ? this.$router.mode : 'hash'
     },
