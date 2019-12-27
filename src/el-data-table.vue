@@ -806,7 +806,7 @@ export default {
     },
     collapseForm() {
       return this.searchForm.map(item => {
-        if (item.collapsible !== false) {
+        if ('collapsible' in item && !item.collapsible) {
           const originHidden = item.hidden || (() => false)
 
           return {
