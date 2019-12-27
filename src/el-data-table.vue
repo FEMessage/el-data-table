@@ -809,9 +809,9 @@ export default {
         const resolveItem = {}
 
         if (item.collapsible !== false) {
-          const origHidden = item.hidden || (() => {})
+          const originHidden = item.hidden || (() => {})
           resolveItem.hidden = () => {
-            return this.isSearchCollapse || origHidden()
+            return this.isSearchCollapse || originHidden()
           }
         }
 
