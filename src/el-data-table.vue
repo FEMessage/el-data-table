@@ -786,6 +786,7 @@ export default {
     },
     columnsAlign() {
       if (this.columns.some(col => col.columns && col.columns.length)) {
+        // 多级表头默认居中
         return 'center'
       } else {
         return ''
