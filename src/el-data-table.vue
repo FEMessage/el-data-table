@@ -813,8 +813,8 @@ export default {
         const itemHidden = item.hidden || (() => false)
         return {
           ...item,
-          hidden: val => {
-            return this.isSearchCollapse || itemHidden(val)
+          hidden: data => {
+            return this.isSearchCollapse || itemHidden(data)
           }
         }
       })
