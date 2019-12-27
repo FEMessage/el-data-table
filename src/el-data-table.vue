@@ -807,15 +807,16 @@ export default {
     collapseForm() {
       return this.searchForm.map(item => {
         if ('collapsible' in item && !item.collapsible) {
-          const itemHidden = item.hidden || (() => false)
-
-          return {
-            ...item,
-            hidden: () => this.isSearchCollapse || itemHidden()
-          }
+          return item
         }
 
-        return item
+        const itemHidden = item.hidden || (() => false)
+        return {
+          ...item,
+          hidden: val => {
+            return this.isSearchCollapse || itemHidden(val)
+          }
+        }
       })
     },
     _searchForm() {
