@@ -805,19 +805,18 @@ export default {
       return getLocatedSlotKeys(this.$slots, 'search:')
     },
     collapseForm() {
-      return this.searchForm.reduce((res, item) => {
-        const resolveItem = {}
-
+      return this.searchForm.map(item => {
         if (item.collapsible !== false) {
           const originHidden = item.hidden || (() => false)
-          resolveItem.hidden = () => {
-            return this.isSearchCollapse || originHidden()
+
+          return {
+            ...item,
+            hidden: () => this.isSearchCollapse || originHidden()
           }
         }
 
-        res.push(Object.assign(item, resolveItem))
-        return res
-      }, [])
+        return item
+      })
     },
     _searchForm() {
       return transformSearchImmediatelyItem(this.collapseForm, this)
