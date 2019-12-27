@@ -93,9 +93,15 @@
         <template v-if="isTree">
           <!--有多选-->
           <template v-if="hasSelect">
-            <el-data-table-column key="selection-key" v-bind="columns[0]" />
+            <el-data-table-column
+              key="selection-key"
+              v-bind="{align: columnsAlign, ...columns[0]}"
+            />
 
-            <el-data-table-column key="tree-ctrl" v-bind="columns[1]">
+            <el-data-table-column
+              key="tree-ctrl"
+              v-bind="{align: columnsAlign, ...columns[1]}"
+            >
               <template slot-scope="scope">
                 <span
                   v-for="space in scope.row._level"
@@ -118,14 +124,17 @@
             <el-data-table-column
               v-for="col in columns.filter((c, i) => i !== 0 && i !== 1)"
               :key="col.prop"
-              v-bind="col"
+              v-bind="{align: columnsAlign, ...col}"
             />
           </template>
 
           <!--无选择-->
           <template v-else>
             <!--展开这列, 丢失 el-data-table-column属性-->
-            <el-data-table-column key="tree-ctrl" v-bind="columns[0]">
+            <el-data-table-column
+              key="tree-ctrl"
+              v-bind="{align: columnsAlign, ...columns[0]}"
+            >
               <template slot-scope="scope">
                 <span
                   v-for="space in scope.row._level"
@@ -149,7 +158,7 @@
             <el-data-table-column
               v-for="col in columns.filter((c, i) => i !== 0)"
               :key="col.prop"
-              v-bind="col"
+              v-bind="{align: columnsAlign, ...col}"
             />
           </template>
         </template>
@@ -159,7 +168,7 @@
           <el-data-table-column
             v-for="col in columns"
             :key="col.prop"
-            v-bind="col"
+            v-bind="{align: columnsAlign, ...col}"
           />
         </template>
 
@@ -167,7 +176,7 @@
         <el-data-table-column
           v-if="hasOperation"
           label="操作"
-          v-bind="operationAttrs"
+          v-bind="{align: columnsAlign, ...operationAttrs}"
         >
           <template slot-scope="scope">
             <self-loading-button
@@ -333,6 +342,20 @@ export default {
     totalPath: {
       type: String,
       default: totalPath
+    },
+    /**
+     * 请求的时候如果接口需要的页码的查询 key 不同的时候可以指定
+     */
+    pageKey: {
+      type: String,
+      default: 'page'
+    },
+    /**
+     * 请求的时候如果接口需要的分页数量的查询 key 不同的时候可以指定
+     */
+    pageSizeKey: {
+      type: String,
+      default: 'size'
     },
     /**
      * 列属性设置, 详情见element-ui官网
@@ -514,6 +537,18 @@ export default {
           ? data.map(v => v[this.id]).join(',')
           : data[this.id]
         return this.$axios.delete(this.url + '/' + ids, this.axiosConfig)
+      }
+    },
+    /**
+     * crud 操作成功后会调用的函数，默认是 this.$message.success('操作成功')
+     * 接受两个参数：
+     * type，操作的类型，可能的值有 new | edit | delete；
+     * data，操作的数据对象
+     */
+    onSuccess: {
+      type: Function,
+      default() {
+        return this.$message.success('操作成功')
       }
     },
     /**
@@ -753,7 +788,6 @@ export default {
   data() {
     return {
       data: [],
-      hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
       page: defaultFirstPage,
       // https://github.com/ElemeFE/element/issues/1153
@@ -773,6 +807,17 @@ export default {
     }
   },
   computed: {
+    hasSelect() {
+      return this.columns.length && this.columns[0].type == 'selection'
+    },
+    columnsAlign() {
+      if (this.columns.some(col => col.columns && col.columns.length)) {
+        // 多级表头默认居中
+        return 'center'
+      } else {
+        return ''
+      }
+    },
     routerMode() {
       return this.$router ? this.$router.mode : 'hash'
     },
@@ -826,12 +871,12 @@ export default {
     if (this.saveQuery) {
       const query = queryUtil.get(location.href)
       if (query) {
-        this.page = parseInt(query.page)
-        this.size = parseInt(query.size)
+        this.page = parseInt(query[this.pageKey])
+        this.size = parseInt(query[this.pageSizeKey])
         // 恢复查询条件，但对slot=search无效
         if (this.$refs.searchForm) {
-          delete query.page
-          delete query.size
+          delete query[this.pageKey]
+          delete query[this.pageSizeKey]
           this.$refs.searchForm.updateForm(query)
         }
       }
@@ -860,11 +905,13 @@ export default {
       }
       Object.assign(query, this._extraQuery)
 
-      query.size = this.hasPagination ? this.size : this.noPaginationSize
+      query[this.pageSizeKey] = this.hasPagination
+        ? this.size
+        : this.noPaginationSize
 
       // 根据偏移值计算接口正确的页数
       const pageOffset = this.firstPage - defaultFirstPage
-      query.page = this.hasPagination ? this.page + pageOffset : -1
+      query[this.pageKey] = this.hasPagination ? this.page + pageOffset : -1
 
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
@@ -884,7 +931,7 @@ export default {
       // 存储query记录, 便于后面恢复
       if (this.saveQuery) {
         // 存储的page是table的页码，无需偏移
-        query.page = this.page
+        query[this.pageKey] = this.page
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.replaceState(history.state, 'el-data-table search', newUrl)
       }
@@ -1056,7 +1103,7 @@ export default {
           await this.$axios[method](url, data, this.axiosConfig)
         }
         this.getList()
-        this.showMessage(true)
+        this.onSuccess(isNew ? 'new' : 'edit', data)
         done()
       } catch (e) {
         // 出错则不关闭dialog
@@ -1080,10 +1127,9 @@ export default {
           try {
             await this.onDelete(data)
             done()
-            this.showMessage(true)
+            this.onSuccess('delete', data)
 
             this.correctPage()
-
             this.getList()
           } catch (error) {
             console.warn(error.message)
@@ -1165,19 +1211,6 @@ export default {
     iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
       return record[this.treeChildKey] && record[this.treeChildKey].length > 0
-    },
-    showMessage(isSuccess = true) {
-      if (isSuccess) {
-        this.$message({
-          type: 'success',
-          message: '操作成功'
-        })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '操作失败'
-        })
-      }
     }
   }
 }
