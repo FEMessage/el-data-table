@@ -95,14 +95,12 @@
           <template v-if="hasSelect">
             <el-data-table-column
               key="selection-key"
-              v-bind="columns[0]"
-              :align="columnsAlign"
+              v-bind="{align: columnsAlign, ...columns[0]}"
             />
 
             <el-data-table-column
               key="tree-ctrl"
-              v-bind="columns[1]"
-              :align="columnsAlign"
+              v-bind="{align: columnsAlign, ...columns[1]}"
             >
               <template slot-scope="scope">
                 <span
@@ -126,8 +124,7 @@
             <el-data-table-column
               v-for="col in columns.filter((c, i) => i !== 0 && i !== 1)"
               :key="col.prop"
-              v-bind="col"
-              :align="columnsAlign"
+              v-bind="{align: columnsAlign, ...col}"
             />
           </template>
 
@@ -136,8 +133,7 @@
             <!--展开这列, 丢失 el-data-table-column属性-->
             <el-data-table-column
               key="tree-ctrl"
-              v-bind="columns[0]"
-              :align="columnsAlign"
+              v-bind="{align: columnsAlign, ...columns[0]}"
             >
               <template slot-scope="scope">
                 <span
@@ -162,8 +158,7 @@
             <el-data-table-column
               v-for="col in columns.filter((c, i) => i !== 0)"
               :key="col.prop"
-              v-bind="col"
-              :align="columnsAlign"
+              v-bind="{align: columnsAlign, ...col}"
             />
           </template>
         </template>
@@ -173,8 +168,7 @@
           <el-data-table-column
             v-for="col in columns"
             :key="col.prop"
-            v-bind="col"
-            :align="columnsAlign"
+            v-bind="{align: columnsAlign, ...col}"
           />
         </template>
 
@@ -182,8 +176,7 @@
         <el-data-table-column
           v-if="hasOperation"
           label="操作"
-          v-bind="operationAttrs"
-          :align="columnsAlign"
+          v-bind="{align: columnsAlign, ...operationAttrs}"
         >
           <template slot-scope="scope">
             <self-loading-button
