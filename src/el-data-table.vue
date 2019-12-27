@@ -58,12 +58,8 @@
             v-if="hasSelect && hasDelete"
             type="danger"
             :size="buttonSize"
-            :disabled="
-              single
-                ? !selected.length || selected.length > 1
-                : !selected.length
-            "
-            @click="onDefaultDelete($event)"
+            :disabled="selected.length === 0 || (single && selected.length > 1)"
+            @click="onDefaultDelete(single ? selected[0] : selected)"
             >{{ deleteText }}</el-button
           >
           <el-button
@@ -225,7 +221,7 @@
               </self-loading-button>
             </template>
             <self-loading-button
-              v-if="!hasSelect && hasDelete && canDelete(scope.row)"
+              v-if="hasDelete && canDelete(scope.row)"
               type="danger"
               :size="operationButtonType === 'text' ? '' : buttonSize"
               :is-text="operationButtonType === 'text'"
@@ -493,7 +489,9 @@ export default {
       default: '删除'
     },
     /**
-     * 删除提示语，接受要删除的数据（单选时为 row，多选时为 row 的数组），返回字符串
+     * 删除提示语。接受要删除的数据（单个对象或数组）；返回字符串
+     * @param {object|object[]} 要删除的数据 - 单个对象或数组
+     * @return {string}
      */
     deleteMessage: {
       type: Function,
@@ -1110,12 +1108,7 @@ export default {
         done(false)
       }
     },
-    onDefaultDelete(row) {
-      const data = this.hasSelect
-        ? this.single
-          ? this.selected[0]
-          : this.selected
-        : row
+    onDefaultDelete(data) {
       this.$confirm(this.deleteMessage(data), '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
