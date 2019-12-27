@@ -5,15 +5,21 @@
       <slot name="no-data"></slot>
     </template>
     <template v-else>
-      <search-form
-        v-if="hasSearchForm"
+      <!-- 搜索字段 -->
+      <!-- @submit.native.prevent -->
+      <!-- 阻止表单提交的默认行为 -->
+      <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
+      <el-form-renderer
         ref="searchForm"
-        :search-form="_searchForm"
-        :can-search-collapse="canSearchCollapse"
-        :is-search-collapse="isSearchCollapse"
-        :located-slot-keys="searchLocatedSlotKeys"
+        :content="_searchForm"
+        inline
+        @submit.native.prevent
       >
-        <slot v-for="slot in searchLocatedSlotKeys" :slot="slot" :name="slot" />
+        <slot
+          v-for="slot in searchLocatedSlotKeys"
+          :slot="slot.replace('search:', 'id:')"
+          :name="slot"
+        />
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
         <el-form-item>
@@ -27,7 +33,7 @@
           >
           <el-button :size="buttonSize" @click="resetSearch">重置</el-button>
         </el-form-item>
-      </search-form>
+      </el-form-renderer>
 
       <el-form v-if="hasHeader">
         <el-form-item>
@@ -269,7 +275,6 @@ import _values from 'lodash.values'
 import _isEmpty from 'lodash.isempty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
-import SearchForm from './components/search-form.vue'
 import ElDataTableColumn from './components/el-data-table-column'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
@@ -293,7 +298,6 @@ export default {
   components: {
     SelfLoadingButton,
     TheDialog,
-    SearchForm,
     ElDataTableColumn
   },
 
@@ -800,8 +804,23 @@ export default {
     searchLocatedSlotKeys() {
       return getLocatedSlotKeys(this.$slots, 'search:')
     },
+    collapseForm() {
+      return this.searchForm.reduce((res, item) => {
+        const resolveItem = {}
+
+        if (item.collapsible !== false) {
+          const origHidden = item.hidden || (() => {})
+          resolveItem.hidden = () => {
+            return this.isSearchCollapse || origHidden.call()
+          }
+        }
+
+        res.push(Object.assign(item, resolveItem))
+        return res
+      }, [])
+    },
     _searchForm() {
-      return transformSearchImmediatelyItem(this.searchForm, this)
+      return transformSearchImmediatelyItem(this.collapseForm, this)
     }
   },
   watch: {
