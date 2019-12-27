@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.18.0](https://github.com/FEMessage/el-data-table/compare/v1.17.0...v1.18.0) (2019-12-27)
+
+
+### Bug Fixes
+
+* columns property align not work ([#272](https://github.com/FEMessage/el-data-table/issues/272)) ([befdd77](https://github.com/FEMessage/el-data-table/commit/befdd77))
+
+
+### Features
+
+* 新增 onSuccess 钩子 ([#269](https://github.com/FEMessage/el-data-table/issues/269)) ([0de48b9](https://github.com/FEMessage/el-data-table/commit/0de48b9))
+* 添加分页自定义 key ([#270](https://github.com/FEMessage/el-data-table/issues/270)) ([8a47d13](https://github.com/FEMessage/el-data-table/commit/8a47d13))
+
+
+
 ## [1.17.0](https://github.com/FEMessage/el-data-table/compare/v1.16.1...v1.17.0) (2019-12-24)
 
 
