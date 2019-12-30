@@ -17,6 +17,7 @@ export default {
       extraButtons: [
         {
           type: 'success',
+          disabled: row => row.date === '2016-05-04',
           text: row => row.status === 'normal' ? '禁用' : '启用',
           atClick(row) {
             alert(row.name)

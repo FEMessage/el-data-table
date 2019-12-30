@@ -137,7 +137,8 @@
       "avatar_url": "https://avatars1.githubusercontent.com/u/20502762?v=4",
       "profile": "http://www.ccc1996.cn",
       "contributions": [
-        "bug"
+        "bug",
+        "code"
       ]
     },
     {
@@ -174,9 +175,30 @@
       "avatar_url": "https://avatars0.githubusercontent.com/u/11766057?v=4",
       "profile": "https://github.com/zcqno1",
       "contributions": [
-        "bug"
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "gd4Ark",
+      "name": "4Ark",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/27952659?v=4",
+      "profile": "https://4ark.me",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    },
+    {
+      "login": "Htongbing",
+      "name": "Htongbing",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/36433396?v=4",
+      "profile": "https://github.com/Htongbing",
+      "contributions": [
+        "code"
       ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }

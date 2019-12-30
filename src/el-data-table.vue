@@ -64,7 +64,7 @@
                 : !selected.length
             "
             @click="onDefaultDelete($event)"
-            >删除</el-button
+            >{{ deleteText }}</el-button
           >
           <el-button
             v-if="canSearchCollapse"
@@ -93,9 +93,15 @@
         <template v-if="isTree">
           <!--有多选-->
           <template v-if="hasSelect">
-            <el-table-column key="selection-key" v-bind="columns[0]" />
+            <el-data-table-column
+              key="selection-key"
+              v-bind="{align: columnsAlign, ...columns[0]}"
+            />
 
-            <el-table-column key="tree-ctrl" v-bind="columns[1]">
+            <el-data-table-column
+              key="tree-ctrl"
+              v-bind="{align: columnsAlign, ...columns[1]}"
+            >
               <template slot-scope="scope">
                 <span
                   v-for="space in scope.row._level"
@@ -113,19 +119,22 @@
                 </span>
                 {{ scope.row[columns[1].prop] }}
               </template>
-            </el-table-column>
+            </el-data-table-column>
 
-            <el-table-column
+            <el-data-table-column
               v-for="col in columns.filter((c, i) => i !== 0 && i !== 1)"
               :key="col.prop"
-              v-bind="col"
+              v-bind="{align: columnsAlign, ...col}"
             />
           </template>
 
           <!--无选择-->
           <template v-else>
-            <!--展开这列, 丢失 el-table-column属性-->
-            <el-table-column key="tree-ctrl" v-bind="columns[0]">
+            <!--展开这列, 丢失 el-data-table-column属性-->
+            <el-data-table-column
+              key="tree-ctrl"
+              v-bind="{align: columnsAlign, ...columns[0]}"
+            >
               <template slot-scope="scope">
                 <span
                   v-for="space in scope.row._level"
@@ -144,30 +153,30 @@
                 </span>
                 {{ scope.row[columns[0].prop] }}
               </template>
-            </el-table-column>
+            </el-data-table-column>
 
-            <el-table-column
+            <el-data-table-column
               v-for="col in columns.filter((c, i) => i !== 0)"
               :key="col.prop"
-              v-bind="col"
+              v-bind="{align: columnsAlign, ...col}"
             />
           </template>
         </template>
 
         <!--非树-->
         <template v-else>
-          <el-table-column
+          <el-data-table-column
             v-for="col in columns"
             :key="col.prop"
-            v-bind="col"
+            v-bind="{align: columnsAlign, ...col}"
           />
         </template>
 
         <!--默认操作列-->
-        <el-table-column
+        <el-data-table-column
           v-if="hasOperation"
           label="操作"
-          v-bind="operationAttrs"
+          v-bind="{align: columnsAlign, ...operationAttrs}"
         >
           <template slot-scope="scope">
             <self-loading-button
@@ -206,6 +215,7 @@
                 :click="btn.atClick"
                 :params="scope.row"
                 :callback="getList"
+                :disabled="'disabled' in btn ? btn.disabled(scope.row) : false"
               >
                 {{
                   typeof btn.text === 'function'
@@ -221,10 +231,10 @@
               :is-text="operationButtonType === 'text'"
               @click="onDefaultDelete(scope.row)"
             >
-              删除
+              {{ deleteText }}
             </self-loading-button>
           </template>
-        </el-table-column>
+        </el-data-table-column>
 
         <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
         <slot />
@@ -269,23 +279,12 @@ import _isEmpty from 'lodash.isempty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
 import SearchForm from './components/search-form.vue'
+import ElDataTableColumn from './components/el-data-table-column'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
 import transformSearchImmediatelyItem from './utils/search-immediately-item'
 import isFalsey from './utils/is-falsey'
-
-// 默认返回的数据格式如下
-//          {
-//            "code":0,
-//            "msg":"ok",
-//            "payload":{
-//              "content":[], // 数组
-//              "totalElements":2, // 总数
-//            }
-//          }
-// 可根据实际情况传入 data/total 两个字段的路径, 分别对应上面数据结构中的 content/totalElements
-// 如果接口不分页, 则传hasPagination=false, 此时数据取 payload, 当然也可以自定义, 设置dataPath即可
 
 const defaultFirstPage = 1
 const noPaginationDataPath = 'payload'
@@ -295,7 +294,8 @@ export default {
   components: {
     SelfLoadingButton,
     TheDialog,
-    SearchForm
+    SearchForm,
+    ElDataTableColumn
   },
 
   props: {
@@ -334,6 +334,20 @@ export default {
     totalPath: {
       type: String,
       default: 'payload.totalElements'
+    },
+    /**
+     * 请求的时候如果接口需要的页码的查询 key 不同的时候可以指定
+     */
+    pageKey: {
+      type: String,
+      default: 'page'
+    },
+    /**
+     * 请求的时候如果接口需要的分页数量的查询 key 不同的时候可以指定
+     */
+    pageSizeKey: {
+      type: String,
+      default: 'size'
     },
     /**
      * 列属性设置, 详情见element-ui官网
@@ -392,7 +406,7 @@ export default {
     },
     /**
      * 操作列的自定义按钮, 渲染的是element-ui的button, 支持包括style在内的以下属性:
-     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示 }
+     * {type: '', text: '', atClick: row => Promise.resolve(), show: row => return true时显示, disabled: row => return true时禁用 }
      * 点击事件 row参数 表示当前行数据, 需要返回Promise, 默认点击后会刷新table, resolve(false) 则不刷新
      */
     extraButtons: {
@@ -462,6 +476,22 @@ export default {
       default: '查看'
     },
     /**
+     * 删除按钮文案
+     */
+    deleteText: {
+      type: String,
+      default: '删除'
+    },
+    /**
+     * 删除提示语，接受要删除的数据（单选时为 row，多选时为 row 的数组），返回字符串
+     */
+    deleteMessage: {
+      type: Function,
+      default() {
+        return `确认${this.deleteText}吗?`
+      }
+    },
+    /**
      * 某行数据是否可以删除, 返回true表示可以, 控制的是单选时单行的删除按钮
      */
     canDelete: {
@@ -477,7 +507,7 @@ export default {
     onNew: {
       type: Function,
       default(data) {
-        return this.$axios.post(this.url, data)
+        return this.$axios.post(this.url, data, this.axiosConfig)
       }
     },
     /**
@@ -487,7 +517,11 @@ export default {
     onEdit: {
       type: Function,
       default(data) {
-        return this.$axios.put(`${this.url}/${this.row[this.id]}`, data)
+        return this.$axios.put(
+          `${this.url}/${this.row[this.id]}`,
+          data,
+          this.axiosConfig
+        )
       }
     },
     /**
@@ -500,7 +534,19 @@ export default {
         const ids = Array.isArray(data)
           ? data.map(v => v[this.id]).join(',')
           : data[this.id]
-        return this.$axios.delete(this.url + '/' + ids)
+        return this.$axios.delete(this.url + '/' + ids, this.axiosConfig)
+      }
+    },
+    /**
+     * crud 操作成功后会调用的函数，默认是 this.$message.success('操作成功')
+     * 接受两个参数：
+     * type，操作的类型，可能的值有 new | edit | delete；
+     * data，操作的数据对象
+     */
+    onSuccess: {
+      type: Function,
+      default() {
+        return this.$message.success('操作成功')
       }
     },
     /**
@@ -726,12 +772,20 @@ export default {
     buttonSize: {
       type: String,
       default: 'small'
+    },
+    /**
+     * 设置axios的config参数
+     */
+    axiosConfig: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   data() {
     return {
       data: [],
-      hasSelect: this.columns.length && this.columns[0].type == 'selection',
       size: this.paginationSize || this.paginationSizes[0],
       page: defaultFirstPage,
       // https://github.com/ElemeFE/element/issues/1153
@@ -751,6 +805,17 @@ export default {
     }
   },
   computed: {
+    hasSelect() {
+      return this.columns.length && this.columns[0].type == 'selection'
+    },
+    columnsAlign() {
+      if (this.columns.some(col => col.columns && col.columns.length)) {
+        // 多级表头默认居中
+        return 'center'
+      } else {
+        return ''
+      }
+    },
     routerMode() {
       return this.$router ? this.$router.mode : 'hash'
     },
@@ -762,7 +827,8 @@ export default {
         this.hasNew ||
         (this.hasSelect && this.hasDelete) ||
         this.headerButtons.length ||
-        this.canSearchCollapse
+        this.canSearchCollapse ||
+        this.$scopedSlots.header
       )
     },
     _extraBody() {
@@ -803,12 +869,12 @@ export default {
     if (this.saveQuery) {
       const query = queryUtil.get(location.href)
       if (query) {
-        this.page = parseInt(query.page)
-        this.size = parseInt(query.size)
+        this.page = parseInt(query[this.pageKey])
+        this.size = parseInt(query[this.pageSizeKey])
         // 恢复查询条件，但对slot=search无效
         if (this.$refs.searchForm) {
-          delete query.page
-          delete query.size
+          delete query[this.pageKey]
+          delete query[this.pageSizeKey]
           this.$refs.searchForm.updateForm(query)
         }
       }
@@ -816,11 +882,11 @@ export default {
   },
   methods: {
     /**
-     * 手动刷新列表数据
+     * 手动刷新列表数据，选项的默认值为: { loading: true }
      * @public
-     * @param {boolean} saveQuery - 是否保存query到路由上
+     * @param {object} options 方法选项
      */
-    getList() {
+    getList({loading = true} = {}) {
       const {url} = this
 
       if (!url) {
@@ -837,11 +903,13 @@ export default {
       }
       Object.assign(query, this._extraQuery)
 
-      query.size = this.hasPagination ? this.size : this.noPaginationSize
+      query[this.pageSizeKey] = this.hasPagination
+        ? this.size
+        : this.noPaginationSize
 
       // 根据偏移值计算接口正确的页数
       const pageOffset = this.firstPage - defaultFirstPage
-      query.page = this.hasPagination ? this.page + pageOffset : -1
+      query[this.pageKey] = this.hasPagination ? this.page + pageOffset : -1
 
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
@@ -856,18 +924,18 @@ export default {
         queryUtil.stringify(query, '=', '&')
 
       // 请求开始
-      this.loading = true
+      this.loading = loading
 
       // 存储query记录, 便于后面恢复
       if (this.saveQuery) {
         // 存储的page是table的页码，无需偏移
-        query.page = this.page
+        query[this.pageKey] = this.page
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.replaceState(history.state, 'el-data-table search', newUrl)
       }
 
       this.$axios
-        .get(url + queryStr)
+        .get(url + queryStr, this.axiosConfig)
         .then(({data: resp}) => {
           let data = []
 
@@ -880,7 +948,8 @@ export default {
             this.total = data.length
           } else {
             data = _get(resp, this.dataPath) || []
-            this.total = _get(resp, this.totalPath)
+            // 获取不到值得时候返回 undefined, el-pagination 接收一个 null 或者 undefined 会导致没数据但是下一页可点击
+            this.total = _get(resp, this.totalPath) || 0
           }
 
           this.data = data
@@ -914,6 +983,7 @@ export default {
            * @event error
            */
           this.$emit('error', err)
+          this.total = 0
           this.loading = false
         })
     },
@@ -1022,7 +1092,7 @@ export default {
           await this.onEdit(data, this.row)
         }
         this.getList()
-        this.showMessage(true)
+        this.onSuccess(isNew ? 'new' : 'edit', data)
         done()
       } catch (e) {
         // 出错则不关闭dialog
@@ -1030,7 +1100,12 @@ export default {
       }
     },
     onDefaultDelete(row) {
-      this.$confirm('确认删除吗', '提示', {
+      const data = this.hasSelect
+        ? this.single
+          ? this.selected[0]
+          : this.selected
+        : row
+      this.$confirm(this.deleteMessage(data), '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
         beforeClose: async (action, instance, done) => {
@@ -1039,28 +1114,11 @@ export default {
           instance.confirmButtonLoading = true
 
           try {
-            if (this.hasSelect) {
-              await this.onDelete(
-                this.single ? this.selected[0] : this.selected
-              )
-            } else {
-              await this.onDelete(row)
-            }
+            await this.onDelete(data)
             done()
-            this.showMessage(true)
-            let deleteCount = 1
-            if (this.hasSelect) {
-              deleteCount = this.selected.length
-              this.clearSelection()
-            }
-            const remain = this.data.length - deleteCount
-            const lastPage = Math.ceil(this.total / this.size)
-            if (
-              remain === 0 &&
-              this.page === lastPage &&
-              this.page > defaultFirstPage
-            )
-              this.page--
+            this.onSuccess('delete', data)
+
+            this.correctPage()
             this.getList()
           } catch (error) {
             console.warn(error.message)
@@ -1073,6 +1131,27 @@ export default {
         /*取消*/
       })
     },
+
+    /**
+     * 判断是否返回上一页
+     * @public
+     */
+    correctPage() {
+      let deleteCount = 1
+      if (this.hasSelect) {
+        deleteCount = this.selected.length
+        this.clearSelection()
+      }
+      const remain = this.data.length - deleteCount
+      const lastPage = Math.ceil(this.total / this.size)
+      if (
+        remain === 0 &&
+        this.page === lastPage &&
+        this.page > defaultFirstPage
+      )
+        this.page--
+    },
+
     // 树形table相关
     // https://github.com/PanJiaChen/vue-element-admin/tree/master/src/components/TreeTable
     tree2Array(data, expandAll, parent = null, level = null) {
@@ -1121,19 +1200,6 @@ export default {
     iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
       return record[this.treeChildKey] && record[this.treeChildKey].length > 0
-    },
-    showMessage(isSuccess = true) {
-      if (isSuccess) {
-        this.$message({
-          type: 'success',
-          message: '操作成功'
-        })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '操作失败'
-        })
-      }
     }
   }
 }

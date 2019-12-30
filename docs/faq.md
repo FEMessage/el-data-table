@@ -19,6 +19,49 @@ export default {
 this.$refs.dataTable.getList()
 ```
 
+## 自己实现 delete 操作，同时实现删除最后一页时，返回正确的最后一页
+
+### 场景
+1. 因为业务需求，data-table 默认的删除确认框不满足需求
+2. 自己在外部使用 extra-buttons 实现 delete 操作
+3. 遇到了[最后一页删到空，页码出现错误](https://github.com/FEMessage/el-data-table/issues/223)的问题
+
+### 解决方案
+1. 自己实现删除操作
+2. 调用 correctPage 判断是否返回正确的最后一页
+3. 调用 getList 刷新列表
+```html
+<template>
+  <el-data-table ref="dataTable" :extraButtons="extraButtons">
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      extraButtons: [
+        {
+          type: 'danger',
+          text: '删除',
+          atClick(row) {
+            this.$axios.delete('delete this row', {
+              id: row.id
+            }).then(() => {
+              // 判断删除后是否返回正确的最后一页
+              this.$refs.dataTable.correctPage()
+
+              // 删除后刷新列表
+              this.$refs.dataTable.getList()
+            })
+          }
+        }
+      ]
+    }
+  }
+}
+</script>
+```
+
 ## 查询后刷新
 
 ### 场景
