@@ -64,12 +64,8 @@
             v-if="hasSelect && hasDelete"
             type="danger"
             :size="buttonSize"
-            :disabled="
-              single
-                ? !selected.length || selected.length > 1
-                : !selected.length
-            "
-            @click="onDefaultDelete($event)"
+            :disabled="selected.length === 0 || (single && selected.length > 1)"
+            @click="onDefaultDelete(single ? selected[0] : selected)"
             >{{ deleteText }}</el-button
           >
           <el-button
@@ -497,7 +493,9 @@ export default {
       default: '删除'
     },
     /**
-     * 删除提示语，接受要删除的数据（单选时为 row，多选时为 row 的数组），返回字符串
+     * 删除提示语。接受要删除的数据（单个对象或数组）；返回字符串
+     * @param {object|object[]} 要删除的数据 - 单个对象或数组
+     * @return {string}
      */
     deleteMessage: {
       type: Function,
@@ -1129,12 +1127,16 @@ export default {
         done(false)
       }
     },
-    onDefaultDelete(row) {
-      const data = this.hasSelect
-        ? this.single
-          ? this.selected[0]
-          : this.selected
-        : row
+    /**
+     * 完整的删除方法，流程如下：
+     * 1. 弹出二次确认弹窗（使用 deleteMessage）；
+     * 2. 执行 onDelete，过程中确认按钮保持 loading；
+     * 3. 失败则报错误信息、弹窗不关闭；
+     * 4. 成功则报成功信息、弹窗关闭、重新请求数据、并校正页码（详见 correctPage）；
+     * @public
+     * @param {object|object[]} - 要删除的数据对象或数组
+     */
+    onDefaultDelete(data) {
       this.$confirm(this.deleteMessage(data), '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
