@@ -1108,6 +1108,15 @@ export default {
         done(false)
       }
     },
+    /**
+     * 完整的删除方法，流程如下：
+     * 1. 弹出二次确认弹窗（使用 deleteMessage）；
+     * 2. 执行 onDelete，过程中确认按钮保持 loading；
+     * 3. 失败则报错误信息、弹窗不关闭；
+     * 4. 成功则报成功信息、弹窗关闭、重新请求数据、并校正页码（详见 correctPage）；
+     * @public
+     * @param {object|object[]} - 要删除的数据对象或数组
+     */
     onDefaultDelete(data) {
       this.$confirm(this.deleteMessage(data), '提示', {
         type: 'warning',
