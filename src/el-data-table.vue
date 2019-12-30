@@ -221,7 +221,7 @@
               </self-loading-button>
             </template>
             <self-loading-button
-              v-if="hasDelete && canDelete(scope.row)"
+              v-if="!hasSelect && hasDelete && canDelete(scope.row)"
               type="danger"
               :size="operationButtonType === 'text' ? '' : buttonSize"
               :is-text="operationButtonType === 'text'"
