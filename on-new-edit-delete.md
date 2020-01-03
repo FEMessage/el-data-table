@@ -3,14 +3,13 @@
 ```vue
 <template>
   <div>
-    <p>默认情况下:
-    </p>
-      <ul>
-    <li>新增是 POST url body 的格式</li>
-    <li>修改是 PUT url/id body 的格式</li>
-    <li>删除多个的请求地址是 DELETE url/id,id,id 的形式</li>
+    <p>默认情况下:</p>
+    <ul>
+      <li>新增是 POST url body 的格式</li>
+      <li>修改是 PUT url/id body 的格式</li>
+      <li>删除多个的请求地址是 DELETE url/id,id,id 的形式</li>
+    </ul>
     <p>当不满足需求时, 可通过 onNew、onEdit、onDelete 方法定制</p>
-  </ul>
     <el-data-table
       v-bind="$data"
       :onNew="onNew"
