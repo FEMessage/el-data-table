@@ -5,15 +5,21 @@
       <slot name="no-data"></slot>
     </template>
     <template v-else>
-      <search-form
-        v-if="hasSearchForm"
+      <!-- 搜索字段 -->
+      <!-- @submit.native.prevent -->
+      <!-- 阻止表单提交的默认行为 -->
+      <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
+      <el-form-renderer
         ref="searchForm"
-        :search-form="_searchForm"
-        :can-search-collapse="canSearchCollapse"
-        :is-search-collapse="isSearchCollapse"
-        :located-slot-keys="searchLocatedSlotKeys"
+        :content="_searchForm"
+        inline
+        @submit.native.prevent
       >
-        <slot v-for="slot in searchLocatedSlotKeys" :slot="slot" :name="slot" />
+        <slot
+          v-for="slot in searchLocatedSlotKeys"
+          :slot="slot.replace('search:', 'id:')"
+          :name="slot"
+        />
         <!--@slot 额外的搜索内容, 当searchForm不满足需求时可以使用-->
         <slot name="search"></slot>
         <el-form-item>
@@ -27,7 +33,7 @@
           >
           <el-button :size="buttonSize" @click="resetSearch">重置</el-button>
         </el-form-item>
-      </search-form>
+      </el-form-renderer>
 
       <el-form v-if="hasHeader">
         <el-form-item>
@@ -58,12 +64,8 @@
             v-if="hasSelect && hasDelete"
             type="danger"
             :size="buttonSize"
-            :disabled="
-              single
-                ? !selected.length || selected.length > 1
-                : !selected.length
-            "
-            @click="onDefaultDelete($event)"
+            :disabled="selected.length === 0 || (single && selected.length > 1)"
+            @click="onDefaultDelete(single ? selected[0] : selected)"
             >{{ deleteText }}</el-button
           >
           <el-button
@@ -278,7 +280,6 @@ import _values from 'lodash.values'
 import _isEmpty from 'lodash.isempty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
-import SearchForm from './components/search-form.vue'
 import ElDataTableColumn from './components/el-data-table-column'
 import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
@@ -287,22 +288,13 @@ import transformSearchImmediatelyItem from './utils/search-immediately-item'
 import isFalsey from './utils/is-falsey'
 
 const defaultFirstPage = 1
-
-const dataPath = 'payload.content'
-const totalPath = 'payload.totalElements'
 const noPaginationDataPath = 'payload'
-
-const treeChildKey = 'children'
-const treeParentKey = 'parentId'
-const treeParentValue = 'id'
-const defaultId = 'id'
 
 export default {
   name: 'ElDataTable',
   components: {
     SelfLoadingButton,
     TheDialog,
-    SearchForm,
     ElDataTableColumn
   },
 
@@ -320,7 +312,7 @@ export default {
      */
     id: {
       type: String,
-      default: defaultId
+      default: 'id'
     },
     /**
      * 分页请求的第一页的值(有的接口0是第一页)
@@ -334,14 +326,14 @@ export default {
      */
     dataPath: {
       type: String,
-      default: dataPath
+      default: 'payload.content'
     },
     /**
      * 分页数据的总数在接口返回的数据中的路径, 嵌套对象使用.表示即可
      */
     totalPath: {
       type: String,
-      default: totalPath
+      default: 'payload.totalElements'
     },
     /**
      * 请求的时候如果接口需要的页码的查询 key 不同的时候可以指定
@@ -389,9 +381,7 @@ export default {
      */
     beforeSearch: {
       type: Function,
-      default() {
-        return Promise.resolve()
-      }
+      default() {}
     },
     /**
      * 单选, 适用场景: 不可以批量删除
@@ -493,7 +483,9 @@ export default {
       default: '删除'
     },
     /**
-     * 删除提示语，接受要删除的数据（单选时为 row，多选时为 row 的数组），返回字符串
+     * 删除提示语。接受要删除的数据（单个对象或数组）；返回字符串
+     * @param {object|object[]} 要删除的数据 - 单个对象或数组
+     * @return {string}
      */
     deleteMessage: {
       type: Function,
@@ -516,7 +508,9 @@ export default {
      */
     onNew: {
       type: Function,
-      default: undefined
+      default(data) {
+        return this.$axios.post(this.url, data, this.axiosConfig)
+      }
     },
     /**
      * 点击修改按钮时的方法, 当默认修改方法不满足需求时使用, 需要返回promise
@@ -524,7 +518,13 @@ export default {
      */
     onEdit: {
       type: Function,
-      default: undefined
+      default(data) {
+        return this.$axios.put(
+          `${this.url}/${this.row[this.id]}`,
+          data,
+          this.axiosConfig
+        )
+      }
     },
     /**
      * 点击删除按钮时的方法, 当默认删除方法不满足需求时使用, 需要返回promise
@@ -602,14 +602,14 @@ export default {
      */
     treeChildKey: {
       type: String,
-      default: treeChildKey
+      default: 'children'
     },
     /**
      * 树形结构相关: 父节点的字段名
      */
     treeParentKey: {
       type: String,
-      default: treeParentKey
+      default: 'parentId'
     },
     /**
      * 树形结构相关: 父节点字段值的来源字段。
@@ -617,7 +617,7 @@ export default {
      */
     treeParentValue: {
       type: String,
-      default: treeParentValue
+      default: 'id'
     },
     /**
      * 树形结构相关: 是否展开所有节点
@@ -845,8 +845,23 @@ export default {
     searchLocatedSlotKeys() {
       return getLocatedSlotKeys(this.$slots, 'search:')
     },
+    collapseForm() {
+      return this.searchForm.map(item => {
+        if ('collapsible' in item && !item.collapsible) {
+          return item
+        }
+
+        const itemHidden = item.hidden || (() => false)
+        return {
+          ...item,
+          hidden: data => {
+            return this.isSearchCollapse || itemHidden(data)
+          }
+        }
+      })
+    },
     _searchForm() {
-      return transformSearchImmediatelyItem(this.searchForm, this)
+      return transformSearchImmediatelyItem(this.collapseForm, this)
     }
   },
   watch: {
@@ -989,19 +1004,17 @@ export default {
           this.loading = false
         })
     },
-    search() {
-      this.$refs.searchForm.validate(valid => {
-        if (!valid) return
+    async search() {
+      const valid = await new Promise(r => this.$refs.searchForm.validate(r))
+      if (!valid) return
 
-        this.beforeSearch()
-          .then(() => {
-            this.page = defaultFirstPage
-            this.getList()
-          })
-          .catch(err => {
-            this.$emit('error', err)
-          })
-      })
+      try {
+        await this.beforeSearch()
+        this.page = defaultFirstPage
+        this.getList()
+      } catch (err) {
+        this.$emit('error', err)
+      }
     },
     /**
      * 重置查询，相当于点击「重置」按钮
@@ -1090,17 +1103,10 @@ export default {
 
       try {
         await this.beforeConfirm(data, isNew)
-        const customMethod = isNew ? 'onNew' : 'onEdit'
-
-        if (this[customMethod]) {
-          await this[customMethod](data, this.row)
+        if (isNew) {
+          await this.onNew(data, this.row)
         } else {
-          // 默认新增/修改逻辑
-          const [method, url] = isNew
-            ? ['post', this.url]
-            : ['put', `${this.url}/${this.row[this.id]}`]
-
-          await this.$axios[method](url, data, this.axiosConfig)
+          await this.onEdit(data, this.row)
         }
         this.getList()
         this.onSuccess(isNew ? 'new' : 'edit', data)
@@ -1110,12 +1116,16 @@ export default {
         done(false)
       }
     },
-    onDefaultDelete(row) {
-      const data = this.hasSelect
-        ? this.single
-          ? this.selected[0]
-          : this.selected
-        : row
+    /**
+     * 完整的删除方法，流程如下：
+     * 1. 弹出二次确认弹窗（使用 deleteMessage）；
+     * 2. 执行 onDelete，过程中确认按钮保持 loading；
+     * 3. 失败则报错误信息、弹窗不关闭；
+     * 4. 成功则报成功信息、弹窗关闭、重新请求数据、并校正页码（详见 correctPage）；
+     * @public
+     * @param {object|object[]} - 要删除的数据对象或数组
+     */
+    onDefaultDelete(data) {
       this.$confirm(this.deleteMessage(data), '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
