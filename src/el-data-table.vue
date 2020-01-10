@@ -167,6 +167,18 @@
 
         <!--非树-->
         <template v-else>
+          <template v-if="hasRadioSelect && !hasSelect">
+            <el-table-column label="" width="45">
+              <template slot-scope="scope">
+                <el-radio
+                  v-model="radioVal"
+                  :label="scope.row"
+                  @change="radioSelectBtn(scope.$index, scope.row)"
+                  ><i></i
+                ></el-radio>
+              </template>
+            </el-table-column>
+          </template>
           <el-data-table-column
             v-for="col in columns"
             :key="col.prop"
@@ -783,11 +795,19 @@ export default {
       default() {
         return {}
       }
+    },
+    /**
+     * 是否显示单选框
+     */
+    hasRadioSelect: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       data: [],
+      radioVal: '', // 单选值
       size: this.paginationSize || this.paginationSizes[0],
       page: defaultFirstPage,
       // https://github.com/ElemeFE/element/issues/1153
@@ -991,7 +1011,12 @@ export default {
 
           // 开启persistSelection时，需要同步selected状态到el-table中
           this.$nextTick(() => {
-            this.selectStrategy.updateElTableSelection()
+            if (this.hasRadioSelect && !this.persistSelection) {
+              // why？clearSelection只针对Checkbox，故这么写
+              this.selected = []
+            }
+            this.persistSelection &&
+              this.selectStrategy.updateElTableSelection()
           })
         })
         .catch(err => {
@@ -1221,6 +1246,10 @@ export default {
     iconShow(index, record) {
       //      return index ===0 && record.children && record.children.length > 0;
       return record[this.treeChildKey] && record[this.treeChildKey].length > 0
+    },
+    radioSelectBtn(index, data) {
+      this.selected.splice(0)
+      this.selected.push(data)
     }
   }
 }
