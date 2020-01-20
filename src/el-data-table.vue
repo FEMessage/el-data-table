@@ -89,7 +89,7 @@
         :row-class-name="showRow"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
-        @select-all="selectStrategy.onSelectAll"
+        @select-all="selectStrategy.onSelectAll($event, selectable)"
       >
         <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
         <template v-if="isTree">
@@ -810,6 +810,14 @@ export default {
     hasSelect() {
       return this.columns.length && this.columns[0].type == 'selection'
     },
+
+    selectable() {
+      if (this.hasSelect && this.columns[0].selectable) {
+        return this.columns[0].selectable
+      }
+      return () => true
+    },
+
     columnsAlign() {
       if (this.columns.some(col => col.columns && col.columns.length)) {
         // 多级表头默认居中
