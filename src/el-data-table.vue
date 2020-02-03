@@ -68,16 +68,21 @@
             @click="onDefaultDelete(single ? selected[0] : selected)"
             >{{ deleteText }}</el-button
           >
-          <el-button
-            v-if="canSearchCollapse"
-            type="default"
-            :size="buttonSize"
-            :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
-            @click="isSearchCollapse = !isSearchCollapse"
-            >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button
-          >
+
           <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，作用域传入selected -->
           <slot name="header" :selected="selected" />
+
+          <!--@collapse 自定义折叠按钮, 默认的样式文案不满足时可以使用，scope 默认返回当前折叠状态 Boolean -->
+          <slot name="collapse" :isSearchCollapse="isSearchCollapse">
+            <el-button
+              v-if="canSearchCollapse"
+              type="default"
+              :size="buttonSize"
+              :icon="`el-icon-arrow-${isSearchCollapse ? 'down' : 'up'}`"
+              @click="isSearchCollapse = !isSearchCollapse"
+              >{{ isSearchCollapse ? '展开' : '折叠' }}搜索</el-button
+            >
+          </slot>
         </el-form-item>
       </el-form>
 
@@ -89,7 +94,7 @@
         :row-class-name="showRow"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
-        @select-all="selectStrategy.onSelectAll"
+        @select-all="selectStrategy.onSelectAll($event, selectable)"
       >
         <!--TODO 不用jsx写, 感觉template逻辑有点不清晰了-->
         <template v-if="isTree">
@@ -810,6 +815,14 @@ export default {
     hasSelect() {
       return this.columns.length && this.columns[0].type == 'selection'
     },
+
+    selectable() {
+      if (this.hasSelect && this.columns[0].selectable) {
+        return this.columns[0].selectable
+      }
+      return () => true
+    },
+
     columnsAlign() {
       if (this.columns.some(col => col.columns && col.columns.length)) {
         // 多级表头默认居中
