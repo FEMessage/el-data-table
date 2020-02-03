@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.18.2](https://github.com/FEMessage/el-data-table/compare/v1.18.1...v1.18.2) (2020-02-03)
+
+
+### Bug Fixes
+
+* select all 应该过滤掉 selectable 为 false 的行 ([#279](https://github.com/FEMessage/el-data-table/issues/279)) ([b9d4c5c](https://github.com/FEMessage/el-data-table/commit/b9d4c5c))
+* slot header 应该在折叠按钮前面 ([#280](https://github.com/FEMessage/el-data-table/issues/280)) ([5b319b7](https://github.com/FEMessage/el-data-table/commit/5b319b7))
+
+
+
 ### [1.18.1](https://github.com/FEMessage/el-data-table/compare/v1.18.0...v1.18.1) (2020-01-03)
 
 
