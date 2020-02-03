@@ -68,9 +68,13 @@ class StrategyPersistSelection extends StrategyAbstract {
   /**
    * 用户切换当前页的多选
    */
-  onSelectAll(selection) {
+  onSelectAll(selection, selectable = () => true) {
     const isSelected = !!selection.length
-    this.elDataTable.data.forEach(r => this.toggleRowSelection(r, isSelected))
+    this.elDataTable.data.forEach(r => {
+      if (selectable(r)) {
+        this.toggleRowSelection(r, isSelected)
+      }
+    })
   }
   /**
    * toggleRowSelection和clearSelection管理elDataTable的selected数组
