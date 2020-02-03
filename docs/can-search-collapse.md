@@ -2,7 +2,9 @@ search表单可以折叠、展开
 
 ```vue
 <template>
-  <el-data-table v-bind="$data" />
+  <el-data-table v-bind="$data">
+    <el-button slot="header">slot header button</el-button>
+  </el-data-table>
 </template>
 <script>
 export default {
