@@ -91,7 +91,7 @@
         v-loading="loading"
         v-bind="tableAttrs"
         :data="data"
-        :row-class-name="showRow"
+        :row-class-name="rowClassName"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
         @select-all="selectStrategy.onSelectAll($event, selectable)"
@@ -1219,6 +1219,13 @@ export default {
         }
       })
       return tmp
+    },
+    rowClassName(...args) {
+      let rcn =
+        this.tableAttrs.rowClassName || this.tableAttrs['row-class-name'] || ''
+      if (typeof rcn === 'function') rcn = rcn(...args)
+      if (this.isTree) rcn += ' ' + this.showRow(...args)
+      return rcn
     },
     showRow({row}) {
       const show = !row.parent || (row.parent._expanded && row.parent._show)
