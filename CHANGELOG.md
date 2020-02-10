@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.18.3](https://github.com/FEMessage/el-data-table/compare/v1.18.2...v1.18.3) (2020-02-10)
+
+
+### Bug Fixes
+
+* tableAttrs 无法修改 rowClassName 的问题 ([#284](https://github.com/FEMessage/el-data-table/issues/284)) ([1ab51ed](https://github.com/FEMessage/el-data-table/commit/1ab51ed))
+
+
+
 ### [1.18.2](https://github.com/FEMessage/el-data-table/compare/v1.18.1...v1.18.2) (2020-02-03)
 
 
