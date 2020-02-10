@@ -33,8 +33,17 @@ export default {
       ],
       hasPagination: false,
       isTree: true,
+      tableAttrs: {
+        rowClassName({rowIndex}) {
+          return rowIndex === 2 ? 'is-tree-red' : ''
+        }
+      },
       expandAll: true,
     }
+  },
+  created() {
+    // FYI: styleguide 里面用不了 style block
+    document.querySelector('style').sheet.insertRule('.is-tree-red {color: red}')
   }
 }
 </script>
