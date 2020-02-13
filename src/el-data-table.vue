@@ -10,6 +10,7 @@
       <!-- 阻止表单提交的默认行为 -->
       <!-- https://www.w3.org/MarkUp/html-spec/html-spec_8.html#SEC8.2 -->
       <el-form-renderer
+        v-if="hasSearchForm"
         ref="searchForm"
         :content="_searchForm"
         inline
