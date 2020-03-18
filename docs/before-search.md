@@ -22,8 +22,9 @@ export default {
           el: {placeholder: '请输入用户名'}
         }
       ],
-      beforeSearch: () => {
+      beforeSearch: (searchData) => {
         this.url = 'https://mockapi.eolinker.com/IeZWjzy87c204a1f7030b2a17b00f3776ce0a07a5030a1b/el-data-table?q=basic'
+        console.log(searchData)
         return Promise.resolve()
       }
     }
