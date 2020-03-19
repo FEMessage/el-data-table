@@ -383,7 +383,7 @@ export default {
       default: false
     },
     /**
-     * 点击查询按钮, 查询前执行的函数, 需要返回Promise
+     * 点击查询按钮, 查询前执行的函数，参数form表单数据，需要返回Promise
      */
     beforeSearch: {
       type: Function,
@@ -1019,11 +1019,12 @@ export default {
         })
     },
     async search() {
-      const valid = await new Promise(r => this.$refs.searchForm.validate(r))
+      const form = this.$refs.searchForm
+      const valid = await new Promise(r => form.validate(r))
       if (!valid) return
 
       try {
-        await this.beforeSearch()
+        await this.beforeSearch(form.getFormValue())
         this.page = defaultFirstPage
         this.getList()
       } catch (err) {
