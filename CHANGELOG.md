@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.19.0](https://github.com/FEMessage/el-data-table/compare/v1.18.4...v1.19.0) (2020-03-19)
+
+
+### Features
+
+* beforeSearch增加表单数据参数 ([#291](https://github.com/FEMessage/el-data-table/issues/291)) ([7557c0e](https://github.com/FEMessage/el-data-table/commit/7557c0e))
+
+
+
 ### [1.18.4](https://github.com/FEMessage/el-data-table/compare/v1.18.3...v1.18.4) (2020-02-13)
 
 
