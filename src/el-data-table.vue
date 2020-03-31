@@ -959,7 +959,6 @@ export default {
         
       // 提供自定义方法，可以转换query
         query = this.transformQuery(query)
-      }
 
       const queryStr =
         (url.indexOf('?') > -1 ? '&' : '?') +
