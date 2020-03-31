@@ -370,7 +370,7 @@ export default {
      */
     transformQuery: {
       type: Function,
-      default: null
+      default: v => v
     },
     /**
      * 查询字段渲染, 配置参考el-form-renderer
