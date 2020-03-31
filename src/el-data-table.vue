@@ -958,7 +958,6 @@ export default {
         }, {})
         
       // 提供自定义方法，可以转换query
-      if (this.transformQuery) {
         query = this.transformQuery(query)
       }
 
