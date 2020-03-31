@@ -366,6 +366,13 @@ export default {
       }
     },
     /**
+     * 请求之前可以转换query的内容, 提供一种方式可以让自定义query, 如有的分页用的是offset机制, offset = page * size, limit = size
+     */
+    transformQuery: {
+      type: Function,
+      default: null
+    },
+    /**
      * 查询字段渲染, 配置参考el-form-renderer
      * @link https://femessage.github.io/el-form-renderer/
      */
@@ -949,6 +956,11 @@ export default {
           obj[k] = query[k].toString().trim()
           return obj
         }, {})
+        
+      // 提供自定义方法，可以转换query
+      if (this.transformQuery) {
+        query = this.transformQuery(query)
+      }
 
       const queryStr =
         (url.indexOf('?') > -1 ? '&' : '?') +
