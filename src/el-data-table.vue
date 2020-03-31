@@ -558,6 +558,18 @@ export default {
       }
     },
     /**
+     * getList 成功后会调用的函数，用于对返回的数据需要自定义一些派生的属性
+     * 如果传了这个钩子，必须要有返回值
+     * 接受一个参数：
+     * resp，请求返回的结果
+     */
+    onGetListSuccess: {
+      type: Function,
+      default() {
+        return undefined
+      }
+    },
+    /**
      * 是否分页。如果不分页，则请求传参page=-1
      */
     hasPagination: {
@@ -969,6 +981,8 @@ export default {
         .get(url + queryStr, this.axiosConfig)
         .then(({data: resp}) => {
           let data = []
+
+          resp = this.onGetListSuccess(resp) || resp
 
           // 不分页
           if (!this.hasPagination) {
