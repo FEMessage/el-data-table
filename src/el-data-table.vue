@@ -981,6 +981,12 @@ export default {
             data = _get(resp, this.dataPath) || []
             // 获取不到值得时候返回 undefined, el-pagination 接收一个 null 或者 undefined 会导致没数据但是下一页可点击
             this.total = _get(resp, this.totalPath) || 0
+            const lastPage = Math.ceil(this.total / this.size)
+            if (lastPage < this.page) {
+              this.page = lastPage
+              this.getList(...arguments)
+              return
+            }
           }
 
           this.data = data
