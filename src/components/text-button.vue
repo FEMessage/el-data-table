@@ -2,9 +2,9 @@
   <el-button
     :type="$attrs.type || 'primary'"
     v-bind="$attrs"
-    v-on="$listeners"
     plain
     :style="style"
+    v-on="$listeners"
   >
     <slot></slot>
   </el-button>
@@ -21,11 +21,24 @@ export default {
       }
     }
   },
+  watch: {
+    '$attrs.disabled': 'fixHoverColor'
+  },
   mounted() {
-    // 将初始color写到style里，覆盖element的hover效果
-    this.style = Object.assign({}, this.style, {
-      color: getComputedStyle(this.$el).color
-    })
+    this.fixHoverColor()
+  },
+  methods: {
+    // 将 color 写到 style 里是为了覆盖 hover 效果
+    async fixHoverColor() {
+      const {style} = this
+      delete style.color
+      this.style = {...style}
+      await new Promise(r => setTimeout(r, 300))
+      this.style = {
+        ...style,
+        color: getComputedStyle(this.$el).color
+      }
+    }
   }
 }
 </script>
