@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.1](https://github.com/FEMessage/el-data-table/compare/v1.19.0...v1.19.1) (2020-04-10)
+
+
+### Bug Fixes
+
+* 修复 extraButtons 未正确显示 disabled 状态的问题 ([#298](https://github.com/FEMessage/el-data-table/issues/298)) ([c8b879f](https://github.com/FEMessage/el-data-table/commit/c8b879f))
+* 超出页码的请求自动跳回最后一页 ([#296](https://github.com/FEMessage/el-data-table/issues/296)) ([d4f0689](https://github.com/FEMessage/el-data-table/commit/d4f0689))
+
+
+
 ## [1.19.0](https://github.com/FEMessage/el-data-table/compare/v1.18.4...v1.19.0) (2020-03-19)
 
 
