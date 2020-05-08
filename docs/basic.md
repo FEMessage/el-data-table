@@ -36,6 +36,30 @@ export default {
           label: '姓名',
           id: 'name',
           type: 'input'
+        },
+        {
+          el: {placeholder: '请输入',multiple:true},
+          label: '区域',
+          id: 'area',
+          type: 'select',
+          options:[
+            {
+              label:'东区',
+              value:'east',
+            },
+            {
+              label:'南区',
+              value:'south',
+            }
+            ,{
+              label:'西区',
+              value:'west',
+            },
+            {
+              label:'北区',
+              value:'north',
+            }
+          ],
         }
       ],
       hasView: true

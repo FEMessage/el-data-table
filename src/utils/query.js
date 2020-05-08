@@ -19,7 +19,7 @@ export function stringify(
   delimiter = paramSeparator
 ) {
   return Object.keys(query)
-    .map(k => `${k}${equal}${encodeURIComponent(query[k])}`)
+    .map(k => `${k}${equal}${encodeURIComponent(JSON.stringify(query[k]))}`)
     .join(delimiter)
 }
 
@@ -42,7 +42,7 @@ export function parse(
     .split(delimiter)
     .map(param => param.split(equal))
     .reduce((obj, [k, v]) => {
-      obj[k] = decodeURIComponent(v)
+      obj[k] = JSON.parse(decodeURIComponent(v))
       return obj
     }, {})
 }
