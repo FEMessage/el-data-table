@@ -946,7 +946,7 @@ export default {
       query = Object.keys(query)
         .filter(k => !isFalsey(query[k]))
         .reduce((obj, k) => {
-          obj[k] = query[k].toString().trim()
+          obj[k] = query[k]
           return obj
         }, {})
 
