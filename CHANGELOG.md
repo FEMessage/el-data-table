@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.2](https://github.com/FEMessage/el-data-table/compare/v1.19.1...v1.19.2) (2020-05-08)
+
+
+### Bug Fixes
+
+* 查询值为数组时的持久化问题 ([#300](https://github.com/FEMessage/el-data-table/issues/300)) ([0158c32](https://github.com/FEMessage/el-data-table/commit/0158c32))
+
+
+
 ### [1.19.1](https://github.com/FEMessage/el-data-table/compare/v1.19.0...v1.19.1) (2020-04-10)
 
 
