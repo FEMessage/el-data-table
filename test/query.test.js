@@ -12,7 +12,9 @@ import {
 const query = {
   obj: {a: '1', b: 'b&c'},
   str(equal = valueSeparator, delimiter = paramSeparator) {
-    return `a${equal}1${delimiter}b${equal}${encodeURIComponent('b&c')}`
+    return `a${equal}${encodeURIComponent(
+      JSON.stringify('1')
+    )}${delimiter}b${equal}${encodeURIComponent(JSON.stringify('b&c'))}`
   }
 }
 const routerModes = ['history', 'hash']
