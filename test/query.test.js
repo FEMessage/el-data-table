@@ -1,8 +1,10 @@
 import {
   valueSeparator,
   paramSeparator,
+  paramInnerSeparator,
   queryFlag,
   stringify,
+  URLStringify,
   parse,
   set,
   get,
@@ -10,13 +12,32 @@ import {
 } from '../src/utils/query'
 
 const query = {
-  obj: {a: '1', b: 'b&c'},
-  str(equal = valueSeparator, delimiter = paramSeparator) {
-    return `a${equal}${encodeURIComponent(
-      JSON.stringify('1')
-    )}${delimiter}b${equal}${encodeURIComponent(JSON.stringify('b&c'))}`
+  obj: {a: '1', b: 'b&c', d: ['1', '2', '3']},
+  str(
+    equal = valueSeparator,
+    delimiter = paramSeparator,
+    arrayDelimiter = paramInnerSeparator
+  ) {
+    return [
+      `a${equal}${encodeURIComponent(JSON.stringify('1'))}`,
+      `b${equal}${encodeURIComponent(JSON.stringify('b&c'))}`,
+      `d${equal}${encodeURIComponent(
+        JSON.stringify(['1', '2', '3'])
+          .split(',')
+          .join(arrayDelimiter)
+      )}`
+    ].join(`${delimiter}`)
+  },
+  URLStr(equal = '=', delimiter = '&') {
+    const encode = val => encodeURIComponent(val)
+    return [
+      `a${equal}${encode('1')}`,
+      `b${equal}${encode('b&c')}`,
+      `d${equal}${encode(['1', '2', '3'])}`
+    ].join(`${delimiter}`)
   }
 }
+
 const routerModes = ['history', 'hash']
 const locations = (() => {
   const origin = 'https://a.b'
@@ -59,11 +80,24 @@ describe('测试 stringify', () => {
   test('基本功能', () => {
     expect(stringify(query.obj)).toBe(query.str())
   })
+  test('自定义 equal & delimiter & arrayDelimiter', () => {
+    const equal = '='
+    const delimiter = '&'
+    const arrayDelimiter = '$'
+    const str = query.str(equal, delimiter, arrayDelimiter)
+    expect(stringify(query.obj, equal, delimiter, arrayDelimiter)).toBe(str)
+  })
+})
+
+describe('测试 URLStringify', () => {
+  test('基本功能', () => {
+    expect(URLStringify(query.obj)).toBe(query.URLStr())
+  })
   test('自定义 equal & delimiter', () => {
     const equal = '='
     const delimiter = '&'
-    const str = query.str(equal, delimiter)
-    expect(stringify(query.obj, equal, delimiter)).toBe(str)
+    const str = query.URLStr(equal, delimiter)
+    expect(URLStringify(query.obj, equal, delimiter)).toBe(str)
   })
 })
 
