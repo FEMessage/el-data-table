@@ -5,22 +5,6 @@ export const queryFlag = 'q='
 export const queryPattern = new RegExp(queryFlag + '.*' + paramSeparator)
 
 /**
- * 转换query对象成可附在url上的字符串
- * qs.stringify只能自定义delimiter，不能自定义equal
- * {a: 'a&b', b: true, d: [1,2,3]} => 'a=a%26b&b=true&d=1%2C2%2C3'
- *
- * @param {object} query
- * @param {string} equal - 键和值的分隔符
- * @param {string} delimiter - 键值对之间的分隔符
- * @return {string}
- */
-export function URLStringify(query, equal = '=', delimiter = '&') {
-  return Object.keys(query)
-    .map(k => `${k}${equal}${encodeURIComponent(query[k])}`)
-    .join(delimiter)
-}
-
-/**
  * 在浏览器地址栏的 URL 需要做额外处理：兼容持久化数组
  * 直接将数组 encode 和 JSON.stringify 会在刷新时自动 decode，解决方法：改变数组的分隔符
  * {a: 'a&b', b: true, d: [1,2,3]} => 'a~a%26b,b~true,d~%5B1%7C2%7C3%5D'

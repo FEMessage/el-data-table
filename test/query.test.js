@@ -4,7 +4,6 @@ import {
   paramInnerSeparator,
   queryFlag,
   stringify,
-  URLStringify,
   parse,
   set,
   get,
@@ -26,14 +25,6 @@ const query = {
           .split(',')
           .join(arrayDelimiter)
       )}`
-    ].join(`${delimiter}`)
-  },
-  URLStr(equal = '=', delimiter = '&') {
-    const encode = val => encodeURIComponent(val)
-    return [
-      `a${equal}${encode('1')}`,
-      `b${equal}${encode('b&c')}`,
-      `d${equal}${encode(['1', '2', '3'])}`
     ].join(`${delimiter}`)
   }
 }
@@ -86,18 +77,6 @@ describe('测试 stringify', () => {
     const arrayDelimiter = '$'
     const str = query.str(equal, delimiter, arrayDelimiter)
     expect(stringify(query.obj, equal, delimiter, arrayDelimiter)).toBe(str)
-  })
-})
-
-describe('测试 URLStringify', () => {
-  test('基本功能', () => {
-    expect(URLStringify(query.obj)).toBe(query.URLStr())
-  })
-  test('自定义 equal & delimiter', () => {
-    const equal = '='
-    const delimiter = '&'
-    const str = query.URLStr(equal, delimiter)
-    expect(URLStringify(query.obj, equal, delimiter)).toBe(str)
   })
 })
 

@@ -951,7 +951,10 @@ export default {
         }, {})
 
       const queryStr =
-        (url.indexOf('?') > -1 ? '&' : '?') + queryUtil.URLStringify(query)
+        (url.indexOf('?') > -1 ? '&' : '?') +
+        Object.keys(query)
+          .map(k => `${k}=${decodeURIComponent(query[k])}`)
+          .join('&')
 
       // 请求开始
       this.loading = loading
