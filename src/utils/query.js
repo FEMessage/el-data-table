@@ -68,7 +68,9 @@ export function parse(
     .map(param => param.split(equal))
     .reduce((obj, [k, v]) => {
       // 替换回逗号
-      const value = decodeURIComponent(v).split(arrayDelimiter)
+      const value = decodeURIComponent(v)
+        .split(arrayDelimiter)
+        .join(',')
       obj[k] = JSON.parse(value)
       return obj
     }, {})
