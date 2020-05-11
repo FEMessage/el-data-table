@@ -1,25 +1,33 @@
 export const valueSeparator = '~'
 export const paramSeparator = ','
+export const paramInnerSeparator = '|'
 export const queryFlag = 'q='
 export const queryPattern = new RegExp(queryFlag + '.*' + paramSeparator)
 
 /**
- * 转换query对象成可附在url上的字符串
- * qs.stringify只能自定义delimiter，不能自定义equal
- * {a: 'a&b', b: true} => 'a~a%26b,b~true'
- *
+ * 在浏览器地址栏的 URL 需要做额外处理：兼容持久化数组
+ * 直接将数组 encode 时，数组[1,2]会先转成'1,2'再 encode 成 '1%2C2'。但 vue-router 会自动转义 url 参数，导致数组的 ',' 无法和键值对分隔符 ',' 区分开。解决方法：改变数组的分隔符
+ * {a: 'a&b', b: true, d: [1,2,3]} => 'a~a%26b,b~true,d~%5B1%7C2%7C3%5D'
  * @param {object} query
  * @param {string} equal - 键和值的分隔符
  * @param {string} delimiter - 键值对之间的分隔符
+ * @param {string} arrayDelimiter - 数组项之间的分隔符
  * @return {string}
  */
 export function stringify(
   query,
   equal = valueSeparator,
-  delimiter = paramSeparator
+  delimiter = paramSeparator,
+  arrayDelimiter = paramInnerSeparator
 ) {
   return Object.keys(query)
-    .map(k => `${k}${equal}${encodeURIComponent(JSON.stringify(query[k]))}`)
+    .map(k => {
+      // 数组即便 encode 也会被自动转义，使用别的分割符
+      const v = JSON.stringify(query[k])
+        .split(',')
+        .join(arrayDelimiter)
+      return `${k}${equal}${encodeURIComponent(v)}`
+    })
     .join(delimiter)
 }
 
@@ -36,13 +44,18 @@ export function stringify(
 export function parse(
   query,
   equal = valueSeparator,
-  delimiter = paramSeparator
+  delimiter = paramSeparator,
+  arrayDelimiter = paramInnerSeparator
 ) {
   return query
     .split(delimiter)
     .map(param => param.split(equal))
     .reduce((obj, [k, v]) => {
-      obj[k] = JSON.parse(decodeURIComponent(v))
+      // 替换回逗号
+      const value = decodeURIComponent(v)
+        .split(arrayDelimiter)
+        .join(',')
+      obj[k] = JSON.parse(value)
       return obj
     }, {})
 }
