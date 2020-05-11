@@ -1,6 +1,7 @@
 import {
   valueSeparator,
   paramSeparator,
+  paramInnerSeparator,
   queryFlag,
   stringify,
   parse,
@@ -10,13 +11,24 @@ import {
 } from '../src/utils/query'
 
 const query = {
-  obj: {a: '1', b: 'b&c'},
-  str(equal = valueSeparator, delimiter = paramSeparator) {
-    return `a${equal}${encodeURIComponent(
-      JSON.stringify('1')
-    )}${delimiter}b${equal}${encodeURIComponent(JSON.stringify('b&c'))}`
+  obj: {a: '1', b: 'b&c', d: ['1', '2', '3']},
+  str(
+    equal = valueSeparator,
+    delimiter = paramSeparator,
+    arrayDelimiter = paramInnerSeparator
+  ) {
+    return [
+      `a${equal}${encodeURIComponent(JSON.stringify('1'))}`,
+      `b${equal}${encodeURIComponent(JSON.stringify('b&c'))}`,
+      `d${equal}${encodeURIComponent(
+        JSON.stringify(['1', '2', '3'])
+          .split(',')
+          .join(arrayDelimiter)
+      )}`
+    ].join(`${delimiter}`)
   }
 }
+
 const routerModes = ['history', 'hash']
 const locations = (() => {
   const origin = 'https://a.b'
@@ -59,11 +71,12 @@ describe('测试 stringify', () => {
   test('基本功能', () => {
     expect(stringify(query.obj)).toBe(query.str())
   })
-  test('自定义 equal & delimiter', () => {
+  test('自定义 equal & delimiter & arrayDelimiter', () => {
     const equal = '='
     const delimiter = '&'
-    const str = query.str(equal, delimiter)
-    expect(stringify(query.obj, equal, delimiter)).toBe(str)
+    const arrayDelimiter = '$'
+    const str = query.str(equal, delimiter, arrayDelimiter)
+    expect(stringify(query.obj, equal, delimiter, arrayDelimiter)).toBe(str)
   })
 })
 
