@@ -6,7 +6,7 @@ export const queryPattern = new RegExp(queryFlag + '.*' + paramSeparator)
 
 /**
  * 在浏览器地址栏的 URL 需要做额外处理：兼容持久化数组
- * 直接将数组 encode 和 JSON.stringify 会在刷新时自动 decode，解决方法：改变数组的分隔符
+ * 直接将数组 encode 时，数组[1,2]会先转成'1,2'再 encode 成 '1%2C2'。但 vue-router 会自动转义 url 参数，导致数组的 ',' 无法和键值对分隔符 ',' 区分开。解决方法：改变数组的分隔符
  * {a: 'a&b', b: true, d: [1,2,3]} => 'a~a%26b,b~true,d~%5B1%7C2%7C3%5D'
  * @param {object} query
  * @param {string} equal - 键和值的分隔符
