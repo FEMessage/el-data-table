@@ -945,20 +945,10 @@ export default {
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
         .filter(k => !isFalsey(query[k]))
-        .reduce((obj, k) => {
-          obj[k] = query[k]
-          return obj
-        }, {})
-
-      const queryStr =
-        (url.indexOf('?') > -1 ? '&' : '?') +
-        Object.keys(query)
-          .map(k => `${k}=${decodeURIComponent(query[k])}`)
-          .join('&')
+        .reduce((obj, k) => ((obj[k] = query[k]), obj), {})
 
       // 请求开始
       this.loading = loading
-
       // 存储query记录, 便于后面恢复
       if (this.saveQuery) {
         // 存储的page是table的页码，无需偏移
@@ -966,9 +956,16 @@ export default {
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.replaceState(history.state, 'el-data-table search', newUrl)
       }
+      const config = {
+        ...this.axiosConfig,
+        params: {
+          ...query,
+          ..._get(this.axiosConfig, 'params', {})
+        }
+      }
 
       this.$axios
-        .get(url + queryStr, this.axiosConfig)
+        .get(url, config)
         .then(({data: resp}) => {
           let data = []
 
