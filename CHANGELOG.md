@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.19.5](https://github.com/FEMessage/el-data-table/compare/v1.19.4...v1.19.5) (2020-06-17)
+
+
+### Bug Fixes
+
+* 增加searchForm 的空数组进行判断 ([#306](https://github.com/FEMessage/el-data-table/issues/306)) ([db86b8b](https://github.com/FEMessage/el-data-table/commit/db86b8b))
+
+
+
 ### [1.19.4](https://github.com/FEMessage/el-data-table/compare/v1.19.3...v1.19.4) (2020-06-04)
 
 
