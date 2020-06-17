@@ -8,6 +8,6 @@ describe('test isFalsey', () => {
     expect(isFalsey()).toBe(true)
     expect(isFalsey(0)).toBe(false)
     expect(isFalsey({})).toBe(false)
-    expect(isFalsey([])).toBe(false)
+    expect(isFalsey([])).toBe(true)
   })
 })

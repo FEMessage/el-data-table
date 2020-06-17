@@ -14,7 +14,16 @@ class StrategyAbstract {
     this.onSelectAll = this.onSelectAll.bind(this)
   }
   get elTable() {
-    return this.elDataTable.$refs.table
+    return (
+      this.elDataTable.$refs.table || {
+        onSelectionChange() {},
+        onSelect() {},
+        onSelectAll() {},
+        toggleRowSelection() {},
+        clearSelection() {},
+        updateElTableSelection() {}
+      }
+    )
   }
   onSelectionChange() {}
   onSelect() {}
