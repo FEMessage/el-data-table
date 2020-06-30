@@ -6,8 +6,16 @@ axiosConfig 示例代码，打开控制台，可以看到请求中带上了自�
 </template>
 <script>
 export default {
+  methods: {
+  	rowClick(...args) {
+    	console.log(args)
+    },
+  },
   data() {
     return {
+      tableEventListeners: {
+        'row-click': this.rowClick,
+      },
       axiosConfig: {
         headers: {
           'Authorization': 'Bearer token',

@@ -93,6 +93,7 @@
         v-bind="tableAttrs"
         :data="data"
         :row-class-name="rowClassName"
+        v-on="tableEventListeners"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
         @select-all="selectStrategy.onSelectAll($event, selectable)"
@@ -637,6 +638,21 @@ export default {
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-attributes
      */
     tableAttrs: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+
+    /**
+     * element table 其他额外的事件监听, 详情配置参考element-ui官网
+     *  tableEventListeners: {
+     *   // key 值必须和 el-table 文档相同的 - 连接模式
+     *   'row-click': rowClick,
+     *  },
+     * @link https://element.eleme.cn/#/zh-CN/component/table#table-events
+     */
+    tableEventListeners: {
       type: Object,
       default() {
         return {}
