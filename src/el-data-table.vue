@@ -93,6 +93,7 @@
         v-bind="tableAttrs"
         :data="data"
         :row-class-name="rowClassName"
+        v-on="tableEventHandlers"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
         @select-all="selectStrategy.onSelectAll($event, selectable)"
@@ -283,6 +284,7 @@
 <script>
 import _get from 'lodash.get'
 import _values from 'lodash.values'
+import _kebabcase from 'lodash.kebabcase'
 import _isEmpty from 'lodash.isempty'
 import SelfLoadingButton from './components/self-loading-button.vue'
 import TheDialog, {dialogModes} from './components/the-dialog.vue'
@@ -633,7 +635,7 @@ export default {
       default: false
     },
     /**
-     * element table 属性设置, 详情配置参考element-ui官网
+     * el-table 的 prop 和 eventHandler 设置, 详情配置参考element-ui官网
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-attributes
      */
     tableAttrs: {
@@ -813,6 +815,16 @@ export default {
     }
   },
   computed: {
+    tableEventHandlers() {
+      const handlers = {}
+      for (const key in this.tableAttrs) {
+        const kebab = _kebabcase(key)
+        if (kebab.startsWith('on-')) {
+          handlers[kebab.slice(3)] = this.tableAttrs[key]
+        }
+      }
+      return handlers
+    },
     hasSelect() {
       return this.columns.length && this.columns[0].type == 'selection'
     },
