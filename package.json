@@ -40,6 +40,7 @@
   "dependencies": {
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
+    "lodash.kebabcase": "^4.1.1",
     "lodash.values": "^4.3.0"
   },
   "devDependencies": {
