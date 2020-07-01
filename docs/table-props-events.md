@@ -1,4 +1,4 @@
-通过 tableAttrs 属性，可以直接传 prop 和 eventHandler 到 el-table 本地上
+通过 tableAttrs & tableEventHandlers 属性，可以直接传 prop 和 eventHandler 到 el-table 本体上
 
 ```vue
 <template>
@@ -16,10 +16,16 @@ export default {
       ],
       tableAttrs: {
         stripe: true,
-        onRowClick: (row, col, event) => {
+      },
+      tableEventHandlers: {
+        // camel & kebab case 皆可
+        rowClick: (row) => {
           this.$message.success(`点击 ${row.name}！`)
+        },
+        'row-dblclick': (row) => {
+          this.$message.success(`双击点击 ${row.name}！`)
         }
-      }
+      },
     }
   }
 }

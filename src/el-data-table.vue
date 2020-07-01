@@ -93,7 +93,7 @@
         v-bind="tableAttrs"
         :data="data"
         :row-class-name="rowClassName"
-        v-on="tableEventHandlers"
+        v-on="tableEventHandlersInner"
         @selection-change="selectStrategy.onSelectionChange"
         @select="selectStrategy.onSelect"
         @select-all="selectStrategy.onSelectAll($event, selectable)"
@@ -635,10 +635,20 @@ export default {
       default: false
     },
     /**
-     * el-table 的 prop 和 eventHandler 设置, 详情配置参考element-ui官网
+     * el-table 的 prop 配置，详情配置参考element-ui官网
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-attributes
      */
     tableAttrs: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    /**
+     * el-table 的 eventHandler 配置，详情配置参考element-ui官网
+     * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-attributes
+     */
+    tableEventHandlers: {
       type: Object,
       default() {
         return {}
@@ -815,13 +825,11 @@ export default {
     }
   },
   computed: {
-    tableEventHandlers() {
+    tableEventHandlersInner() {
       const handlers = {}
-      for (const key in this.tableAttrs) {
+      for (const key in this.tableEventHandlers) {
         const kebab = _kebabcase(key)
-        if (kebab.startsWith('on-')) {
-          handlers[kebab.slice(3)] = this.tableAttrs[key]
-        }
+        handlers[kebab] = this.tableEventHandlers[key]
       }
       return handlers
     },
