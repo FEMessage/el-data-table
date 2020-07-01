@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.20.0](https://github.com/FEMessage/el-data-table/compare/v1.19.5...v1.20.0) (2020-07-01)
+
+
+### Features
+
+* 支持监听 el-table 事件（新增 prop：tableEventHandlers） ([#309](https://github.com/FEMessage/el-data-table/issues/309)) ([1aa1e0e](https://github.com/FEMessage/el-data-table/commit/1aa1e0e))
+
+
+
 ### [1.19.5](https://github.com/FEMessage/el-data-table/compare/v1.19.4...v1.19.5) (2020-06-17)
 
 
