@@ -15,6 +15,7 @@
         :content="_searchForm"
         inline
         @submit.native.prevent
+        class="search-form-container"
       >
         <slot
           v-for="slot in searchLocatedSlotKeys"
@@ -37,7 +38,7 @@
       </el-form-renderer>
 
       <el-form v-if="hasHeader">
-        <el-form-item>
+        <el-form-item class="header-button-container">
           <el-button
             v-if="hasNew"
             type="primary"
