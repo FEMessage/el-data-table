@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.20.1](https://github.com/FEMessage/el-data-table/compare/v1.20.0...v1.20.1) (2020-07-13)
+
+
+### Bug Fixes
+
+* 给 el-form-renderer 容器增加类名 ([0229411](https://github.com/FEMessage/el-data-table/commit/0229411))
+
+
+
 ## [1.20.0](https://github.com/FEMessage/el-data-table/compare/v1.19.5...v1.20.0) (2020-07-01)
 
 
