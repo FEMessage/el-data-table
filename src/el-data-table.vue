@@ -14,8 +14,8 @@
         ref="searchForm"
         :content="_searchForm"
         inline
-        @submit.native.prevent
         class="search-form-container"
+        @submit.native.prevent
       >
         <slot
           v-for="slot in searchLocatedSlotKeys"
@@ -966,7 +966,15 @@ export default {
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
         .filter(k => !isFalsey(query[k]))
-        .reduce((obj, k) => ((obj[k] = query[k]), obj), {})
+        .reduce(
+          (obj, k) => (
+            (obj[k] = Array.isArray(query[k])
+              ? query[k].toString().trim()
+              : query[k]),
+            obj
+          ),
+          {}
+        )
 
       // 请求开始
       this.loading = loading
