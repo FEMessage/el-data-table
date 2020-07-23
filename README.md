@@ -328,6 +328,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://4ark.me"><img src="https://avatars0.githubusercontent.com/u/27952659?v=4" width="100px;" alt=""/><br /><sub><b>4Ark</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=gd4Ark" title="Code">💻</a> <a href="https://github.com/FEMessage/el-data-table/commits?author=gd4Ark" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/Htongbing"><img src="https://avatars2.githubusercontent.com/u/36433396?v=4" width="100px;" alt=""/><br /><sub><b>Htongbing</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=Htongbing" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/PPPenny"><img src="https://avatars3.githubusercontent.com/u/20984729?v=4" width="100px;" alt=""/><br /><sub><b>PPPenny</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=PPPenny" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/zenghao1203"><img src="https://avatars0.githubusercontent.com/u/22702128?v=4" width="100px;" alt=""/><br /><sub><b>PopupDialog</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Azenghao1203" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
