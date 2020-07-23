@@ -978,7 +978,7 @@ export default {
         history.replaceState(history.state, 'el-data-table search', newUrl)
       }
 
-      // 处理查询参数为数组时，将数组转为字符串
+      // 当查询参数为数组时，需要将参数转化为字符串才发送请求
       query = Object.keys(query).reduce(
         (obj, k) => (
           (obj[k] = Array.isArray(query[k])
