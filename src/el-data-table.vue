@@ -966,15 +966,7 @@ export default {
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
         .filter(k => !isFalsey(query[k]))
-        .reduce(
-          (obj, k) => (
-            (obj[k] = Array.isArray(query[k])
-              ? query[k].toString().trim()
-              : query[k]),
-            obj
-          ),
-          {}
-        )
+        .reduce((obj, k) => ((obj[k] = query[k]), obj), {})
 
       // 请求开始
       this.loading = loading
@@ -985,6 +977,18 @@ export default {
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.replaceState(history.state, 'el-data-table search', newUrl)
       }
+
+      // 处理查询参数为数组时，将数组转为字符串
+      query = Object.keys(query).reduce(
+        (obj, k) => (
+          (obj[k] = Array.isArray(query[k])
+            ? query[k].toString().trim()
+            : query[k]),
+          obj
+        ),
+        {}
+      )
+
       const config = {
         ...this.axiosConfig,
         params: {
