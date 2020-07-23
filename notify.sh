@@ -5,9 +5,8 @@ then
   exit 1
 fi
 
-ORG_NAME=$(cut -d '/' -f 1 <<< "$TRAVIS_REPO_SLUG")
-
-REPO_NAME=$(cut -d '/' -f 2 <<< "$TRAVIS_REPO_SLUG")
+ORG_NAME=$(echo "$TRAVIS_REPO_SLUG" | cut -d '/' -f 1)
+REPO_NAME=$(echo "$TRAVIS_REPO_SLUG" | cut -d '/' -f 2)
 
 git remote add github https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git > /dev/null 2>&1
 git push github HEAD:master --follow-tags
@@ -23,7 +22,7 @@ html_url=$(sed -n 5p $resp_tmp_file | sed 's/\"html_url\"://g' | awk -F '"' '{pr
 body=$(grep body < $resp_tmp_file | sed 's/\"body\"://g;s/\"//g')
 version=$(echo $html_url | awk -F '/' '{print $NF}')
 
-msg='{"msgtype": "markdown", "markdown": {"title": "$REPO_NAME更新", "text": "@所有人\n# [$REPO_NAME('$version')]('$html_url')\n'$body'"}}'
+msg='{"msgtype": "markdown", "markdown": {"title": "'$REPO_NAME'更新", "text": "@所有人\n# ['$REPO_NAME'('$version')]('$html_url')\n'$body'"}}'
 
 curl -X POST https://oapi.dingtalk.com/robot/send\?access_token\=$DINGTALK_ROBOT_TOKEN -H 'Content-Type: application/json' -d "$msg"
 
