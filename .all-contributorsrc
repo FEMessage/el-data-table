@@ -207,6 +207,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "zenghao1203",
+      "name": "PopupDialog",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/22702128?v=4",
+      "profile": "https://github.com/zenghao1203",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
