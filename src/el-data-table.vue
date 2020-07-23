@@ -14,8 +14,8 @@
         ref="searchForm"
         :content="_searchForm"
         inline
-        @submit.native.prevent
         class="search-form-container"
+        @submit.native.prevent
       >
         <slot
           v-for="slot in searchLocatedSlotKeys"
@@ -977,6 +977,18 @@ export default {
         const newUrl = queryUtil.set(location.href, query, this.routerMode)
         history.replaceState(history.state, 'el-data-table search', newUrl)
       }
+
+      // 当查询参数为数组时，需要将参数转化为字符串才发送请求
+      query = Object.keys(query).reduce(
+        (obj, k) => (
+          (obj[k] = Array.isArray(query[k])
+            ? query[k].toString().trim()
+            : query[k]),
+          obj
+        ),
+        {}
+      )
+
       const config = {
         ...this.axiosConfig,
         params: {
