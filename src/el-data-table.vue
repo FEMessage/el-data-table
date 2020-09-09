@@ -294,7 +294,7 @@ import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
 import transformSearchImmediatelyItem from './utils/search-immediately-item'
-import isFalsey from './utils/is-falsey'
+import {isFalsey, dealQuery} from './utils/is-falsey'
 
 const defaultFirstPage = 1
 const noPaginationDataPath = 'payload'
@@ -992,7 +992,7 @@ export default {
       const config = {
         ...this.axiosConfig,
         params: {
-          ...query,
+          ...dealQuery(query),
           ..._get(this.axiosConfig, 'params', {})
         }
       }
