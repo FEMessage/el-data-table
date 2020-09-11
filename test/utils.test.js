@@ -1,4 +1,4 @@
-import {isFalsey, dealQuery} from '../src/utils/is-falsey'
+import {isFalsey, removeEmptyKeys} from '../src/utils/utils'
 
 describe('test isFalsey', () => {
   test('判断为 "",undefined或者 null', () => {
