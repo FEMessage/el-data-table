@@ -12,10 +12,10 @@ describe('test isFalsey', () => {
   })
 })
 
-describe('test dealQuery', () => {
+describe('test removeEmptyKeys', () => {
   test('判断 "", undefined, null, 空数组', () => {
     expect(
-      dealQuery({
+      removeEmptyKeys({
         a: 1,
         b: '',
         c: undefined,
