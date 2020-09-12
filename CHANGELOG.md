@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.20.3](https://github.com/FEMessage/el-data-table/compare/v1.20.2...v1.20.3) (2020-09-12)
+
+
+### Bug Fixes
+
+* notify error ([49e72d8](https://github.com/FEMessage/el-data-table/commit/49e72d8))
+* 修复 searchForm 刷新后恢复默认值的问题 ([#320](https://github.com/FEMessage/el-data-table/issues/320)) ([82768b8](https://github.com/FEMessage/el-data-table/commit/82768b8))
+
+
+
 ### [1.20.2](https://github.com/FEMessage/el-data-table/compare/v1.20.1...v1.20.2) (2020-07-23)
 
 ### [1.20.1](https://github.com/FEMessage/el-data-table/compare/v1.20.0...v1.20.1) (2020-07-13)
