@@ -294,7 +294,7 @@ import * as queryUtil from './utils/query'
 import getSelectStrategy from './utils/select-strategy'
 import getLocatedSlotKeys from './utils/extract-keys'
 import transformSearchImmediatelyItem from './utils/search-immediately-item'
-import isFalsey from './utils/is-falsey'
+import {isFalsey, removeEmptyKeys} from './utils/utils'
 
 const defaultFirstPage = 1
 const noPaginationDataPath = 'payload'
@@ -965,7 +965,7 @@ export default {
 
       // 无效值过滤，注意0是有效值
       query = Object.keys(query)
-        .filter(k => !isFalsey(query[k]))
+        .filter(k => ![undefined, null].includes(query[k]))
         .reduce((obj, k) => ((obj[k] = query[k]), obj), {})
 
       // 请求开始
@@ -992,7 +992,7 @@ export default {
       const config = {
         ...this.axiosConfig,
         params: {
-          ...query,
+          ...removeEmptyKeys(query),
           ..._get(this.axiosConfig, 'params', {})
         }
       }
