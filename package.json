@@ -1,6 +1,6 @@
 {
   "name": "@femessage/el-data-table",
-  "version": "1.20.3",
+  "version": "1.20.4",
   "description": "base on element-ui, makes crud easily",
   "author": "https://github.com/FEMessage",
   "license": "MIT",
