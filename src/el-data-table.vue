@@ -989,16 +989,17 @@ export default {
         {}
       )
 
-      const config = {
-        ...this.axiosConfig,
-        params: {
-          ...removeEmptyKeys(query),
-          ..._get(this.axiosConfig, 'params', {})
-        }
+      const params = {
+        ...removeEmptyKeys(query),
+        ..._get(this.axiosConfig, 'params', {})
       }
 
-      this.$axios
-        .get(url, config)
+      this.$axios({
+        method: 'get',
+        url,
+        params,
+        ...this.axiosConfig
+      })
         .then(({data: resp}) => {
           let data = []
 
