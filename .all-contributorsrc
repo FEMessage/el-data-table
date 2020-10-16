@@ -216,6 +216,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "Jogiter",
+      "name": "Jogiter",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/9711036?v=4",
+      "profile": "https://www.jogiter.cn/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
