@@ -25,6 +25,7 @@
   "browser": {
     "./sfc": "src/el-data-table.vue"
   },
+  "types": "src/el-data-table.d.ts",
   "scripts": {
     "test": "jest --verbose",
     "dev": "vue-styleguidist server",
