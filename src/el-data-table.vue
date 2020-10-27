@@ -1180,7 +1180,7 @@ export default {
      * @param {object|object[]} - 要删除的数据对象或数组
      */
     onDefaultDelete(data) {
-      this.$confirm(this.deleteMessage(data), '提示', {
+      return this.$confirm(this.deleteMessage(data), '提示', {
         type: 'warning',
         confirmButtonClass: 'el-button--danger',
         beforeClose: async (action, instance, done) => {
