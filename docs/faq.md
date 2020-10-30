@@ -177,6 +177,8 @@ el-form 包裹 el-data-table 时，点击 el-data-table 的操作列按钮会触
 <script lang="ts">
 // 需要引入这个
 // import { ElDataTableType } from '@femessage/el-data-table'
+// 如果你用的是 @femessage/element-ui
+// import { ElDataTableType } from '@femessage/el-data-table/src/femessage'
 export default {
   mounted() {
     (this.$refs.dataTable as ElDataTableType).getList()
