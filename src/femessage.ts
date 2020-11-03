@@ -74,7 +74,17 @@ export interface DataTableColumn {
 
 export type DataTableColumns = Array<DataTableColumn>
 
-type ElDataTableProps = {
+export type OperationButton = {
+  type?: string
+  text: string
+  atClick: (row: any) => Promise<any>
+  show?: (row: any) => boolean
+  disabled?: (row: any) => boolean
+}
+
+export type OperationButtons = OperationButton[]
+
+export type ElDataTableProps = Partial<{
   url: string
   id: string
   firstPage: number
@@ -89,8 +99,8 @@ type ElDataTableProps = {
   single: boolean
   persistSelection: boolean
   hasOperation: boolean
-  extraButtons: boolean
-  headerButtons: boolean
+  extraButtons: OperationButtons
+  headerButtons: OperationButtons
   hasNew: boolean
   hasEdit: boolean
   hasView: boolean
@@ -115,15 +125,15 @@ type ElDataTableProps = {
   treeParentKey: string
   treeParentValue: string
   expandAll: boolean
-  tableAttrs: Table
+  tableAttrs: Partial<Table>
   tableEventHandlers: object
   operationAttrs: object
   dialogNewTitle: string
   dialogEditTitle: string
   dialogViewTitle: string
   form: FormContent
-  formAttrs: Form
-  dialogAttrs: Dialog
+  formAttrs: Partial<Form>
+  dialogAttrs: Partial<Dialog>
   extraParams: object
   extraBody: object
   beforeConfirm: (data: any, isNew: boolean) => Promise<any>
@@ -133,7 +143,7 @@ type ElDataTableProps = {
   operationButtonType: string
   buttonSize: string
   axiosConfig: AxiosRequestConfig
-}
+}>
 
 type ElDataTable = Combined<
   ElDataTableData,

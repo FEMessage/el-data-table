@@ -93,7 +93,17 @@ declare module '@femessage/el-data-table' {
 
   export type DataTableColumns = Array<DataTableColumn>
 
-  type ElDataTableProps = {
+  export type OperationButton = {
+    type?: string
+    text: string
+    atClick: (row: any) => Promise<any>
+    show?: (row: any) => boolean
+    disabled?: (row: any) => boolean
+  }
+
+  export type OperationButtons = OperationButton[]
+
+  export type ElDataTableProps = Partial<{
     url: string
     id: string
     firstPage: number
@@ -108,8 +118,8 @@ declare module '@femessage/el-data-table' {
     single: boolean
     persistSelection: boolean
     hasOperation: boolean
-    extraButtons: boolean
-    headerButtons: boolean
+    extraButtons: OperationButtons
+    headerButtons: OperationButtons
     hasNew: boolean
     hasEdit: boolean
     hasView: boolean
@@ -134,15 +144,15 @@ declare module '@femessage/el-data-table' {
     treeParentKey: string
     treeParentValue: string
     expandAll: boolean
-    tableAttrs: Table
+    tableAttrs: Partial<Table>
     tableEventHandlers: object
     operationAttrs: object
     dialogNewTitle: string
     dialogEditTitle: string
     dialogViewTitle: string
     form: FormContent
-    formAttrs: Form
-    dialogAttrs: Dialog
+    formAttrs: Partial<Form>
+    dialogAttrs: Partial<Dialog>
     extraParams: object
     extraBody: object
     beforeConfirm: (data: any, isNew: boolean) => Promise<any>
@@ -152,7 +162,7 @@ declare module '@femessage/el-data-table' {
     operationButtonType: string
     buttonSize: string
     axiosConfig: AxiosRequestConfig
-  }
+  }>
 
   type ElDataTable = Combined<
     ElDataTableData,
