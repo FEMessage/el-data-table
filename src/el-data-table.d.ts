@@ -2,8 +2,8 @@ import Vue, {VueConstructor, VNode} from 'vue'
 
 import {AxiosRequestConfig} from 'axios'
 
-import {Table, Form, Dialog} from 'element-ui/types/element-ui'
-import {TableColumn} from 'element-ui/types/table-column'
+import {Table,Form, Dialog} from '@femessage/types/element-ui'
+import {TableColumn} from '@femessage/types/element-ui/table-column'
 
 declare module '@femessage/el-data-table' {
   class FemessageComponent extends Vue {
