@@ -103,6 +103,7 @@ declare module '@femessage/el-data-table' {
 
   export type OperationButtons = OperationButton[]
 
+  // props 都有默认值，都是可选的
   export type ElDataTableProps = Partial<{
     url: string
     id: string
@@ -168,7 +169,7 @@ declare module '@femessage/el-data-table' {
     ElDataTableData,
     ElDataTableMethods,
     ElDataTableComputed,
-    ElDataTableProps
+    Required<ElDataTableProps>
   >
 
   export interface ElDataTableType extends FemessageComponent, ElDataTable {}
@@ -178,7 +179,7 @@ declare module '@femessage/el-data-table' {
     ElDataTableData,
     ElDataTableMethods,
     ElDataTableComputed,
-    ElDataTableProps
+    Required<ElDataTableProps>
   >
 
   export default ElDataTableConstruction
