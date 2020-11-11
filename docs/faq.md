@@ -170,3 +170,18 @@ el-form 包裹 el-data-table 时，点击 el-data-table 的操作列按钮会触
 [element-ui el-form 文档](https://element.eleme.cn/#/zh-CN/component/form)
 
 [issue #224](https://github.com/FEMessage/el-data-table/issues/224)
+
+## 在 TypeScript 中指定组件的类型
+
+```html
+<script lang="ts">
+// 需要引入这个
+// import { ElDataTableType } from '@femessage/el-data-table'
+export default {
+  mounted() {
+    (this.$refs.dataTable as ElDataTableType).getList()
+  },
+}
+</script>
+```
+> 关于更多可用类型请参考：[el-data-table.d.ts](https://github.com/FEMessage/el-data-table/blob/dev/src/el-data-table.d.ts)
