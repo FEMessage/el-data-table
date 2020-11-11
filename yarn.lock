@@ -831,10 +831,10 @@
     require-yaml "0.0.1"
     valid-url "^1.0.9"
 
-"@femessage/types@^1.0.1":
-  version "1.0.1"
-  resolved "https://frontend-infra.deepexi.com:4873/@femessage%2ftypes/-/types-1.0.1.tgz#9d995bcca3ecb473ab6042a93642d0db8c36a9d4"
-  integrity sha512-+fpnAZ7ssWMmoM/Hr6lgW9JJwtbpV22y8QP3F1eyoYmOW1P4BHURzMs0VYaeGJ3zNun2ZaahbpYp5mKvJt/4lg==
+"@femessage/types@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/@femessage/types/-/types-1.0.3.tgz#1c93d89506628c7e5a8662da4fa88e765ce57b02"
+  integrity sha512-VXeHibO3nNNgTZ5WH0wv4ejjGO3oCnyefjvmw6dZoX08DU4URcfnyw8JQ67IK0rI3xBoIyTPSWFCu29Hi7RrIQ==
 
 "@jest/console@^24.7.1":
   version "24.7.1"

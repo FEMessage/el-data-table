@@ -39,7 +39,6 @@
     "release": "gren release --override"
   },
   "dependencies": {
-    "@femessage/types": "^1.0.1",
     "lodash.get": "^4.4.2",
     "lodash.isempty": "^4.4.0",
     "lodash.kebabcase": "^4.1.1",
@@ -51,6 +50,7 @@
     "@babel/preset-env": "^7.4.3",
     "@femessage/el-form-renderer": "^1.6.0",
     "@femessage/github-release-notes": "^0.19.0",
+    "@femessage/types": "^1.0.3",
     "axios": "^0.19.0",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.5",
