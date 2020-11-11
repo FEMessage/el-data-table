@@ -831,6 +831,11 @@
     require-yaml "0.0.1"
     valid-url "^1.0.9"
 
+"@femessage/types@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/@femessage/types/-/types-1.0.3.tgz#1c93d89506628c7e5a8662da4fa88e765ce57b02"
+  integrity sha512-VXeHibO3nNNgTZ5WH0wv4ejjGO3oCnyefjvmw6dZoX08DU4URcfnyw8JQ67IK0rI3xBoIyTPSWFCu29Hi7RrIQ==
+
 "@jest/console@^24.7.1":
   version "24.7.1"
   resolved "https://registry.npm.taobao.org/@jest/console/download/@jest/console-24.7.1.tgz#32a9e42535a97aedfe037e725bd67e954b459545"
