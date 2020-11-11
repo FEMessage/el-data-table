@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.0](https://github.com/FEMessage/el-data-table/compare/v1.20.5...v1.21.0) (2020-11-11)
+
+
+### Features
+
+* add types ([#327](https://github.com/FEMessage/el-data-table/issues/327)) ([feb8a3e](https://github.com/FEMessage/el-data-table/commit/feb8a3e))
+
+
+
 ### [1.20.5](https://github.com/FEMessage/el-data-table/compare/v1.20.4...v1.20.5) (2020-10-30)
 
 
