@@ -17,7 +17,9 @@ export default {
       style: {
         border: 'none',
         background: 'inherit',
-        padding: '9px 0'
+        padding: '9px 0',
+        color: '',
+        pointerEvents: ''
       }
     }
   },
@@ -25,19 +27,16 @@ export default {
     '$attrs.disabled': 'fixHoverColor'
   },
   mounted() {
-    this.fixHoverColor()
+    this.style.color = getComputedStyle(this.$el).color
   },
   methods: {
     // 将 color 写到 style 里是为了覆盖 hover 效果
     async fixHoverColor() {
-      const {style} = this
-      delete style.color
-      this.style = {...style}
+      this.style.color = ''
+      this.style.pointerEvents = 'none'
       await new Promise(r => setTimeout(r, 300))
-      this.style = {
-        ...style,
-        color: getComputedStyle(this.$el).color
-      }
+      this.style.color = getComputedStyle(this.$el).color
+      this.style.pointerEvents = ''
     }
   }
 }
