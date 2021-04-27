@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.21.1](https://github.com/FEMessage/el-data-table/compare/v1.21.0...v1.21.1) (2021-04-27)
+
+
+### Bug Fixes
+
+* **text-button:**  操作栏按钮的色值可能会取值不正确  ([1fa5893](https://github.com/FEMessage/el-data-table/commit/1fa5893))
+
+
+
 ## [1.21.0](https://github.com/FEMessage/el-data-table/compare/v1.20.5...v1.21.0) (2020-11-11)
 
 
