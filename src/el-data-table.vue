@@ -267,7 +267,7 @@
         :new-title="dialogNewTitle"
         :edit-title="dialogEditTitle"
         :view-title="dialogViewTitle"
-        :form="form"
+        :form="dialogForm || form"
         :form-attrs="formAttrs"
         :dialog-attrs="dialogAttrs"
         :button-size="buttonSize"
@@ -693,10 +693,20 @@ export default {
       }
     },
     /**
-     * 弹窗表单, 用于新增与修改, 详情配置参考el-form-renderer
-     * @link https://femessage.github.io/el-form-renderer/
+     * @deprecated
      */
     form: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    /**
+     * 弹窗表单, 用于新增与修改, 详情配置参考 el-form-renderer
+     * 为了 api 更符合直觉而设置
+     * @link https://femessage.github.io/el-form-renderer/
+     */
+    dialogForm: {
       type: Array,
       default() {
         return []
