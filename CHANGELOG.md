@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.21.3](https://github.com/FEMessage/el-data-table/compare/v1.21.2...v1.21.3) (2021-08-13)
+
+
+### Bug Fixes
+
+* **dialogForm:** 兼容 form 的旧写法 ([#341](https://github.com/FEMessage/el-data-table/issues/341)) ([8dc99c3](https://github.com/FEMessage/el-data-table/commit/8dc99c3))
+
+
+
 ### [1.21.2](https://github.com/FEMessage/el-data-table/compare/v1.21.1...v1.21.2) (2021-08-10)
 
 
