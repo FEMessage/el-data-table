@@ -709,7 +709,7 @@ export default {
     dialogForm: {
       type: Array,
       default() {
-        return []
+        return null
       }
     },
     /**
