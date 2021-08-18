@@ -71,10 +71,10 @@
             >{{ deleteText }}</el-button
           >
 
-          <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，作用域传入selected -->
+          <!--@slot 额外的header内容, 当headerButtons不满足需求时可以使用，传入selected -->
           <slot name="header" :selected="selected" />
 
-          <!--@collapse 自定义折叠按钮, 默认的样式文案不满足时可以使用，scope 默认返回当前折叠状态 Boolean -->
+          <!--@collapse 自定义折叠按钮, 默认的样式文案不满足时可以使用。传入当前折叠状态 isSearchCollapse: Boolean -->
           <slot name="collapse" :isSearchCollapse="isSearchCollapse">
             <el-button
               v-if="canSearchCollapse"
@@ -243,10 +243,13 @@
             >
               {{ deleteText }}
             </self-loading-button>
+
+            <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用。传入 row -->
+            <slot name="operation" :row="scope.row" />
           </template>
         </el-data-table-column>
 
-        <!--@slot 自定义操作列, 当extraButtons不满足需求时可以使用 -->
+        <!--@slot 默认slot，同 el-table -->
         <slot />
       </el-table>
 
