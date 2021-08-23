@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.22.0](https://github.com/FEMessage/el-data-table/compare/v1.21.3...v1.22.0) (2021-08-23)
+
+
+### Features
+
+* slot=operation，适用于 extraButtons 不满足需求时 ([cdbd733](https://github.com/FEMessage/el-data-table/commit/cdbd733))
+
+
+
 ### [1.21.3](https://github.com/FEMessage/el-data-table/compare/v1.21.2...v1.21.3) (2021-08-13)
 
 
