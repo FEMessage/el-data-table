@@ -1023,7 +1023,7 @@ export default {
         ...this.axiosConfig
       })
         .then(raw => {
-          let payload = {}
+          let payload = raw
           let data = []
           let total = 0
 
