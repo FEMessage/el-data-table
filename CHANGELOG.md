@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.23.0](https://github.com/FEMessage/el-data-table/compare/v1.22.0...v1.23.0) (2021-09-11)
+
+
+### Features
+
+* **on-response:** 兼容 axios 直接返回 data 的情况 ([#348](https://github.com/FEMessage/el-data-table/issues/348)) ([ccca117](https://github.com/FEMessage/el-data-table/commit/ccca117))
+
+
+
 ## [1.22.0](https://github.com/FEMessage/el-data-table/compare/v1.21.3...v1.22.0) (2021-08-23)
 
 
