@@ -362,6 +362,15 @@ export default {
       default: 'size'
     },
     /**
+     * 处理请求返回的数据
+     * @param raw axios 返回的原始数据
+     * @return 函数应返回 {total, data}
+     */
+    onResponse: {
+      type: Function,
+      default: undefined
+    },
+    /**
      * 列属性设置, 详情见element-ui官网
      * @link https://element.eleme.cn/2.4/#/zh-CN/component/table#table-column-attributes
      */
@@ -1013,33 +1022,43 @@ export default {
         params,
         ...this.axiosConfig
       })
-        .then(({data: resp}) => {
+        .then(raw => {
+          let payload = {}
           let data = []
+          let total = 0
 
-          // 不分页
-          if (!this.hasPagination) {
-            data =
-              _get(resp, this.dataPath) ||
-              _get(resp, noPaginationDataPath) ||
-              []
-            this.total = data.length
+          if (this.onResponse) {
+            let processData = this.onResponse(raw)
+            data = processData.data
+            total = processData.total
           } else {
-            data = _get(resp, this.dataPath) || []
-            // 获取不到值得时候返回 undefined, el-pagination 接收一个 null 或者 undefined 会导致没数据但是下一页可点击
-            this.total = _get(resp, this.totalPath) || 0
-            const lastPage = Math.ceil(this.total / this.size)
-            if (0 < lastPage && lastPage < this.page) {
-              this.page = lastPage
-              this.getList(...arguments)
-              return
+            payload = raw.data
+            // 不分页
+            if (!this.hasPagination) {
+              data =
+                _get(payload, this.dataPath) ||
+                _get(payload, noPaginationDataPath) ||
+                []
+              total = data.length
+            } else {
+              data = _get(payload, this.dataPath) || []
+              // 获取不到值得时候返回 undefined, el-pagination 接收一个 null 或者 undefined 会导致没数据但是下一页可点击
+              total = _get(payload, this.totalPath) || 0
+              const lastPage = Math.ceil(total / this.size)
+              if (0 < lastPage && lastPage < this.page) {
+                this.page = lastPage
+                this.getList(...arguments)
+                return
+              }
             }
           }
-
-          this.data = data
 
           // 树形结构逻辑
           if (this.isTree) {
             this.data = this.tree2Array(data, this.expandAll)
+          } else {
+            this.data = data
+            this.total = total
           }
 
           this.showNoData =
@@ -1051,9 +1070,9 @@ export default {
           /**
            * 请求返回, 数据更新后触发
            * @property {object} data - table的数据
-           * @property {object} resp - 请求返回的完整response
+           * @property {object} payload - 包含 data 的外层数据
            */
-          this.$emit('update', data, resp)
+          this.$emit('update', data, payload)
 
           // 开启persistSelection时，需要同步selected状态到el-table中
           this.$nextTick(() => {
