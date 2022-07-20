@@ -333,6 +333,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://www.jogiter.cn/"><img src="https://avatars0.githubusercontent.com/u/9711036?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jogiter</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/commits?author=Jogiter" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/yolofit"><img src="https://avatars.githubusercontent.com/u/20294811?v=4?s=100" width="100px;" alt=""/><br /><sub><b>yolofit</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Ayolofit" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/huazaili"><img src="https://avatars.githubusercontent.com/u/13534495?v=4?s=100" width="100px;" alt=""/><br /><sub><b>huazaili</b></sub></a><br /><a href="https://github.com/FEMessage/el-data-table/issues?q=author%3Ahuazaili" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
