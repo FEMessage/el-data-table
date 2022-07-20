@@ -1056,6 +1056,7 @@ export default {
           // 树形结构逻辑
           if (this.isTree) {
             this.data = this.tree2Array(data, this.expandAll)
+            this.total = total //树翻页总数
           } else {
             this.data = data
             this.total = total
