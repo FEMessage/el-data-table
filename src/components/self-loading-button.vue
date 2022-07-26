@@ -5,7 +5,7 @@
     v-on="$listeners"
     :loading="loading"
     :type="type"
-    @click="handleClick"
+    @click.stop="handleClick"
   >
     <slot></slot>
   </component>
