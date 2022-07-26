@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.23.2](https://github.com/FEMessage/el-data-table/compare/v1.23.1...v1.23.2) (2022-07-26)
+
+
+### Bug Fixes
+
+* extraButtons按钮点击去除冒泡 ([#357](https://github.com/FEMessage/el-data-table/issues/357)) ([899acd5](https://github.com/FEMessage/el-data-table/commit/899acd5))
+
+
+
 ### [1.23.1](https://github.com/FEMessage/el-data-table/compare/v1.23.0...v1.23.1) (2022-07-20)
 
 
